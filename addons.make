@@ -1,0 +1,4 @@
+ofxAssimp
+ofxAssimpModelLoader
+ofxGui
+ofxVectorGraphics

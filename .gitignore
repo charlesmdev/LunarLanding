@@ -1,0 +1,79 @@
+# ============================
+# openFrameworks build artifacts
+# ============================
+
+# Ignore object files and compiled libraries
+obj/
+*.o
+*.obj
+*.lo
+*.la
+*.lai
+*.dll
+*.so
+*.dylib
+*.lib
+*.a
+*.exp
+
+# Ignore build folders inside bin (but keep bin/data/)
+bin/*/Release/
+bin/*/Debug/
+bin/*/x64/
+bin/*/x86/
+!bin/*/data/
+
+# Ignore temporary build folders
+build/
+
+# ============================
+# Xcode (macOS)
+# ============================
+*.xcworkspace
+*.xcuserstate
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/xcuserstate
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM/
+
+# ============================
+# Visual Studio (Windows)
+# ============================
+.vs/
+*.vcxproj.user
+*.vcxproj.filters
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+ipch/
+Debug/
+Release/
+x64/ 
+x86/
+
+# ============================
+# VS Code
+# ============================
+.vscode/
+.history/
+*.code-workspace
+
+# ============================
+# OS-specific files
+# ============================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================
+# Temporary and swap files
+# ============================
+*.log
+*.tmp
+*.swp
+*~
+
