@@ -21,6 +21,8 @@ bin/*/Release/
 bin/*/Debug/
 bin/*/x64/
 bin/*/x86/
+bin/*.exe
+bin/*.pdb
 !bin/*/data/
 
 # Ignore temporary build folders
