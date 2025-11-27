@@ -139,7 +139,15 @@ void ofApp::draw() {
 
 				Box bounds = Box(Vector3(min.x, min.y, min.z), Vector3(max.x, max.y, max.z));
 				ofSetColor(ofColor::white);
+				ofNoFill();
+
+				if (bInDrag) {
+					ofSetColor(ofColor::red);
+					ofNoFill();
+				}
 				Octree::drawBox(bounds);
+
+			
 
 				// draw colliding boxes
 				//
