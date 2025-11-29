@@ -42,8 +42,11 @@ void ofApp::setup(){
 	//
 	initLightingAndMaterials();
 
-	mars.loadModel("geo/mars-low-5x-v2.obj");
-//	mars.loadModel("geo/moon-houdini.obj");
+	//	mars.loadModel("geo/moon-houdini.obj");
+	//  mars.loadModel("geo/mars-low-5x-v2.obj
+
+	mars.loadModel("geo/maya-moon-rings-flags-bright.obj");
+
 	mars.setScaleNormalization(false);
 
 	// create sliders for testing
@@ -63,6 +66,10 @@ void ofApp::setup(){
 	cout << "Number of Verts: " << mars.getMesh(0).getNumVertices() << endl;
 
 	testBox = Box(Vector3(3, 3, 0), Vector3(5, 5, 2));
+
+
+	// sky box
+	skybox.load("stars_dn.jpg");
 
 }
  
@@ -95,13 +102,19 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 
-	ofBackground(ofColor::black);
+
+	ofDisableDepthTest();
+	skybox.draw(0, 0, ofGetWidth(), ofGetHeight());
+	ofEnableDepthTest();
 
 	glDepthMask(false);
 	if (!bHide) gui.draw();
 	glDepthMask(true);
 
 	cam.begin();
+
+
+
 	ofPushMatrix();
 	if (bWireframe) {                    // wireframe mode  (include axis)
 		ofDisableLighting();

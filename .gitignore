@@ -5,7 +5,6 @@
 # Ignore object files and compiled libraries
 obj/
 *.o
-*.obj
 *.lo
 *.la
 *.lai
