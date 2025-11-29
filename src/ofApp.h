@@ -82,4 +82,9 @@ class ofApp : public ofBaseApp{
 		ofxToggle timingToggle;
 	
 		vector<ofColor> levelColors;
+
+		// skybox
+		ofImage skybox;
+
+
 };
