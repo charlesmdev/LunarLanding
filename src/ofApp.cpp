@@ -42,8 +42,11 @@ void ofApp::setup(){
 	//
 	initLightingAndMaterials();
 
-	mars.loadModel("geo/mars-low-5x-v2.obj");
-//	mars.loadModel("geo/moon-houdini.obj");
+	//	mars.loadModel("geo/moon-houdini.obj");
+	//  mars.loadModel("geo/mars-low-5x-v2.obj
+
+	mars.loadModel("geo/maya-moon-rings-flags.obj");
+
 	mars.setScaleNormalization(false);
 
 	// create sliders for testing
