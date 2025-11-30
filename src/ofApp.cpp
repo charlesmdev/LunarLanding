@@ -22,6 +22,7 @@ void ofApp::setup(){
 	for(int i = 0; i < 10; i++) {
 		levelColors[i] = ofColor::fromHsb(i * 25, 255, 255); // Random hue shift colors, I used this rather than hardcoding colors.
 	}
+
 	
 	bWireframe = false;
 	bDisplayPoints = false;
@@ -43,9 +44,10 @@ void ofApp::setup(){
 	initLightingAndMaterials();
 
 	//	mars.loadModel("geo/moon-houdini.obj");
-	//  mars.loadModel("geo/mars-low-5x-v2.obj
+	//  mars.loadModel("geo/mars-low-5x-v2.obj");
 
-	mars.loadModel("geo/maya-moon-rings-flags-bright.obj");
+	mars.loadModel("geo/maya-moon-combined.obj");
+
 
 	mars.setScaleNormalization(false);
 
@@ -59,7 +61,14 @@ void ofApp::setup(){
 	//  Create Octree for testing.
 	//
 	buildStartTime = ofGetElapsedTimeMillis();
-	octree.create(mars.getMesh(0), 20);
+
+	// need this to combine meshes (terrain, flags, everything)
+	for (int i = 0; i < mars.getNumMeshes(); i++) {
+		combined.append(mars.getMesh(i));
+	}
+
+	octree.create(combined, 20);
+
 	buildEndTime = ofGetElapsedTimeMillis();
 	
 	cout << "Octree Build Time: " << (buildEndTime - buildStartTime) << " ms" << endl;
