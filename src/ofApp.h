@@ -86,5 +86,8 @@ class ofApp : public ofBaseApp{
 		// skybox
 		ofImage skybox;
 
+		// mesh
+		ofMesh combined;
+
 
 };
