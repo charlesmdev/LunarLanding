@@ -86,6 +86,10 @@ void ofApp::setup(){
 // incrementally update scene (animation)
 //
 void ofApp::update() {
+//	glm::vec3 gravity(0, -9.8f * lander.physics.mass, 0);
+//	lander.physics.addForce(gravity);
+	lander.updatePhysics();
+
 	if(bResolvingCollision) {
 		if (!bLanderLoaded) return;
 
@@ -314,6 +318,14 @@ void ofApp::keyPressed(int key) {
 		break;
 	case 'x':
 		bResolvingCollision = true;
+		break;
+	case OF_KEY_UP:
+		lander.physics.addForce(glm::vec3(0, 100.0f, 0)); // thrust up
+			cout << "UP" << endl;
+		break;
+	case OF_KEY_LEFT:
+		lander.physics.addTorque(glm::vec3(0, 0, 100.0f)); // spin
+			cout << "ROT LEFT" << endl;
 		break;
 	default:
 		break;

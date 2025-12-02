@@ -148,6 +148,9 @@
 		"28CCF4EC-8CD2-48E9-9B23-292BCBB291DF" /* RemoveComments.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RemoveComments.h; sourceTree = "<group>"; };
 		291E6A352EDF80F600FB5743 /* Lander.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Lander.cpp; sourceTree = "<group>"; };
 		291E6A372EDF80FF00FB5743 /* Lander.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Lander.h; sourceTree = "<group>"; };
+		291E6A382EDF847F00FB5743 /* Shape3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shape3D.h; sourceTree = "<group>"; };
+		291E6A392EDF84AE00FB5743 /* Physics3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Physics3D.h; sourceTree = "<group>"; };
+		291E6A3C2EDF857300FB5743 /* RotationalPhysics3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RotationalPhysics3D.h; sourceTree = "<group>"; };
 		2944DD992ED76DB600D1357A /* box.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = box.cc; sourceTree = "<group>"; };
 		"2A594F1E-C3D7-4516-AAB9-6987E84E25A7" /* pushpack1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pushpack1.h; sourceTree = "<group>"; };
 		"2A5AF2B6-7512-475D-92ED-010537EE4438" /* qnan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = qnan.h; sourceTree = "<group>"; };
@@ -768,6 +771,7 @@
 		"3BC5C11B-5A4A-4A02-BD79-31A53A70913C" /* shapes */ = {
 			isa = PBXGroup;
 			children = (
+				291E6A382EDF847F00FB5743 /* Shape3D.h */,
 				"B36A5649-0CB6-4816-AD3D-8379819A9904" /* Asteroid.cpp */,
 				"B8B4C03D-702A-47BF-AE8D-4F0A7E985456" /* Asteroid.h */,
 				"4125D893-12C2-4E71-A172-ABC8AF29B430" /* AsteroidManager.cpp */,
@@ -798,6 +802,8 @@
 		"4BAB9BFA-3B6D-4FF2-91A3-D1C073DE3A52" /* physics */ = {
 			isa = PBXGroup;
 			children = (
+				291E6A3C2EDF857300FB5743 /* RotationalPhysics3D.h */,
+				291E6A392EDF84AE00FB5743 /* Physics3D.h */,
 				"45BCC53B-8110-4484-A83B-F72849A65D4D" /* Collision.cpp */,
 				"CB1B2504-6B67-4A86-AC75-3EEE30B8ECEE" /* Collision.h */,
 				"4AACBE1A-64AA-49FD-85E6-77186E602CF1" /* CollisionManager.cpp */,

@@ -4,39 +4,43 @@
 //
 //  Created by Charles M. on 12/2/25.
 //
+// Lander.h
 #pragma once
 
 #include "ofMain.h"
 #include "ofxAssimpModelLoader.h"
 #include "Box.h"
+#include "Shape3D.h"
+#include "physics/RotationalPhysics3D.h"
 
-class Lander {
+class Lander : public Shape3D {
 public:
 	Lander();
 
 	bool loadModel(const std::string &path);
 	void drawWireframe();
 	void drawFaces();
-	void setPosition(float x, float y, float z);
-	ofVec3f getPosition() const;
+
+	void setPosition(float x, float y, float z) override;
+	glm::vec3 getPosition() const override;
+
+	void updatePhysics(const glm::vec3& externalForce = glm::vec3(0, 0, 0));
+
 	void setScaleNormalization(bool normalize);
-	int getNumMeshes();          // remove const
-	ofMesh getMesh(int i);       // remove const
-	int getMeshCount();          // remove const
-	ofVec3f getSceneMin();       // remove const
-	ofVec3f getSceneMax();       // remove const
-	ofMatrix4x4 getModelMatrix();// remove const
+	int getNumMeshes();
+	ofMesh getMesh(int i);
+	int getMeshCount();
+	glm::vec3 getSceneMin();
+	glm::vec3 getSceneMax();
+	ofMatrix4x4 getModelMatrix();
 
-
-	// Add your extra attributes here
-	// float fuelLevel;
-	// bool isActive;
-	// ... etc
+	RotationalPhysics3D physics;
 
 private:
 	ofxAssimpModelLoader model;
-	ofVec3f position;
-	bool scaleNormalization;
-	ofMatrix4x4 modelMatrix;
+	bool scaleNormalization = false;
+
+	void applyTransformToModel(); // helper
 };
+
 
