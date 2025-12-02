@@ -40,6 +40,8 @@ public:
 	float     thrustAmount = 0.0f;              // current thrust magnitude from GUI
 	float     thrustMax    = 20.0f;             // max thrust (for clamping / tuning)
 	glm::vec3 torqueScale  = glm::vec3(0, 0, 10.0f); // optional if you want scaled torque
+	
+	glm::vec3 getWorldThrustDir() const;
 
 private:
 	ofxAssimpModelLoader model;

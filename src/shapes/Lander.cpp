@@ -6,6 +6,8 @@
 //
 // Lander.cpp
 #include "Lander.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/constants.hpp>
 
 Lander::Lander() {
 	position = glm::vec3(0, 0, 0);
@@ -30,6 +32,22 @@ void Lander::applyTransformToModel() {
 
 	// scale
 	model.setScale(scale.x, scale.y, scale.z);
+}
+
+glm::vec3 Lander::getWorldThrustDir() const {
+	// Use this->rotation (Euler degrees) to rotate local up (0,1,0)
+	glm::vec3 rotRad = glm::radians(rotation);
+
+	glm::mat4 Rx = glm::rotate(glm::mat4(1.0f), rotRad.x, glm::vec3(1, 0, 0));
+	glm::mat4 Ry = glm::rotate(glm::mat4(1.0f), rotRad.y, glm::vec3(0, 1, 0));
+	glm::mat4 Rz = glm::rotate(glm::mat4(1.0f), rotRad.z, glm::vec3(0, 0, 1));
+
+	glm::mat4 R = Rz * Ry * Rx;
+
+	glm::vec4 localUp(0, 1, 0, 0); // thrust along local +Y
+	glm::vec4 worldUp = R * localUp;
+
+	return glm::normalize(glm::vec3(worldUp));
 }
 
 void Lander::drawWireframe() {

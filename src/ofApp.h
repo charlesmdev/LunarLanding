@@ -113,5 +113,12 @@ class ofApp : public ofBaseApp{
 		
 		void PhysicsDebugSetup();
 		void PhysicsUpdate();
+	
+		
+		bool bThrusting = false;
+		bool bPitchForward = false;
+		bool bPitchBackward = false;
+		bool bYawLeft = false;
+		bool bYawRight = false;
 
 };

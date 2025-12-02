@@ -328,12 +328,19 @@ void ofApp::keyPressed(int key) {
 		bResolvingCollision = true;
 		break;
 	case OF_KEY_UP:
-		lander.physics.addForce(glm::vec3(0, 100.0f, 0)); // thrust up
-			cout << "UP" << endl;
+		bPitchForward = true;
+		break;
+	case OF_KEY_DOWN:
+		bPitchBackward = true;
 		break;
 	case OF_KEY_LEFT:
-		lander.physics.addTorque(glm::vec3(0, 0, 100.0f)); // spin
-			cout << "ROT LEFT" << endl;
+		bYawLeft = true;
+		break;
+	case OF_KEY_RIGHT:
+		bYawRight = true;
+		break;
+	case ' ':
+		bThrusting = true;
 		break;
 	default:
 		break;
@@ -353,9 +360,22 @@ void ofApp::togglePointsDisplay() {
 }
 
 void ofApp::keyReleased(int key) {
-
 	switch (key) {
-	
+	case OF_KEY_UP:
+		bPitchForward = false;
+		break;
+	case OF_KEY_DOWN:
+		bPitchBackward = false;
+		break;
+	case OF_KEY_LEFT:
+		bYawLeft = false;
+		break;
+	case OF_KEY_RIGHT:
+		bYawRight = false;
+		break;
+	case ' ':
+		bThrusting = false;
+		break;
 	case OF_KEY_ALT:
 		cam.disableMouseInput();
 		bAltKeyDown = false;
@@ -709,44 +729,50 @@ void ofApp::PhysicsDebugSetup() {
 
 	physicsGui.add(rotDampingSlider.setup("Rot Damping", 0.99f, 0.80f, 1.0f));
 }
-
 void ofApp::PhysicsUpdate() {
+
 	if (!bLanderLoaded) return;
 
-	// 1) Read GUI values into lander parameters
-	lander.thrustMax    = static_cast<float>(thrustMaxSlider);
-	lander.thrustAmount = static_cast<float>(thrustSlider);
-
-	lander.physics.damping = static_cast<float>(dampingSlider);
-	lander.physics.mass    = static_cast<float>(massSlider);
+	lander.physics.damping           = static_cast<float>(dampingSlider);
+	lander.physics.mass              = static_cast<float>(massSlider);
 	lander.physics.rotationalDamping = static_cast<float>(rotDampingSlider);
 
-	// 2) Build thrust force from slider (continuous)
-	float clampedThrust = glm::clamp(lander.thrustAmount, 0.0f, lander.thrustMax);
-	glm::vec3 thrustForce(0.0f);
-	if (clampedThrust > 0.0f) {
-		// world-space thrust in thrustDir
-		thrustForce = glm::normalize(lander.thrustDir) * clampedThrust;
-	}
+	// keep thrustMax in sync with GUI
+	lander.thrustMax = static_cast<float>(thrustMaxSlider);
 
-	// 3) Build torque vector from sliders (continuous)
-	glm::vec3 torqueInput(
-		static_cast<float>(torqueXSlider),
-		static_cast<float>(torqueYSlider),
-		static_cast<float>(torqueZSlider)
-	);
-
-	if (glm::length(torqueInput) > 0.0f) {
-		// add torque as rotational force
-		lander.physics.addTorque(torqueInput);
-		// if you want one-shot impulses, uncomment to reset sliders:
-		// torqueXSlider = torqueYSlider = torqueZSlider = 0.0f;
-	}
-
-	// 4) Gravity + thrust as total linear force
+	// Gravity
 	glm::vec3 gravity(0, -1.62f * lander.physics.mass, 0);
-	glm::vec3 totalForce = gravity + thrustForce;
+	lander.physics.addForce(gravity);
 
-	// 5) Integrate physics using the combined force
-	lander.physics.integrate(lander, totalForce);
+	// SPACE thrust: continuous while key held
+	if (bThrusting) {
+		float thrustMag = 10.0f; // fixed SPACE thrust
+		glm::vec3 thrustDir = lander.getWorldThrustDir();
+		lander.physics.addForce(thrustDir * thrustMag);
+	}
+
+	// Optional: extra continuous thrust from slider (if you still want it)
+	float sliderThrustRaw = static_cast<float>(thrustSlider);
+	float sliderThrust    = glm::clamp(sliderThrustRaw, 0.0f, lander.thrustMax);
+	if (sliderThrust > 0.0f) {
+		glm::vec3 thrustDir = lander.getWorldThrustDir();
+		lander.physics.addForce(thrustDir * sliderThrust);
+	}
+
+	// Rotational input: continuous torque while keys held
+	float torqueMag = 50.0f; // tune or make a slider
+
+	if (bPitchForward) {
+		lander.physics.addTorque(glm::vec3( torqueMag, 0, 0)); // pitch down
+	}
+	if (bPitchBackward) {
+		lander.physics.addTorque(glm::vec3(-torqueMag, 0, 0)); // pitch up
+	}
+	if (bYawLeft) {
+		lander.physics.addTorque(glm::vec3(0, 0,  torqueMag)); // rotate left
+	}
+	if (bYawRight) {
+		lander.physics.addTorque(glm::vec3(0, 0, -torqueMag)); // rotate right
+	}
+	lander.updatePhysics();
 }

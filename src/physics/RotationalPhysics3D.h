@@ -15,6 +15,7 @@ public:
 	glm::vec3 angularAccel = glm::vec3(0, 0, 0);
 	glm::vec3 torque       = glm::vec3(0, 0, 0); // simplistic: 1 inertia per axis
 	float rotationalDamping = 0.99f;
+	float angularScale = 5.0f;
 
 	// override integrates both linear and angular motion
 	void integrate(Shape3D& s, const glm::vec3& externalForce) override {
@@ -24,8 +25,9 @@ public:
 		Physics3D::integrate(s, externalForce);
 
 		// angular (very simplified: angularAccel = torque / mass)
+		angularAccel = (torque / mass) * angularScale;
 		s.rotation += angularVel * dt;
-		angularAccel = torque / mass;
+//		angularAccel = torque / mass;
 		angularVel += angularAccel * dt;
 		angularVel *= rotationalDamping;
 
