@@ -5,6 +5,7 @@
 #include  "ofxAssimpModelLoader.h"
 #include "Octree.h"
 #include <glm/gtx/intersect.hpp>
+#include "shapes/Lander.h"
 
 
 class ofApp : public ofBaseApp{
@@ -38,7 +39,7 @@ class ofApp : public ofBaseApp{
 		glm::vec3 getMousePointOnPlane(glm::vec3 p , glm::vec3 n);
 
 		ofEasyCam cam;
-		ofxAssimpModelLoader mars, lander;
+		ofxAssimpModelLoader mars;
 		ofLight light;
 		Box boundingBox, landerBounds;
 		Box testBox;
@@ -88,6 +89,7 @@ class ofApp : public ofBaseApp{
 
 		// mesh
 		ofMesh combined;
+		Lander lander;
 
 
 };
