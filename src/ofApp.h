@@ -90,6 +90,28 @@ class ofApp : public ofBaseApp{
 		// mesh
 		ofMesh combined;
 		Lander lander;
+	
+		ofxPanel physicsGui;        // new physics debug GUI
 
+		// Lander physics parameters
+		ofxFloatSlider thrustSlider;
+		ofxFloatSlider thrustMaxSlider;
+		ofxFloatSlider dampingSlider;
+		ofxFloatSlider massSlider;
+
+		ofxFloatSlider angVelXSlider;
+		ofxFloatSlider angVelYSlider;
+		ofxFloatSlider angVelZSlider;
+
+		ofxFloatSlider torqueXSlider;
+		ofxFloatSlider torqueYSlider;
+		ofxFloatSlider torqueZSlider;
+
+		ofxFloatSlider rotDampingSlider;
+
+		bool bShowPhysicsGui = true;
+		
+		void PhysicsDebugSetup();
+		void PhysicsUpdate();
 
 };

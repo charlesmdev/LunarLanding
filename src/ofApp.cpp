@@ -53,6 +53,7 @@ void ofApp::setup(){
 
 	// create sliders for testing
 	//
+	PhysicsDebugSetup();
 	gui.setup();
 	gui.add(numLevels.setup("Number of Octree Levels", 1, 1, 10));
 	gui.add(timingToggle.setup("Timing Info", false));
@@ -89,6 +90,7 @@ void ofApp::update() {
 //	glm::vec3 gravity(0, -9.8f * lander.physics.mass, 0);
 //	lander.physics.addForce(gravity);
 	lander.updatePhysics();
+	PhysicsUpdate();
 
 	if(bResolvingCollision) {
 		if (!bLanderLoaded) return;
@@ -121,7 +123,13 @@ void ofApp::draw() {
 	ofEnableDepthTest();
 
 	glDepthMask(false);
-	if (!bHide) gui.draw();
+//	if (!bHide) gui.draw();
+	if (!bHide) {
+		  gui.draw();
+		  if (bShowPhysicsGui) {
+			  physicsGui.draw();
+		  }
+	  }
 	glDepthMask(true);
 
 	cam.begin();
@@ -680,4 +688,65 @@ glm::vec3 ofApp::getMousePointOnPlane(glm::vec3 planePt, glm::vec3 planeNorm) {
 		return intersectPoint;
 	}
 	else return glm::vec3(0, 0, 0);
+}
+
+void ofApp::PhysicsDebugSetup() {
+	physicsGui.setup("Physics Debug");
+	physicsGui.setPosition(10, 220);
+
+	physicsGui.add(thrustSlider.setup("Thrust", 0.0f, 0.0f, 50.0f));
+	physicsGui.add(thrustMaxSlider.setup("Thrust Max", 20.0f, 0.0f, 100.0f));
+	physicsGui.add(dampingSlider.setup("Linear Damping", 0.99f, 0.80f, 1.0f));
+	physicsGui.add(massSlider.setup("Mass", 0.8f, 0.1f, 10.0f));
+
+	physicsGui.add(angVelXSlider.setup("Ang Vel X", 0.0f, -180.0f, 180.0f));
+	physicsGui.add(angVelYSlider.setup("Ang Vel Y", 0.0f, -180.0f, 180.0f));
+	physicsGui.add(angVelZSlider.setup("Ang Vel Z", 0.0f, -180.0f, 180.0f));
+
+	physicsGui.add(torqueXSlider.setup("Torque X", 0.0f, -50.0f, 50.0f));
+	physicsGui.add(torqueYSlider.setup("Torque Y", 0.0f, -50.0f, 50.0f));
+	physicsGui.add(torqueZSlider.setup("Torque Z", 0.0f, -50.0f, 50.0f));
+
+	physicsGui.add(rotDampingSlider.setup("Rot Damping", 0.99f, 0.80f, 1.0f));
+}
+
+void ofApp::PhysicsUpdate() {
+	if (!bLanderLoaded) return;
+
+	// 1) Read GUI values into lander parameters
+	lander.thrustMax    = static_cast<float>(thrustMaxSlider);
+	lander.thrustAmount = static_cast<float>(thrustSlider);
+
+	lander.physics.damping = static_cast<float>(dampingSlider);
+	lander.physics.mass    = static_cast<float>(massSlider);
+	lander.physics.rotationalDamping = static_cast<float>(rotDampingSlider);
+
+	// 2) Build thrust force from slider (continuous)
+	float clampedThrust = glm::clamp(lander.thrustAmount, 0.0f, lander.thrustMax);
+	glm::vec3 thrustForce(0.0f);
+	if (clampedThrust > 0.0f) {
+		// world-space thrust in thrustDir
+		thrustForce = glm::normalize(lander.thrustDir) * clampedThrust;
+	}
+
+	// 3) Build torque vector from sliders (continuous)
+	glm::vec3 torqueInput(
+		static_cast<float>(torqueXSlider),
+		static_cast<float>(torqueYSlider),
+		static_cast<float>(torqueZSlider)
+	);
+
+	if (glm::length(torqueInput) > 0.0f) {
+		// add torque as rotational force
+		lander.physics.addTorque(torqueInput);
+		// if you want one-shot impulses, uncomment to reset sliders:
+		// torqueXSlider = torqueYSlider = torqueZSlider = 0.0f;
+	}
+
+	// 4) Gravity + thrust as total linear force
+	glm::vec3 gravity(0, -1.62f * lander.physics.mass, 0);
+	glm::vec3 totalForce = gravity + thrustForce;
+
+	// 5) Integrate physics using the combined force
+	lander.physics.integrate(lander, totalForce);
 }
