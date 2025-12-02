@@ -320,27 +320,34 @@ void ofApp::keyPressed(int key) {
 	case OF_KEY_CONTROL:
 		bCtrlKeyDown = true;
 		break;
-	case OF_KEY_SHIFT:
-		break;
 	case OF_KEY_DEL:
 		break;
 	case 'x':
 		bResolvingCollision = true;
 		break;
 	case OF_KEY_UP:
-		bPitchForward = true;
+		bMoveForward = true;
 		break;
 	case OF_KEY_DOWN:
-		bPitchBackward = true;
+		bMoveBackward = true;
 		break;
 	case OF_KEY_LEFT:
-		bYawLeft = true;
+		bMoveLeft = true;
 		break;
 	case OF_KEY_RIGHT:
+		bMoveRight = true;
+		break;
+	case 'q': // yaw left
+		bYawLeft = true;
+		break;
+	case 'e': // yaw right
 		bYawRight = true;
 		break;
 	case ' ':
-		bThrusting = true;
+		bMoveUp = true;
+		break;
+	case OF_KEY_SHIFT:
+		bMoveDown = true;
 		break;
 	default:
 		break;
@@ -362,19 +369,28 @@ void ofApp::togglePointsDisplay() {
 void ofApp::keyReleased(int key) {
 	switch (key) {
 	case OF_KEY_UP:
-		bPitchForward = false;
+		bMoveForward = false;
 		break;
 	case OF_KEY_DOWN:
-		bPitchBackward = false;
+		bMoveBackward = false;
 		break;
 	case OF_KEY_LEFT:
-		bYawLeft = false;
+		bMoveLeft = false;
 		break;
 	case OF_KEY_RIGHT:
+		bMoveRight = false;
+		break;
+	case 'q':
+		bYawLeft = false;
+		break;
+	case 'e':
 		bYawRight = false;
 		break;
 	case ' ':
-		bThrusting = false;
+		bMoveUp = false;
+		break;
+	case OF_KEY_SHIFT:
+		bMoveDown = false;
 		break;
 	case OF_KEY_ALT:
 		cam.disableMouseInput();
@@ -382,8 +398,6 @@ void ofApp::keyReleased(int key) {
 		break;
 	case OF_KEY_CONTROL:
 		bCtrlKeyDown = false;
-		break;
-	case OF_KEY_SHIFT:
 		break;
 	default:
 		break;
@@ -719,13 +733,13 @@ void ofApp::PhysicsDebugSetup() {
 	physicsGui.add(dampingSlider.setup("Linear Damping", 0.99f, 0.80f, 1.0f));
 	physicsGui.add(massSlider.setup("Mass", 0.8f, 0.1f, 10.0f));
 
-	physicsGui.add(angVelXSlider.setup("Ang Vel X", 0.0f, -180.0f, 180.0f));
-	physicsGui.add(angVelYSlider.setup("Ang Vel Y", 0.0f, -180.0f, 180.0f));
-	physicsGui.add(angVelZSlider.setup("Ang Vel Z", 0.0f, -180.0f, 180.0f));
-
-	physicsGui.add(torqueXSlider.setup("Torque X", 0.0f, -50.0f, 50.0f));
-	physicsGui.add(torqueYSlider.setup("Torque Y", 0.0f, -50.0f, 50.0f));
-	physicsGui.add(torqueZSlider.setup("Torque Z", 0.0f, -50.0f, 50.0f));
+//	physicsGui.add(angVelXSlider.setup("Ang Vel X", 0.0f, -180.0f, 180.0f));
+//	physicsGui.add(angVelYSlider.setup("Ang Vel Y", 0.0f, -180.0f, 180.0f));
+//	physicsGui.add(angVelZSlider.setup("Ang Vel Z", 0.0f, -180.0f, 180.0f));
+//
+//	physicsGui.add(torqueXSlider.setup("Torque X", 0.0f, -50.0f, 50.0f));
+//	physicsGui.add(torqueYSlider.setup("Torque Y", 0.0f, -50.0f, 50.0f));
+//	physicsGui.add(torqueZSlider.setup("Torque Z", 0.0f, -50.0f, 50.0f));
 
 	physicsGui.add(rotDampingSlider.setup("Rot Damping", 0.99f, 0.80f, 1.0f));
 }
@@ -737,42 +751,42 @@ void ofApp::PhysicsUpdate() {
 	lander.physics.mass              = static_cast<float>(massSlider);
 	lander.physics.rotationalDamping = static_cast<float>(rotDampingSlider);
 
-	// keep thrustMax in sync with GUI
-	lander.thrustMax = static_cast<float>(thrustMaxSlider);
-
 	// Gravity
 	glm::vec3 gravity(0, -1.62f * lander.physics.mass, 0);
 	lander.physics.addForce(gravity);
 
-	// SPACE thrust: continuous while key held
-	if (bThrusting) {
-		float thrustMag = 10.0f; // fixed SPACE thrust
-		glm::vec3 thrustDir = lander.getWorldThrustDir();
-		lander.physics.addForce(thrustDir * thrustMag);
-	}
+	// Direction basis from heading
+	glm::vec3 fwd  = lander.getForwardDir();
+	glm::vec3 right = lander.getRightDir();
+	glm::vec3 up    = lander.getUpDir();
 
-	// Optional: extra continuous thrust from slider (if you still want it)
-	float sliderThrustRaw = static_cast<float>(thrustSlider);
-	float sliderThrust    = glm::clamp(sliderThrustRaw, 0.0f, lander.thrustMax);
-	if (sliderThrust > 0.0f) {
-		glm::vec3 thrustDir = lander.getWorldThrustDir();
-		lander.physics.addForce(thrustDir * sliderThrust);
-	}
+	float moveThrust = static_cast<float>(thrustSlider); // or a fixed 10, etc.
 
-	// Rotational input: continuous torque while keys held
-	float torqueMag = 50.0f; // tune or make a slider
-
-	if (bPitchForward) {
-		lander.physics.addTorque(glm::vec3( torqueMag, 0, 0)); // pitch down
+	if (bMoveForward) {
+		lander.physics.addForce(fwd * moveThrust);
 	}
-	if (bPitchBackward) {
-		lander.physics.addTorque(glm::vec3(-torqueMag, 0, 0)); // pitch up
+	if (bMoveBackward) {
+		lander.physics.addForce(-fwd * moveThrust);
 	}
+	if (bMoveRight) {
+		lander.physics.addForce(right * moveThrust);
+	}
+	if (bMoveLeft) {
+		lander.physics.addForce(-right * moveThrust);
+	}
+	if (bMoveUp) {
+		lander.physics.addForce(up * moveThrust);
+	}
+	if (bMoveDown) {
+		lander.physics.addForce(-up * moveThrust);
+	}
+	float yawTorque = 30.0f;
 	if (bYawLeft) {
-		lander.physics.addTorque(glm::vec3(0, 0,  torqueMag)); // rotate left
+		lander.physics.addTorque(glm::vec3(0, yawTorque, 0));   // +Y rotation
 	}
 	if (bYawRight) {
-		lander.physics.addTorque(glm::vec3(0, 0, -torqueMag)); // rotate right
+		lander.physics.addTorque(glm::vec3(0, -yawTorque, 0));  // -Y rotation
 	}
+
 	lander.updatePhysics();
 }

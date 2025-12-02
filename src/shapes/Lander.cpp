@@ -8,6 +8,7 @@
 #include "Lander.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/gtc/matrix_inverse.hpp>
 
 Lander::Lander() {
 	position = glm::vec3(0, 0, 0);
@@ -34,20 +35,41 @@ void Lander::applyTransformToModel() {
 	model.setScale(scale.x, scale.y, scale.z);
 }
 
-glm::vec3 Lander::getWorldThrustDir() const {
-	// Use this->rotation (Euler degrees) to rotate local up (0,1,0)
-	glm::vec3 rotRad = glm::radians(rotation);
+//glm::vec3 Lander::getWorldThrustDir() const {
+//	// Use this->rotation (Euler degrees) to rotate local up (0,1,0)
+//	glm::vec3 rotRad = glm::radians(rotation);
+//
+//	glm::mat4 Rx = glm::rotate(glm::mat4(1.0f), rotRad.x, glm::vec3(1, 0, 0));
+//	glm::mat4 Ry = glm::rotate(glm::mat4(1.0f), rotRad.y, glm::vec3(0, 1, 0));
+//	glm::mat4 Rz = glm::rotate(glm::mat4(1.0f), rotRad.z, glm::vec3(0, 0, 1));
+//
+//	glm::mat4 R = Rz * Ry * Rx;
+//
+//	glm::vec4 localUp(0, 1, 0, 0); // thrust along local +Y
+//	glm::vec4 worldUp = R * localUp;
+//
+//	return glm::normalize(glm::vec3(worldUp));
+//}
 
-	glm::mat4 Rx = glm::rotate(glm::mat4(1.0f), rotRad.x, glm::vec3(1, 0, 0));
-	glm::mat4 Ry = glm::rotate(glm::mat4(1.0f), rotRad.y, glm::vec3(0, 1, 0));
-	glm::mat4 Rz = glm::rotate(glm::mat4(1.0f), rotRad.z, glm::vec3(0, 0, 1));
+glm::vec3 Lander::getForwardDir() const {
+	// Heading is rotation.y in degrees; forward = -Z in local space
+	float yawRad = glm::radians(rotation.y);
+	// Standard FPS-style forward in XZ plane:
+	// forward = (sin(yaw), 0, -cos(yaw))
+	glm::vec3 f(std::sin(yawRad), 0.0f, -std::cos(yawRad));
+	return glm::normalize(f);
+}
 
-	glm::mat4 R = Rz * Ry * Rx;
+glm::vec3 Lander::getRightDir() const {
+	// Right is +90 degrees from forward in XZ plane
+	float yawRad = glm::radians(rotation.y + 90.0f);
+	glm::vec3 r(std::sin(yawRad), 0.0f, -std::cos(yawRad));
+	return glm::normalize(r);
+}
 
-	glm::vec4 localUp(0, 1, 0, 0); // thrust along local +Y
-	glm::vec4 worldUp = R * localUp;
-
-	return glm::normalize(glm::vec3(worldUp));
+glm::vec3 Lander::getUpDir() const {
+	// Up is just world up if you only want heading-based movement
+	return glm::vec3(0, 1, 0);
 }
 
 void Lander::drawWireframe() {

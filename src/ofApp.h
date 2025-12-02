@@ -91,7 +91,7 @@ class ofApp : public ofBaseApp{
 		ofMesh combined;
 		Lander lander;
 	
-		ofxPanel physicsGui;        // new physics debug GUI
+		ofxPanel physicsGui;
 
 		// Lander physics parameters
 		ofxFloatSlider thrustSlider;
@@ -99,13 +99,13 @@ class ofApp : public ofBaseApp{
 		ofxFloatSlider dampingSlider;
 		ofxFloatSlider massSlider;
 
-		ofxFloatSlider angVelXSlider;
-		ofxFloatSlider angVelYSlider;
-		ofxFloatSlider angVelZSlider;
-
-		ofxFloatSlider torqueXSlider;
-		ofxFloatSlider torqueYSlider;
-		ofxFloatSlider torqueZSlider;
+//		ofxFloatSlider angVelXSlider;
+//		ofxFloatSlider angVelYSlider;
+//		ofxFloatSlider angVelZSlider;
+//
+//		ofxFloatSlider torqueXSlider;
+//		ofxFloatSlider torqueYSlider;
+//		ofxFloatSlider torqueZSlider;
 
 		ofxFloatSlider rotDampingSlider;
 
@@ -114,10 +114,12 @@ class ofApp : public ofBaseApp{
 		void PhysicsDebugSetup();
 		void PhysicsUpdate();
 	
-		
-		bool bThrusting = false;
-		bool bPitchForward = false;
-		bool bPitchBackward = false;
+		bool bMoveForward = false;
+		bool bMoveBackward = false;
+		bool bMoveLeft = false;
+		bool bMoveRight = false;
+		bool bMoveUp = false;
+		bool bMoveDown = false;
 		bool bYawLeft = false;
 		bool bYawRight = false;
 
