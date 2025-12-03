@@ -87,12 +87,9 @@ void ofApp::setup(){
 // incrementally update scene (animation)
 //
 void ofApp::update() {
-//	glm::vec3 gravity(0, -9.8f * lander.physics.mass, 0);
-//	lander.physics.addForce(gravity);
-	lander.updatePhysics();
+	
 	PhysicsUpdate();
-
-	if(bResolvingCollision) {
+	
 		if (!bLanderLoaded) return;
 
 		ofVec3f min = lander.getSceneMin() + lander.getPosition();
@@ -101,18 +98,23 @@ void ofApp::update() {
 
 		colBoxList.clear();
 		octree.intersect(bounds, octree.root, colBoxList);
-
-		if (colBoxList.size() >= 10) {
-			// move upward while colliding
-			ofVec3f pos = lander.getPosition();
-			pos += ofVec3f(0, 0.2, 0);
-			lander.setPosition(pos.x, pos.y, pos.z);
+	
+		if (!colBoxList.empty()) {
+			// Simple resolution: push up and stop vertical velocity
+			glm::vec3 pos = lander.getPosition();
+			if (lander.physics.vel.y < 0.0f) {
+				pos.y += 0.01f;                 // small bump up
+				lander.setPosition(pos.x, pos.y, pos.z);
+				lander.physics.vel.y = 0.0f;    // stop falling
+			}
+			//		lander.physics.vel.y = 0.0f;
+			//		bGrounded = true;
+			//		cout << "bGrounded = true!" << endl;
 		} else {
-			bResolvingCollision = false;
+//			bGrounded = false;
 			colBoxList.clear();
 		}
 
-	}
 }
 //--------------------------------------------------------------
 void ofApp::draw() {
@@ -754,6 +756,11 @@ void ofApp::PhysicsUpdate() {
 	// Gravity
 	glm::vec3 gravity(0, -1.62f * lander.physics.mass, 0);
 	lander.physics.addForce(gravity);
+//	if (!bGrounded) {
+//		cout << "Not grounded!" << endl;
+//		glm::vec3 gravity(0, -1.62f * lander.physics.mass, 0);
+//		lander.physics.addForce(gravity);
+//	}
 
 	// Direction basis from heading
 	glm::vec3 fwd  = lander.getForwardDir();

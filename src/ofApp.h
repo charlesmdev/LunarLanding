@@ -90,6 +90,7 @@ class ofApp : public ofBaseApp{
 		// mesh
 		ofMesh combined;
 		Lander lander;
+		bool bGrounded = false;
 	
 		ofxPanel physicsGui;
 
