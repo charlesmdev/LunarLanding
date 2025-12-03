@@ -5,6 +5,7 @@
 #include  "ofxAssimpModelLoader.h"
 #include "Octree.h"
 #include <glm/gtx/intersect.hpp>
+#include "shapes/Lander.h"
 
 
 class ofApp : public ofBaseApp{
@@ -38,7 +39,7 @@ class ofApp : public ofBaseApp{
 		glm::vec3 getMousePointOnPlane(glm::vec3 p , glm::vec3 n);
 
 		ofEasyCam cam;
-		ofxAssimpModelLoader mars, lander;
+		ofxAssimpModelLoader mars;
 		ofLight light;
 		Box boundingBox, landerBounds;
 		Box testBox;
@@ -88,6 +89,39 @@ class ofApp : public ofBaseApp{
 
 		// mesh
 		ofMesh combined;
+		Lander lander;
+		bool bGrounded = false;
+	
+		ofxPanel physicsGui;
 
+		// Lander physics parameters
+		ofxFloatSlider thrustSlider;
+		ofxFloatSlider thrustMaxSlider;
+		ofxFloatSlider dampingSlider;
+		ofxFloatSlider massSlider;
+
+//		ofxFloatSlider angVelXSlider;
+//		ofxFloatSlider angVelYSlider;
+//		ofxFloatSlider angVelZSlider;
+//
+//		ofxFloatSlider torqueXSlider;
+//		ofxFloatSlider torqueYSlider;
+//		ofxFloatSlider torqueZSlider;
+
+		ofxFloatSlider rotDampingSlider;
+
+		bool bShowPhysicsGui = true;
+		
+		void PhysicsDebugSetup();
+		void PhysicsUpdate();
+	
+		bool bMoveForward = false;
+		bool bMoveBackward = false;
+		bool bMoveLeft = false;
+		bool bMoveRight = false;
+		bool bMoveUp = false;
+		bool bMoveDown = false;
+		bool bYawLeft = false;
+		bool bYawRight = false;
 
 };

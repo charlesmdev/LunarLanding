@@ -46,13 +46,13 @@ void ofApp::setup(){
 	//	mars.loadModel("geo/moon-houdini.obj");
 	//  mars.loadModel("geo/mars-low-5x-v2.obj");
 
-	mars.loadModel("geo/maya-moon-combined.obj");
+//	mars.loadModel("geo/maya-moon-combined.obj");
+	mars.loadModel("geo/dev-space-moon-ex-final.obj");
 
 
 	mars.setScaleNormalization(false);
 
-	// create sliders for testing
-	//
+	PhysicsDebugSetup();
 	gui.setup();
 	gui.add(numLevels.setup("Number of Octree Levels", 1, 1, 10));
 	gui.add(timingToggle.setup("Timing Info", false));
@@ -86,7 +86,9 @@ void ofApp::setup(){
 // incrementally update scene (animation)
 //
 void ofApp::update() {
-	if(bResolvingCollision) {
+	
+	PhysicsUpdate();
+	
 		if (!bLanderLoaded) return;
 
 		ofVec3f min = lander.getSceneMin() + lander.getPosition();
@@ -95,18 +97,23 @@ void ofApp::update() {
 
 		colBoxList.clear();
 		octree.intersect(bounds, octree.root, colBoxList);
-
-		if (colBoxList.size() >= 10) {
-			// move upward while colliding
-			ofVec3f pos = lander.getPosition();
-			pos += ofVec3f(0, 0.2, 0);
-			lander.setPosition(pos.x, pos.y, pos.z);
+	
+		if (!colBoxList.empty()) {
+			// Simple resolution: push up and stop vertical velocity
+			glm::vec3 pos = lander.getPosition();
+			if (lander.physics.vel.y < 0.0f) {
+				pos.y += 0.01f;                 // small bump up
+				lander.setPosition(pos.x, pos.y, pos.z);
+				lander.physics.vel.y = 0.0f;    // stop falling
+			}
+			//		lander.physics.vel.y = 0.0f;
+			//		bGrounded = true;
+			//		cout << "bGrounded = true!" << endl;
 		} else {
-			bResolvingCollision = false;
+//			bGrounded = false;
 			colBoxList.clear();
 		}
 
-	}
 }
 //--------------------------------------------------------------
 void ofApp::draw() {
@@ -116,9 +123,15 @@ void ofApp::draw() {
 	skybox.draw(0, 0, ofGetWidth(), ofGetHeight());
 	ofEnableDepthTest();
 
-	glDepthMask(false);
-	if (!bHide) gui.draw();
-	glDepthMask(true);
+//	glDepthMask(false);
+////	if (!bHide) gui.draw();
+//	if (!bHide) {
+//		  gui.draw();
+//		  if (bShowPhysicsGui) {
+//			  physicsGui.draw();
+//		  }
+//	  }
+//	glDepthMask(true);
 
 	cam.begin();
 
@@ -225,6 +238,17 @@ void ofApp::draw() {
 
 	ofPopMatrix();
 	cam.end();
+	
+	ofDisableDepthTest();
+	glDepthMask(false);
+	if (!bHide) {
+	 gui.draw();
+	if (bShowPhysicsGui) {
+		 physicsGui.draw();
+	 }
+	}
+
+	glDepthMask(true);
 }
 
 
@@ -308,12 +332,34 @@ void ofApp::keyPressed(int key) {
 	case OF_KEY_CONTROL:
 		bCtrlKeyDown = true;
 		break;
-	case OF_KEY_SHIFT:
-		break;
 	case OF_KEY_DEL:
 		break;
 	case 'x':
 		bResolvingCollision = true;
+		break;
+	case OF_KEY_UP:
+		bMoveForward = true;
+		break;
+	case OF_KEY_DOWN:
+		bMoveBackward = true;
+		break;
+	case OF_KEY_LEFT:
+		bMoveLeft = true;
+		break;
+	case OF_KEY_RIGHT:
+		bMoveRight = true;
+		break;
+	case 'q': // yaw left
+		bYawLeft = true;
+		break;
+	case 'e': // yaw right
+		bYawRight = true;
+		break;
+	case ' ':
+		bMoveUp = true;
+		break;
+	case OF_KEY_SHIFT:
+		bMoveDown = true;
 		break;
 	default:
 		break;
@@ -333,17 +379,37 @@ void ofApp::togglePointsDisplay() {
 }
 
 void ofApp::keyReleased(int key) {
-
 	switch (key) {
-	
+	case OF_KEY_UP:
+		bMoveForward = false;
+		break;
+	case OF_KEY_DOWN:
+		bMoveBackward = false;
+		break;
+	case OF_KEY_LEFT:
+		bMoveLeft = false;
+		break;
+	case OF_KEY_RIGHT:
+		bMoveRight = false;
+		break;
+	case 'q':
+		bYawLeft = false;
+		break;
+	case 'e':
+		bYawRight = false;
+		break;
+	case ' ':
+		bMoveUp = false;
+		break;
+	case OF_KEY_SHIFT:
+		bMoveDown = false;
+		break;
 	case OF_KEY_ALT:
 		cam.disableMouseInput();
 		bAltKeyDown = false;
 		break;
 	case OF_KEY_CONTROL:
 		bCtrlKeyDown = false;
-		break;
-	case OF_KEY_SHIFT:
 		break;
 	default:
 		break;
@@ -668,4 +734,76 @@ glm::vec3 ofApp::getMousePointOnPlane(glm::vec3 planePt, glm::vec3 planeNorm) {
 		return intersectPoint;
 	}
 	else return glm::vec3(0, 0, 0);
+}
+
+void ofApp::PhysicsDebugSetup() {
+	physicsGui.setup("Physics Debug");
+	physicsGui.setPosition(10, 220);
+
+	physicsGui.add(thrustSlider.setup("Thrust", 0.0f, 0.0f, 50.0f));
+	physicsGui.add(thrustMaxSlider.setup("Thrust Max", 20.0f, 0.0f, 100.0f));
+	physicsGui.add(dampingSlider.setup("Linear Damping", 0.99f, 0.80f, 1.0f));
+	physicsGui.add(massSlider.setup("Mass", 0.8f, 0.1f, 10.0f));
+
+//	physicsGui.add(angVelXSlider.setup("Ang Vel X", 0.0f, -180.0f, 180.0f));
+//	physicsGui.add(angVelYSlider.setup("Ang Vel Y", 0.0f, -180.0f, 180.0f));
+//	physicsGui.add(angVelZSlider.setup("Ang Vel Z", 0.0f, -180.0f, 180.0f));
+//
+//	physicsGui.add(torqueXSlider.setup("Torque X", 0.0f, -50.0f, 50.0f));
+//	physicsGui.add(torqueYSlider.setup("Torque Y", 0.0f, -50.0f, 50.0f));
+//	physicsGui.add(torqueZSlider.setup("Torque Z", 0.0f, -50.0f, 50.0f));
+
+	physicsGui.add(rotDampingSlider.setup("Rot Damping", 0.99f, 0.80f, 1.0f));
+}
+void ofApp::PhysicsUpdate() {
+
+	if (!bLanderLoaded) return;
+
+	lander.physics.damping           = static_cast<float>(dampingSlider);
+	lander.physics.mass              = static_cast<float>(massSlider);
+	lander.physics.rotationalDamping = static_cast<float>(rotDampingSlider);
+
+	// Gravity
+	glm::vec3 gravity(0, -1.62f * lander.physics.mass, 0);
+	lander.physics.addForce(gravity);
+//	if (!bGrounded) {
+//		cout << "Not grounded!" << endl;
+//		glm::vec3 gravity(0, -1.62f * lander.physics.mass, 0);
+//		lander.physics.addForce(gravity);
+//	}
+
+	// Direction basis from heading
+	glm::vec3 fwd  = lander.getForwardDir();
+	glm::vec3 right = lander.getRightDir();
+	glm::vec3 up    = lander.getUpDir();
+
+	float moveThrust = static_cast<float>(thrustSlider);
+
+	if (bMoveForward) {
+		lander.physics.addForce(fwd * moveThrust);
+	}
+	if (bMoveBackward) {
+		lander.physics.addForce(-fwd * moveThrust);
+	}
+	if (bMoveRight) {
+		lander.physics.addForce(right * moveThrust);
+	}
+	if (bMoveLeft) {
+		lander.physics.addForce(-right * moveThrust);
+	}
+	if (bMoveUp) {
+		lander.physics.addForce(up * moveThrust);
+	}
+	if (bMoveDown) {
+		lander.physics.addForce(-up * moveThrust);
+	}
+	float yawTorque = 30.0f;
+	if (bYawLeft) {
+		lander.physics.addTorque(glm::vec3(0, yawTorque, 0));   // +Y rotation
+	}
+	if (bYawRight) {
+		lander.physics.addTorque(glm::vec3(0, -yawTorque, 0));  // -Y rotation
+	}
+
+	lander.updatePhysics();
 }
