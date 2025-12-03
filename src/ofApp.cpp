@@ -51,8 +51,6 @@ void ofApp::setup(){
 
 	mars.setScaleNormalization(false);
 
-	// create sliders for testing
-	//
 	PhysicsDebugSetup();
 	gui.setup();
 	gui.add(numLevels.setup("Number of Octree Levels", 1, 1, 10));
@@ -767,7 +765,7 @@ void ofApp::PhysicsUpdate() {
 	glm::vec3 right = lander.getRightDir();
 	glm::vec3 up    = lander.getUpDir();
 
-	float moveThrust = static_cast<float>(thrustSlider); // or a fixed 10, etc.
+	float moveThrust = static_cast<float>(thrustSlider);
 
 	if (bMoveForward) {
 		lander.physics.addForce(fwd * moveThrust);
