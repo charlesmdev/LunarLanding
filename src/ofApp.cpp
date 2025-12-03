@@ -46,7 +46,8 @@ void ofApp::setup(){
 	//	mars.loadModel("geo/moon-houdini.obj");
 	//  mars.loadModel("geo/mars-low-5x-v2.obj");
 
-	mars.loadModel("geo/maya-moon-combined.obj");
+//	mars.loadModel("geo/maya-moon-combined.obj");
+	mars.loadModel("geo/dev-space-moon-ex-final.obj");
 
 
 	mars.setScaleNormalization(false);
@@ -122,15 +123,15 @@ void ofApp::draw() {
 	skybox.draw(0, 0, ofGetWidth(), ofGetHeight());
 	ofEnableDepthTest();
 
-	glDepthMask(false);
-//	if (!bHide) gui.draw();
-	if (!bHide) {
-		  gui.draw();
-		  if (bShowPhysicsGui) {
-			  physicsGui.draw();
-		  }
-	  }
-	glDepthMask(true);
+//	glDepthMask(false);
+////	if (!bHide) gui.draw();
+//	if (!bHide) {
+//		  gui.draw();
+//		  if (bShowPhysicsGui) {
+//			  physicsGui.draw();
+//		  }
+//	  }
+//	glDepthMask(true);
 
 	cam.begin();
 
@@ -237,6 +238,17 @@ void ofApp::draw() {
 
 	ofPopMatrix();
 	cam.end();
+	
+	ofDisableDepthTest();
+	glDepthMask(false);
+	if (!bHide) {
+	 gui.draw();
+	if (bShowPhysicsGui) {
+		 physicsGui.draw();
+	 }
+	}
+
+	glDepthMask(true);
 }
 
 
