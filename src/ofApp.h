@@ -124,4 +124,18 @@ class ofApp : public ofBaseApp{
 		bool bYawLeft = false;
 		bool bYawRight = false;
 
+
+		// tracking cam
+		ofCamera trackingCam;
+		bool useTrackingCam;
+
+		// landing zone cams
+		vector<glm::vec3> camPositions;
+
+		// cam indictator
+		int currentLandingCam = 0; // 0 = start, 123 = landing zones
+
+
+
+
 };
