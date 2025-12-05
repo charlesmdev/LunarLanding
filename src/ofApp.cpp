@@ -47,7 +47,8 @@ void ofApp::setup(){
 	//  mars.loadModel("geo/mars-low-5x-v2.obj");
 
 //	mars.loadModel("geo/maya-moon-combined.obj");
-	mars.loadModel("geo/dev-space-moon-ex-final.obj");
+
+	mars.loadModel("geo/dev-space-moon-alt-v2-final.obj");
 
 
 	mars.setScaleNormalization(false);
@@ -79,6 +80,24 @@ void ofApp::setup(){
 
 	// sky box
 	skybox.load("stars_dn.jpg");
+
+
+	// camera
+
+	// Example coordinates you got:
+	camPositions.push_back(glm::vec3(0, 50, 20)); // Landing Zone Start (default 0)
+	camPositions.push_back(glm::vec3(76.4916, 14.7818, 86.614)); // Landing Zone 1
+	camPositions.push_back(glm::vec3(-86.0892, 40.9025, -51.3489)); // Landing Zone 2
+	camPositions.push_back(glm::vec3(26.6946, 19.3444, -74.3588)); // Landing Zone 3
+	// camera 4 onward will use onboard
+	
+
+	trackingCam.setPosition(0, 50, 20); // Landing Center Start
+	trackingCam.lookAt(glm::vec3(0, 0, 0)); // initial target
+	trackingCam.setNearClip(0.1);
+	trackingCam.setFarClip(2000);
+
+
 
 }
  
@@ -114,12 +133,30 @@ void ofApp::update() {
 			colBoxList.clear();
 		}
 
+
+		// tracking camera
+		if (currentLandingCam < 4)
+		{
+			trackingCam.setPosition(camPositions[currentLandingCam]);
+			trackingCam.lookAt(lander.getPosition());
+		}
+		// onboard camera
+		else
+		{
+			glm::vec3 landerPos = lander.getPosition();
+			trackingCam.setPosition(landerPos + glm::vec3(0, 10, -8));
+			trackingCam.lookAt(landerPos + glm::vec3(0, 2, 0));
+		}
+		
+
+
 }
 //--------------------------------------------------------------
 void ofApp::draw() {
 
 
 	ofDisableDepthTest();
+	ofSetColor(255); // reset color
 	skybox.draw(0, 0, ofGetWidth(), ofGetHeight());
 	ofEnableDepthTest();
 
@@ -133,7 +170,15 @@ void ofApp::draw() {
 //	  }
 //	glDepthMask(true);
 
-	cam.begin();
+	
+
+	if (useTrackingCam) {
+		trackingCam.begin();
+	}
+
+	else{
+		cam.begin();
+	}
 
 
 
@@ -361,6 +406,22 @@ void ofApp::keyPressed(int key) {
 	case OF_KEY_SHIFT:
 		bMoveDown = true;
 		break;
+	case '`':
+		useTrackingCam = !useTrackingCam; // toggle tracking camera
+		break;
+	case '1':
+		currentLandingCam = 1;
+		break;
+	case '2':
+		currentLandingCam = 2;
+		break;
+	case '3':
+		currentLandingCam = 3;
+		break;
+	case '4':
+		currentLandingCam = 4;
+		break;
+
 	default:
 		break;
 	}
@@ -463,6 +524,11 @@ void ofApp::mousePressed(int x, int y, int button) {
 		ofVec3f p;
 		raySelectWithOctree(p);
 	}
+
+	// debug print to find some coords
+	glm::vec3 mouseWorld = cam.screenToWorld(glm::vec3(x, y, 0));
+	cout << "Clicked world coords: " << mouseWorld << endl;
+
 }
 
 bool ofApp::raySelectWithOctree(ofVec3f &pointRet) {
@@ -626,7 +692,7 @@ void ofApp::dragEvent2(ofDragInfo dragInfo) {
 
 	ofVec3f point;
 	mouseIntersectPlane(ofVec3f(0, 0, 0), cam.getZAxis(), point);
-	if (lander.loadModel(dragInfo.files[0])) {
+	if (lander.loadModel(dragInfo.files[0].string())) {
 		lander.setScaleNormalization(false);
 //		lander.setScale(.1, .1, .1);
 	//	lander.setPosition(point.x, point.y, point.z);
@@ -656,7 +722,7 @@ bool ofApp::mouseIntersectPlane(ofVec3f planePoint, ofVec3f planeNorm, ofVec3f &
 // model is dropped in viewport, place origin under cursor
 //
 void ofApp::dragEvent(ofDragInfo dragInfo) {
-	if (lander.loadModel(dragInfo.files[0])) {
+	if (lander.loadModel(dragInfo.files[0].string())) {
 		bLanderLoaded = true;
 		lander.setScaleNormalization(false);
 		lander.setPosition(0, 0, 0);
