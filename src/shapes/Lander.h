@@ -52,6 +52,9 @@ public:
 	float fuelBurnRate = 5.0f;
 
 	bool hasFuel() const { return fuel > 0.0f; }
+	
+	// For collision Bounce/impulse force.
+	float restitution = 0.3f;
 
 private:
 	ofxAssimpModelLoader model;

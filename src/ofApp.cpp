@@ -118,16 +118,30 @@ void ofApp::update() {
 		octree.intersect(bounds, octree.root, colBoxList);
 	
 		if (!colBoxList.empty()) {
-			// Simple resolution: push up and stop vertical velocity
-			glm::vec3 pos = lander.getPosition();
-			if (lander.physics.vel.y < 0.0f) {
-				pos.y += 0.01f;                 // small bump up
+//			// Simple resolution: push up and stop vertical velocity
+//			glm::vec3 pos = lander.getPosition();
+//			if (lander.physics.vel.y < 0.0f) {
+//				pos.y += 0.01f;                 // small bump up
+//				lander.setPosition(pos.x, pos.y, pos.z);
+//				lander.physics.vel.y = 0.0f;    // stop falling
+//			}
+//			//		lander.physics.vel.y = 0.0f;
+//			//		bGrounded = true;
+//			//		cout << "bGrounded = true!" << endl;
+			glm::vec3 n(0, 1, 0);
+			float vRel = glm::dot(lander.physics.vel, n);
+			if (vRel < 0.0f) {
+				// Adds an impulse force on collision for lander, this is hard coded unfortunately :(
+				float e = lander.restitution;
+				float vRelAfter = -e * vRel;
+				float deltaV    = vRelAfter - vRel;
+				float j = lander.physics.mass * deltaV;
+				
+				lander.physics.vel += (j / lander.physics.mass) * n;
+				glm::vec3 pos = lander.getPosition();
+				pos += n * 0.01f;
 				lander.setPosition(pos.x, pos.y, pos.z);
-				lander.physics.vel.y = 0.0f;    // stop falling
 			}
-			//		lander.physics.vel.y = 0.0f;
-			//		bGrounded = true;
-			//		cout << "bGrounded = true!" << endl;
 		} else {
 //			bGrounded = false;
 			colBoxList.clear();
@@ -858,6 +872,8 @@ void ofApp::PhysicsDebugSetup() {
 	
 	physicsGui.add(fuelMaxSlider.setup("Fuel Max", 100.0f, 0.0f, 500.0f));
 	physicsGui.add(fuelSlider.setup("Fuel",       100.0f, 0.0f, 500.0f));
+	
+	physicsGui.add(restitutionSlider.setup("Restitution", 0.3f, 0.0f, 1.0f));
 }
 void ofApp::PhysicsUpdate() {
 
@@ -869,6 +885,9 @@ void ofApp::PhysicsUpdate() {
 	lander.physics.damping           = static_cast<float>(dampingSlider);
 	lander.physics.mass              = static_cast<float>(massSlider);
 	lander.physics.rotationalDamping = static_cast<float>(rotDampingSlider);
+	
+	lander.restitution = (float)restitutionSlider;
+
 
 	// Gravity
 	glm::vec3 gravity(0, -1.62f * lander.physics.mass, 0);

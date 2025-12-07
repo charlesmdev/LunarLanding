@@ -154,5 +154,8 @@ class ofApp : public ofBaseApp{
 	
 		ofxFloatSlider fuelSlider;
 		ofxFloatSlider fuelMaxSlider;
+	
+		ofxFloatSlider restitutionSlider;
+
 
 };
