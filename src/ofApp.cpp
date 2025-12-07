@@ -82,9 +82,9 @@ void ofApp::setup(){
 	skybox.load("stars_dn.jpg");
 
 
-	// camera
+	// Camera
 
-	// Example coordinates you got:
+	// camera coordinates for landing zones
 	camPositions.push_back(glm::vec3(0, 50, 20)); // Landing Zone Start (default 0)
 	camPositions.push_back(glm::vec3(76.4916, 14.7818, 86.614)); // Landing Zone 1
 	camPositions.push_back(glm::vec3(-86.0892, 40.9025, -51.3489)); // Landing Zone 2
@@ -99,6 +99,7 @@ void ofApp::setup(){
 
 	// Lighting
 
+	// Environmental lighting
 	keyLight.setup();
 	keyLight.enable();
 	keyLight.setAmbientColor(ofFloatColor(0.1, 0.1, 0.1));
@@ -108,7 +109,7 @@ void ofApp::setup(){
 	keyLight.setPosition(0, 40, 0);
 
 
-
+	// Landing Zone 1
 	keyLight1.setup();
 	keyLight1.enable();
 	keyLight1.setSpotlight();
@@ -117,7 +118,7 @@ void ofApp::setup(){
 	keyLight1.setDiffuseColor(ofFloatColor(1, 1, 1));
 	keyLight1.setSpecularColor(ofFloatColor(1, 1, 1));
 	keyLight1.rotate(-90, ofVec3f(1, 0, 0));
-	keyLight1.setPosition(32.226, 25, 45.588);
+	keyLight1.setPosition(32.226, 25, 45.588); // NOTE: Use this position to get the coords for landing zone 1
 
 	fillLight1.setup();
 	fillLight1.enable();
@@ -129,6 +130,8 @@ void ofApp::setup(){
 	fillLight1.setPosition(32.226, 25, 45.588);
 	fillLight1.lookAt(glm::vec3(32.226, 25, 45.588));
 
+
+	// Landing Zone 2
 	keyLight2.setup();
 	keyLight2.enable();
 	keyLight2.setSpotlight();
@@ -137,7 +140,7 @@ void ofApp::setup(){
 	keyLight2.setDiffuseColor(ofFloatColor(1, 1, 1));
 	keyLight2.setSpecularColor(ofFloatColor(1, 1, 1));
 	keyLight2.rotate(-90, ofVec3f(1, 0, 0));
-	keyLight2.setPosition(-62.6381, 50, -33.1133);
+	keyLight2.setPosition(-62.6381, 50, -33.1133); // NOTE: Use this position to get the coords for landing zone 2
 
 	fillLight2.setup();
 	fillLight2.enable();
@@ -149,6 +152,8 @@ void ofApp::setup(){
 	fillLight2.setPosition(-62.6381, 50, -33.1133);
 	fillLight2.lookAt(glm::vec3(-62.6381, 50, -33.1133));
 
+
+	// Landing Zone 3
 	keyLight3.setup();
 	keyLight3.enable();
 	keyLight3.setSpotlight();
@@ -157,7 +162,7 @@ void ofApp::setup(){
 	keyLight3.setDiffuseColor(ofFloatColor(1, 1, 1));
 	keyLight3.setSpecularColor(ofFloatColor(1, 1, 1));
 	keyLight3.rotate(-90, ofVec3f(1, 0, 0));
-	keyLight3.setPosition(40, 19.3444, -60.3588);
+	keyLight3.setPosition(40, 19.3444, -60.3588); // NOTE: Use this position to get the coords for landing zone 3
 
 	fillLight3.setup();
 	fillLight3.enable();
@@ -169,7 +174,7 @@ void ofApp::setup(){
 	fillLight3.setPosition(46.6946, 19.3444, -74.3588);
 	fillLight3.lookAt(glm::vec3(-86.0892, 40.9025, -20.3489));
 
-
+	// Lander light
 	landerLight.setup();
 	landerLight.enable();
 	landerLight.setPointLight(); 
@@ -239,9 +244,10 @@ void ofApp::update() {
 			trackingCam.setPosition(landerPos + glm::vec3(0, 10, -8));
 			trackingCam.lookAt(landerPos + glm::vec3(0, 2, 0));
 		}
+
 		// lander light
 		glm::vec3 landerPos = lander.getPosition();
-		landerLight.setPosition(landerPos + glm::vec3(0, 5, 0)); // 5 units above
+		landerLight.setPosition(landerPos + glm::vec3(0, 5, 0)); // offset above lander
 
 		updateAltitudeTelemetry();
 
@@ -278,13 +284,19 @@ void ofApp::draw() {
 	}
 
 	// draw lighting
+	// NOTE: only uncomment thisif you want to see the physical light
+
 	/*keyLight.draw();*/
 
 	/*keyLight1.draw();
 	fillLight1.draw();
 
 	keyLight2.draw();
-	fillLight2.draw();*/
+	fillLight2.draw();
+
+	keyLight3.draw();
+	fillLight3.draw();
+	*/
 	
 
 
