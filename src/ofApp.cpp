@@ -148,6 +148,7 @@ void ofApp::update() {
 			trackingCam.lookAt(landerPos + glm::vec3(0, 2, 0));
 		}
 		
+		updateAltitudeTelemetry();
 
 
 }
@@ -280,12 +281,30 @@ void ofApp::draw() {
 		ofSetColor(ofColor::lightGreen);
 		ofDrawSphere(p, .02 * d.length());
 	}
+	
+	if (bShowAltitudeRay && hasAltitudeHit) {
+		ofSetColor(ofColor::yellow);
+		ofSetLineWidth(2.0f);
+
+		glm::vec3 p0(altitudeRayOrigin.x(),
+					 altitudeRayOrigin.y(),
+					 altitudeRayOrigin.z());
+
+		glm::vec3 p1(altitudeRayOrigin.x(),
+					 altitudeGroundY,
+					 altitudeRayOrigin.z());
+
+		ofDrawLine(p0, p1);
+	}
 
 	ofPopMatrix();
 	cam.end();
 	
 	ofDisableDepthTest();
 	glDepthMask(false);
+	
+	drawAltitudeTelemetry();
+	
 	if (!bHide) {
 	 gui.draw();
 	if (bShowPhysicsGui) {
@@ -421,7 +440,14 @@ void ofApp::keyPressed(int key) {
 	case '4':
 		currentLandingCam = 4;
 		break;
-
+	case 'a':
+		bShowAltitudeHUD = !bShowAltitudeHUD;
+		cout << "Altitude HUD: " << (bShowAltitude ? "ON" : "OFF") << endl;
+		break;
+	case 'z':   
+		bShowAltitudeRay = !bShowAltitudeRay;
+		cout << "Altitude Ray: " << (bShowAltitudeRay ? "ON" : "OFF") << endl;
+		break;
 	default:
 		break;
 	}
@@ -872,4 +898,40 @@ void ofApp::PhysicsUpdate() {
 	}
 
 	lander.updatePhysics();
+}
+
+void ofApp::updateAltitudeTelemetry() {
+	hasAltitudeHit = false;
+	altitudeAGL    = 0.0f;
+
+	if (!bLanderLoaded) return;
+
+	glm::vec3 landerPos = lander.getPosition();
+	altitudeRayOrigin = Vector3(landerPos.x, landerPos.y + 0.1f, landerPos.z);
+	altitudeRayDir    = Vector3(0.0f, -1.0f, 0.0f);
+	Ray ray(altitudeRayOrigin, altitudeRayDir);
+
+	TreeNode hitNode;
+	bool hit = octree.intersect(ray, octree.root, hitNode);
+	if (hit) {
+		hasAltitudeHit  = true;
+		const Box &box  = hitNode.box;
+		altitudeGroundY = box.max().y();
+		altitudeAGL     = altitudeRayOrigin.y() - altitudeGroundY;
+	}
+}
+
+void ofApp::drawAltitudeTelemetry() {
+	ofDisableDepthTest();
+
+	if (bShowAltitudeHUD) {
+		ofSetColor(255);
+		std::string msg;
+		if (hasAltitudeHit) {
+			msg = "Altitude (AGL): " + ofToString(altitudeAGL, 2) + " m";
+		} else {
+			msg = "Altitude (AGL): N/A";
+		}
+		ofDrawBitmapStringHighlight(msg, 20, 20);
+	}
 }
