@@ -148,7 +148,8 @@ class ofApp : public ofBaseApp{
 		
 		bool  bShowAltitudeHUD  = false;  // text
 		bool  bShowAltitudeRay  = false;  // line
-
-
+		
+		bool thrusterActivated = false;
+		void drawFuel();
 
 };
