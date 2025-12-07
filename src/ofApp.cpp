@@ -196,16 +196,30 @@ void ofApp::update() {
 		octree.intersect(bounds, octree.root, colBoxList);
 	
 		if (!colBoxList.empty()) {
-			// Simple resolution: push up and stop vertical velocity
-			glm::vec3 pos = lander.getPosition();
-			if (lander.physics.vel.y < 0.0f) {
-				pos.y += 0.01f;                 // small bump up
+//			// Simple resolution: push up and stop vertical velocity
+//			glm::vec3 pos = lander.getPosition();
+//			if (lander.physics.vel.y < 0.0f) {
+//				pos.y += 0.01f;                 // small bump up
+//				lander.setPosition(pos.x, pos.y, pos.z);
+//				lander.physics.vel.y = 0.0f;    // stop falling
+//			}
+//			//		lander.physics.vel.y = 0.0f;
+//			//		bGrounded = true;
+//			//		cout << "bGrounded = true!" << endl;
+			glm::vec3 n(0, 1, 0);
+			float vRel = glm::dot(lander.physics.vel, n);
+			if (vRel < 0.0f) {
+				// Adds an impulse force on collision for lander, this is hard coded unfortunately :(
+				float e = lander.restitution;
+				float vRelAfter = -e * vRel;
+				float deltaV    = vRelAfter - vRel;
+				float j = lander.physics.mass * deltaV;
+				
+				lander.physics.vel += (j / lander.physics.mass) * n;
+				glm::vec3 pos = lander.getPosition();
+				pos += n * 0.01f;
 				lander.setPosition(pos.x, pos.y, pos.z);
-				lander.physics.vel.y = 0.0f;    // stop falling
 			}
-			//		lander.physics.vel.y = 0.0f;
-			//		bGrounded = true;
-			//		cout << "bGrounded = true!" << endl;
 		} else {
 //			bGrounded = false;
 			colBoxList.clear();
@@ -225,11 +239,12 @@ void ofApp::update() {
 			trackingCam.setPosition(landerPos + glm::vec3(0, 10, -8));
 			trackingCam.lookAt(landerPos + glm::vec3(0, 2, 0));
 		}
-
 		// lander light
 		glm::vec3 landerPos = lander.getPosition();
 		landerLight.setPosition(landerPos + glm::vec3(0, 5, 0)); // 5 units above
-		
+
+		updateAltitudeTelemetry();
+
 
 }
 //--------------------------------------------------------------
@@ -373,12 +388,31 @@ void ofApp::draw() {
 		ofSetColor(ofColor::lightGreen);
 		ofDrawSphere(p, .02 * d.length());
 	}
+	
+	if (bShowAltitudeRay && hasAltitudeHit) {
+		ofSetColor(ofColor::yellow);
+		ofSetLineWidth(2.0f);
+
+		glm::vec3 p0(altitudeRayOrigin.x(),
+					 altitudeRayOrigin.y(),
+					 altitudeRayOrigin.z());
+
+		glm::vec3 p1(altitudeRayOrigin.x(),
+					 altitudeGroundY,
+					 altitudeRayOrigin.z());
+
+		ofDrawLine(p0, p1);
+	}
 
 	ofPopMatrix();
 	cam.end();
 	
 	ofDisableDepthTest();
 	glDepthMask(false);
+	
+	drawAltitudeTelemetry();
+	drawFuel();
+	
 	if (!bHide) {
 	 gui.draw();
 	if (bShowPhysicsGui) {
@@ -480,27 +514,35 @@ void ofApp::keyPressed(int key) {
 		break;
 	case OF_KEY_UP:
 		bMoveForward = true;
+		thrusterActivated = true;
 		break;
 	case OF_KEY_DOWN:
 		bMoveBackward = true;
+		thrusterActivated = true;
 		break;
 	case OF_KEY_LEFT:
 		bMoveLeft = true;
+		thrusterActivated = true;
 		break;
 	case OF_KEY_RIGHT:
 		bMoveRight = true;
+		thrusterActivated = true;
 		break;
-	case 'q': // yaw left
+	case 'q':
 		bYawLeft = true;
+		thrusterActivated = true;
 		break;
-	case 'e': // yaw right
+	case 'e':
 		bYawRight = true;
+		thrusterActivated = true;
 		break;
 	case ' ':
 		bMoveUp = true;
+		thrusterActivated = true;
 		break;
 	case OF_KEY_SHIFT:
 		bMoveDown = true;
+		thrusterActivated = true;
 		break;
 	case '`':
 		useTrackingCam = !useTrackingCam; // toggle tracking camera
@@ -517,7 +559,14 @@ void ofApp::keyPressed(int key) {
 	case '4':
 		currentLandingCam = 4;
 		break;
-
+	case 'a':
+		bShowAltitudeHUD = !bShowAltitudeHUD;
+		cout << "Altitude HUD: " << (bShowAltitude ? "ON" : "OFF") << endl;
+		break;
+	case 'z':   
+		bShowAltitudeRay = !bShowAltitudeRay;
+		cout << "Altitude Ray: " << (bShowAltitudeRay ? "ON" : "OFF") << endl;
+		break;
 	default:
 		break;
 	}
@@ -924,14 +973,25 @@ void ofApp::PhysicsDebugSetup() {
 //	physicsGui.add(torqueZSlider.setup("Torque Z", 0.0f, -50.0f, 50.0f));
 
 	physicsGui.add(rotDampingSlider.setup("Rot Damping", 0.99f, 0.80f, 1.0f));
+	
+	physicsGui.add(fuelMaxSlider.setup("Fuel Max", 100.0f, 0.0f, 500.0f));
+	physicsGui.add(fuelSlider.setup("Fuel",       100.0f, 0.0f, 500.0f));
+	
+	physicsGui.add(restitutionSlider.setup("Restitution", 0.3f, 0.0f, 1.0f));
 }
 void ofApp::PhysicsUpdate() {
 
 	if (!bLanderLoaded) return;
+	
+	lander.fuelMax = (float)fuelMaxSlider;
+	lander.fuel = ofClamp((float)fuelSlider, 0.0f, lander.fuelMax);
 
 	lander.physics.damping           = static_cast<float>(dampingSlider);
 	lander.physics.mass              = static_cast<float>(massSlider);
 	lander.physics.rotationalDamping = static_cast<float>(rotDampingSlider);
+	
+	lander.restitution = (float)restitutionSlider;
+
 
 	// Gravity
 	glm::vec3 gravity(0, -1.62f * lander.physics.mass, 0);
@@ -948,32 +1008,103 @@ void ofApp::PhysicsUpdate() {
 	glm::vec3 up    = lander.getUpDir();
 
 	float moveThrust = static_cast<float>(thrustSlider);
+	
+	bool thrustersRequested =
+			bMoveForward || bMoveBackward ||
+			bMoveRight   || bMoveLeft     ||
+			bMoveUp      || bMoveDown     ||
+			bYawLeft     || bYawRight;
 
-	if (bMoveForward) {
-		lander.physics.addForce(fwd * moveThrust);
+	bool thrustersActive = thrustersRequested && lander.hasFuel();
+
+	if (thrustersActive) {
+		if (bMoveForward) {
+			lander.physics.addForce(fwd * moveThrust);
+		}
+		if (bMoveBackward) {
+			lander.physics.addForce(-fwd * moveThrust);
+		}
+		if (bMoveRight) {
+			lander.physics.addForce(right * moveThrust);
+		}
+		if (bMoveLeft) {
+			lander.physics.addForce(-right * moveThrust);
+		}
+		if (bMoveUp) {
+			lander.physics.addForce(up * moveThrust);
+		}
+		if (bMoveDown) {
+			lander.physics.addForce(-up * moveThrust);
+		}
+		float yawTorque = 30.0f;
+		if (bYawLeft) {
+			lander.physics.addTorque(glm::vec3(0, yawTorque, 0));   // +Y rotation
+		}
+		if (bYawRight) {
+			lander.physics.addTorque(glm::vec3(0, -yawTorque, 0));  // -Y rotation
+		}
+		
+	  float dt = ofGetLastFrameTime();  // seconds
+	  float thrustFactor = moveThrust / std::max(0.01f, (float)thrustMaxSlider);
+	  float burn = lander.fuelBurnRate * thrustFactor * dt;
+	  lander.fuel = std::max(0.0f, lander.fuel - burn);
 	}
-	if (bMoveBackward) {
-		lander.physics.addForce(-fwd * moveThrust);
-	}
-	if (bMoveRight) {
-		lander.physics.addForce(right * moveThrust);
-	}
-	if (bMoveLeft) {
-		lander.physics.addForce(-right * moveThrust);
-	}
-	if (bMoveUp) {
-		lander.physics.addForce(up * moveThrust);
-	}
-	if (bMoveDown) {
-		lander.physics.addForce(-up * moveThrust);
-	}
-	float yawTorque = 30.0f;
-	if (bYawLeft) {
-		lander.physics.addTorque(glm::vec3(0, yawTorque, 0));   // +Y rotation
-	}
-	if (bYawRight) {
-		lander.physics.addTorque(glm::vec3(0, -yawTorque, 0));  // -Y rotation
-	}
+	
+	fuelSlider = lander.fuel;
 
 	lander.updatePhysics();
+}
+
+void ofApp::updateAltitudeTelemetry() {
+	hasAltitudeHit = false;
+	altitudeAGL    = 0.0f;
+
+	if (!bLanderLoaded) return;
+
+	glm::vec3 landerPos = lander.getPosition();
+	altitudeRayOrigin = Vector3(landerPos.x, landerPos.y + 0.1f, landerPos.z);
+	altitudeRayDir    = Vector3(0.0f, -1.0f, 0.0f);
+	Ray ray(altitudeRayOrigin, altitudeRayDir);
+
+	TreeNode hitNode;
+	bool hit = octree.intersect(ray, octree.root, hitNode);
+	if (hit) {
+		hasAltitudeHit  = true;
+		const Box &box  = hitNode.box;
+		altitudeGroundY = box.max().y();
+		altitudeAGL     = altitudeRayOrigin.y() - altitudeGroundY;
+	}
+}
+
+void ofApp::drawAltitudeTelemetry() {
+	ofDisableDepthTest();
+
+	if (bShowAltitudeHUD) {
+		ofSetColor(255);
+		std::string msg;
+		if (hasAltitudeHit) {
+			msg = "Altitude (AGL): " + ofToString(altitudeAGL, 2) + " m";
+		} else {
+			msg = "Altitude (AGL): N/A";
+		}
+		ofDrawBitmapStringHighlight(msg, 20, 20);
+	}
+}
+
+void ofApp::drawFuel() {
+	if (!bShowAltitudeHUD) return;  // same toggle as altitude HUD
+
+	ofSetColor(255);
+
+	float fuelPct = 0.0f;
+	if (lander.fuelMax > 0.0f) {
+		fuelPct = (lander.fuel / lander.fuelMax) * 100.0f;
+	}
+
+	std::string fuelMsg =
+		"Fuel: " + ofToString(lander.fuel, 1) +
+		" (" + ofToString(fuelPct, 0) + "%)";
+
+	// Draw under altitude text
+	ofDrawBitmapStringHighlight(fuelMsg, 20, 40);
 }

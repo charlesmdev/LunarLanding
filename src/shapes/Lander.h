@@ -46,6 +46,15 @@ public:
 	glm::vec3 getForwardDir() const;
 	glm::vec3 getRightDir()   const;
 	glm::vec3 getUpDir()      const;
+	
+	float fuel       = 100.0f;
+	float fuelMax    = 100.0f;
+	float fuelBurnRate = 5.0f;
+
+	bool hasFuel() const { return fuel > 0.0f; }
+	
+	// For collision Bounce/impulse force.
+	float restitution = 0.3f;
 
 private:
 	ofxAssimpModelLoader model;

@@ -136,6 +136,28 @@ class ofApp : public ofBaseApp{
 		int currentLandingCam = 0; // 0 = start, 123 = landing zones
 
 
+		// Telemetry
+		bool bShowAltitude = false;
+		float altitudeAGL = 0.0f;
+		bool hasAltitudeHit = false;
+		void updateAltitudeTelemetry();
+		void drawAltitudeTelemetry();
+
+		Vector3 altitudeRayOrigin;
+		Vector3 altitudeRayDir;
+		float  altitudeGroundY = 0.0f;
+
+		bool  bShowAltitudeHUD = true;  // text
+		bool  bShowAltitudeRay = false;  // line
+
+		bool thrusterActivated = false;
+		void drawFuel();
+
+		ofxFloatSlider fuelSlider;
+		ofxFloatSlider fuelMaxSlider;
+
+		ofxFloatSlider restitutionSlider;
+
 		// lighting
 
 		ofxPanel keyGui;
