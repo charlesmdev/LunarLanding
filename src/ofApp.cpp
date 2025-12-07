@@ -148,6 +148,7 @@ void ofApp::update() {
 			trackingCam.lookAt(landerPos + glm::vec3(0, 2, 0));
 		}
 		
+		updateAltitudeTelemetry();
 
 
 }
@@ -286,6 +287,9 @@ void ofApp::draw() {
 	
 	ofDisableDepthTest();
 	glDepthMask(false);
+	
+	drawAltitudeTelemetry();
+	
 	if (!bHide) {
 	 gui.draw();
 	if (bShowPhysicsGui) {
@@ -421,7 +425,10 @@ void ofApp::keyPressed(int key) {
 	case '4':
 		currentLandingCam = 4;
 		break;
-
+	case 'a':
+		bShowAltitude = !bShowAltitude;
+		cout << "Altitude HUD: " << (bShowAltitude ? "ON" : "OFF") << endl;
+		break;
 	default:
 		break;
 	}
@@ -872,4 +879,38 @@ void ofApp::PhysicsUpdate() {
 	}
 
 	lander.updatePhysics();
+}
+
+void ofApp::updateAltitudeTelemetry() {
+	hasAltitudeHit = false;
+	altitudeAGL    = 0.0f;
+	if (bLanderLoaded && bShowAltitude) {
+		glm::vec3 landerPos = lander.getPosition();
+		Vector3 origin(landerPos.x, landerPos.y + 0.1f, landerPos.z);
+		Vector3 dir(0.0f, -1.0f, 0.0f);
+		Ray ray(origin, dir);
+		TreeNode hitNode;
+		bool hit = octree.intersect(ray, octree.root, hitNode);
+		if (hit) {
+			hasAltitudeHit = true;
+			const Box &box = hitNode.box;
+			float groundY = box.max().y();
+			altitudeAGL = origin.y() - groundY;
+		}
+	}
+}
+
+void ofApp::drawAltitudeTelemetry() {
+	ofDisableDepthTest();
+
+	if (bShowAltitude) {
+		ofSetColor(255);
+		std::string msg;
+		if (hasAltitudeHit) {
+			msg = "Altitude (AGL): " + ofToString(altitudeAGL, 2) + " m";
+		} else {
+			msg = "Altitude (AGL): N/A";
+		}
+		ofDrawBitmapStringHighlight(msg, 20, 20);
+	}
 }

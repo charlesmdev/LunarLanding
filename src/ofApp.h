@@ -135,7 +135,12 @@ class ofApp : public ofBaseApp{
 		// cam indictator
 		int currentLandingCam = 0; // 0 = start, 123 = landing zones
 
-
+		// Telemetry
+		bool bShowAltitude = false;
+		float altitudeAGL = 0.0f;
+		bool hasAltitudeHit = false;
+		void updateAltitudeTelemetry();
+		void drawAltitudeTelemetry();
 
 
 };
