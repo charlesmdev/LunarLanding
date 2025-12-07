@@ -136,6 +136,19 @@ class ofApp : public ofBaseApp{
 		int currentLandingCam = 0; // 0 = start, 123 = landing zones
 
 
+		// lighting
+
+		ofxPanel keyGui;
+
+		ofLight keyLight, fillLight, rimLight; // environment light
+
+		ofLight keyLight1, fillLight1, rimLight1; // landing zone 1
+
+		ofLight keyLight2, fillLight2, rimLight2; // landing zone 2
+
+		ofLight keyLight3, fillLight3, rimLight3; // landing zone 2
+
+		ofLight landerLight;
 
 
 };
