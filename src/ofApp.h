@@ -146,10 +146,13 @@ class ofApp : public ofBaseApp{
 		Vector3 altitudeRayDir;
 		float  altitudeGroundY = 0.0f;
 		
-		bool  bShowAltitudeHUD  = false;  // text
+		bool  bShowAltitudeHUD  = true;  // text
 		bool  bShowAltitudeRay  = false;  // line
 		
 		bool thrusterActivated = false;
 		void drawFuel();
+	
+		ofxFloatSlider fuelSlider;
+		ofxFloatSlider fuelMaxSlider;
 
 };

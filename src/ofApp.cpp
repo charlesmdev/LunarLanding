@@ -855,10 +855,16 @@ void ofApp::PhysicsDebugSetup() {
 //	physicsGui.add(torqueZSlider.setup("Torque Z", 0.0f, -50.0f, 50.0f));
 
 	physicsGui.add(rotDampingSlider.setup("Rot Damping", 0.99f, 0.80f, 1.0f));
+	
+	physicsGui.add(fuelMaxSlider.setup("Fuel Max", 100.0f, 0.0f, 500.0f));
+	physicsGui.add(fuelSlider.setup("Fuel",       100.0f, 0.0f, 500.0f));
 }
 void ofApp::PhysicsUpdate() {
 
 	if (!bLanderLoaded) return;
+	
+	lander.fuelMax = (float)fuelMaxSlider;
+	lander.fuel = ofClamp((float)fuelSlider, 0.0f, lander.fuelMax);
 
 	lander.physics.damping           = static_cast<float>(dampingSlider);
 	lander.physics.mass              = static_cast<float>(massSlider);
@@ -920,6 +926,8 @@ void ofApp::PhysicsUpdate() {
 	  float burn = lander.fuelBurnRate * thrustFactor * dt;
 	  lander.fuel = std::max(0.0f, lander.fuel - burn);
 	}
+	
+	fuelSlider = lander.fuel;
 
 	lander.updatePhysics();
 }
