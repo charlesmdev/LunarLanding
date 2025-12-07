@@ -304,6 +304,7 @@ void ofApp::draw() {
 	glDepthMask(false);
 	
 	drawAltitudeTelemetry();
+	drawFuel();
 	
 	if (!bHide) {
 	 gui.draw();
@@ -403,27 +404,35 @@ void ofApp::keyPressed(int key) {
 		break;
 	case OF_KEY_UP:
 		bMoveForward = true;
+		thrusterActivated = true;
 		break;
 	case OF_KEY_DOWN:
 		bMoveBackward = true;
+		thrusterActivated = true;
 		break;
 	case OF_KEY_LEFT:
 		bMoveLeft = true;
+		thrusterActivated = true;
 		break;
 	case OF_KEY_RIGHT:
 		bMoveRight = true;
+		thrusterActivated = true;
 		break;
-	case 'q': // yaw left
+	case 'q':
 		bYawLeft = true;
+		thrusterActivated = true;
 		break;
-	case 'e': // yaw right
+	case 'e':
 		bYawRight = true;
+		thrusterActivated = true;
 		break;
 	case ' ':
 		bMoveUp = true;
+		thrusterActivated = true;
 		break;
 	case OF_KEY_SHIFT:
 		bMoveDown = true;
+		thrusterActivated = true;
 		break;
 	case '`':
 		useTrackingCam = !useTrackingCam; // toggle tracking camera
@@ -846,10 +855,16 @@ void ofApp::PhysicsDebugSetup() {
 //	physicsGui.add(torqueZSlider.setup("Torque Z", 0.0f, -50.0f, 50.0f));
 
 	physicsGui.add(rotDampingSlider.setup("Rot Damping", 0.99f, 0.80f, 1.0f));
+	
+	physicsGui.add(fuelMaxSlider.setup("Fuel Max", 100.0f, 0.0f, 500.0f));
+	physicsGui.add(fuelSlider.setup("Fuel",       100.0f, 0.0f, 500.0f));
 }
 void ofApp::PhysicsUpdate() {
 
 	if (!bLanderLoaded) return;
+	
+	lander.fuelMax = (float)fuelMaxSlider;
+	lander.fuel = ofClamp((float)fuelSlider, 0.0f, lander.fuelMax);
 
 	lander.physics.damping           = static_cast<float>(dampingSlider);
 	lander.physics.mass              = static_cast<float>(massSlider);
@@ -870,32 +885,49 @@ void ofApp::PhysicsUpdate() {
 	glm::vec3 up    = lander.getUpDir();
 
 	float moveThrust = static_cast<float>(thrustSlider);
+	
+	bool thrustersRequested =
+			bMoveForward || bMoveBackward ||
+			bMoveRight   || bMoveLeft     ||
+			bMoveUp      || bMoveDown     ||
+			bYawLeft     || bYawRight;
 
-	if (bMoveForward) {
-		lander.physics.addForce(fwd * moveThrust);
+	bool thrustersActive = thrustersRequested && lander.hasFuel();
+
+	if (thrustersActive) {
+		if (bMoveForward) {
+			lander.physics.addForce(fwd * moveThrust);
+		}
+		if (bMoveBackward) {
+			lander.physics.addForce(-fwd * moveThrust);
+		}
+		if (bMoveRight) {
+			lander.physics.addForce(right * moveThrust);
+		}
+		if (bMoveLeft) {
+			lander.physics.addForce(-right * moveThrust);
+		}
+		if (bMoveUp) {
+			lander.physics.addForce(up * moveThrust);
+		}
+		if (bMoveDown) {
+			lander.physics.addForce(-up * moveThrust);
+		}
+		float yawTorque = 30.0f;
+		if (bYawLeft) {
+			lander.physics.addTorque(glm::vec3(0, yawTorque, 0));   // +Y rotation
+		}
+		if (bYawRight) {
+			lander.physics.addTorque(glm::vec3(0, -yawTorque, 0));  // -Y rotation
+		}
+		
+	  float dt = ofGetLastFrameTime();  // seconds
+	  float thrustFactor = moveThrust / std::max(0.01f, (float)thrustMaxSlider);
+	  float burn = lander.fuelBurnRate * thrustFactor * dt;
+	  lander.fuel = std::max(0.0f, lander.fuel - burn);
 	}
-	if (bMoveBackward) {
-		lander.physics.addForce(-fwd * moveThrust);
-	}
-	if (bMoveRight) {
-		lander.physics.addForce(right * moveThrust);
-	}
-	if (bMoveLeft) {
-		lander.physics.addForce(-right * moveThrust);
-	}
-	if (bMoveUp) {
-		lander.physics.addForce(up * moveThrust);
-	}
-	if (bMoveDown) {
-		lander.physics.addForce(-up * moveThrust);
-	}
-	float yawTorque = 30.0f;
-	if (bYawLeft) {
-		lander.physics.addTorque(glm::vec3(0, yawTorque, 0));   // +Y rotation
-	}
-	if (bYawRight) {
-		lander.physics.addTorque(glm::vec3(0, -yawTorque, 0));  // -Y rotation
-	}
+	
+	fuelSlider = lander.fuel;
 
 	lander.updatePhysics();
 }
@@ -934,4 +966,22 @@ void ofApp::drawAltitudeTelemetry() {
 		}
 		ofDrawBitmapStringHighlight(msg, 20, 20);
 	}
+}
+
+void ofApp::drawFuel() {
+	if (!bShowAltitudeHUD) return;  // same toggle as altitude HUD
+
+	ofSetColor(255);
+
+	float fuelPct = 0.0f;
+	if (lander.fuelMax > 0.0f) {
+		fuelPct = (lander.fuel / lander.fuelMax) * 100.0f;
+	}
+
+	std::string fuelMsg =
+		"Fuel: " + ofToString(lander.fuel, 1) +
+		" (" + ofToString(fuelPct, 0) + "%)";
+
+	// Draw under altitude text
+	ofDrawBitmapStringHighlight(fuelMsg, 20, 40);
 }
