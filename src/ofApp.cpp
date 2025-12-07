@@ -281,6 +281,21 @@ void ofApp::draw() {
 		ofSetColor(ofColor::lightGreen);
 		ofDrawSphere(p, .02 * d.length());
 	}
+	
+	if (bShowAltitudeRay && hasAltitudeHit) {
+		ofSetColor(ofColor::yellow);
+		ofSetLineWidth(2.0f);
+
+		glm::vec3 p0(altitudeRayOrigin.x(),
+					 altitudeRayOrigin.y(),
+					 altitudeRayOrigin.z());
+
+		glm::vec3 p1(altitudeRayOrigin.x(),
+					 altitudeGroundY,
+					 altitudeRayOrigin.z());
+
+		ofDrawLine(p0, p1);
+	}
 
 	ofPopMatrix();
 	cam.end();
@@ -426,8 +441,12 @@ void ofApp::keyPressed(int key) {
 		currentLandingCam = 4;
 		break;
 	case 'a':
-		bShowAltitude = !bShowAltitude;
+		bShowAltitudeHUD = !bShowAltitudeHUD;
 		cout << "Altitude HUD: " << (bShowAltitude ? "ON" : "OFF") << endl;
+		break;
+	case 'z':   
+		bShowAltitudeRay = !bShowAltitudeRay;
+		cout << "Altitude Ray: " << (bShowAltitudeRay ? "ON" : "OFF") << endl;
 		break;
 	default:
 		break;
@@ -884,26 +903,28 @@ void ofApp::PhysicsUpdate() {
 void ofApp::updateAltitudeTelemetry() {
 	hasAltitudeHit = false;
 	altitudeAGL    = 0.0f;
-	if (bLanderLoaded && bShowAltitude) {
-		glm::vec3 landerPos = lander.getPosition();
-		Vector3 origin(landerPos.x, landerPos.y + 0.1f, landerPos.z);
-		Vector3 dir(0.0f, -1.0f, 0.0f);
-		Ray ray(origin, dir);
-		TreeNode hitNode;
-		bool hit = octree.intersect(ray, octree.root, hitNode);
-		if (hit) {
-			hasAltitudeHit = true;
-			const Box &box = hitNode.box;
-			float groundY = box.max().y();
-			altitudeAGL = origin.y() - groundY;
-		}
+
+	if (!bLanderLoaded) return;
+
+	glm::vec3 landerPos = lander.getPosition();
+	altitudeRayOrigin = Vector3(landerPos.x, landerPos.y + 0.1f, landerPos.z);
+	altitudeRayDir    = Vector3(0.0f, -1.0f, 0.0f);
+	Ray ray(altitudeRayOrigin, altitudeRayDir);
+
+	TreeNode hitNode;
+	bool hit = octree.intersect(ray, octree.root, hitNode);
+	if (hit) {
+		hasAltitudeHit  = true;
+		const Box &box  = hitNode.box;
+		altitudeGroundY = box.max().y();
+		altitudeAGL     = altitudeRayOrigin.y() - altitudeGroundY;
 	}
 }
 
 void ofApp::drawAltitudeTelemetry() {
 	ofDisableDepthTest();
 
-	if (bShowAltitude) {
+	if (bShowAltitudeHUD) {
 		ofSetColor(255);
 		std::string msg;
 		if (hasAltitudeHit) {

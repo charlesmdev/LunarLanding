@@ -141,6 +141,14 @@ class ofApp : public ofBaseApp{
 		bool hasAltitudeHit = false;
 		void updateAltitudeTelemetry();
 		void drawAltitudeTelemetry();
+	
+		Vector3 altitudeRayOrigin;
+		Vector3 altitudeRayDir;
+		float  altitudeGroundY = 0.0f;
+		
+		bool  bShowAltitudeHUD  = false;  // text
+		bool  bShowAltitudeRay  = false;  // line
+
 
 
 };
