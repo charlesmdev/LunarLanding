@@ -55,6 +55,12 @@ public:
 	
 	// For collision Bounce/impulse force.
 	float restitution = 0.3f;
+	// For collision impact force
+	bool  crashed = false;
+	float crashSpeedThreshold = 5.0f;
+	
+	bool isCrashed() const { return crashed; }
+	void setCrashed(bool c) { crashed = c; }
 
 private:
 	ofxAssimpModelLoader model;

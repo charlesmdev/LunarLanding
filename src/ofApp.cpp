@@ -200,33 +200,46 @@ void ofApp::update() {
 		colBoxList.clear();
 		octree.intersect(bounds, octree.root, colBoxList);
 	
-		if (!colBoxList.empty()) {
-//			// Simple resolution: push up and stop vertical velocity
-//			glm::vec3 pos = lander.getPosition();
-//			if (lander.physics.vel.y < 0.0f) {
-//				pos.y += 0.01f;                 // small bump up
-//				lander.setPosition(pos.x, pos.y, pos.z);
-//				lander.physics.vel.y = 0.0f;    // stop falling
-//			}
-//			//		lander.physics.vel.y = 0.0f;
-//			//		bGrounded = true;
-//			//		cout << "bGrounded = true!" << endl;
+		if (!colBoxList.empty() && !lander.isCrashed()) {
+
 			glm::vec3 n(0, 1, 0);
 			float vRel = glm::dot(lander.physics.vel, n);
-			if (vRel < 0.0f) {
-				// Adds an impulse force on collision for lander, this is hard coded unfortunately :(
-				float e = lander.restitution;
-				float vRelAfter = -e * vRel;
-				float deltaV    = vRelAfter - vRel;
-				float j = lander.physics.mass * deltaV;
-				
-				lander.physics.vel += (j / lander.physics.mass) * n;
-				glm::vec3 pos = lander.getPosition();
-				pos += n * 0.01f;
-				lander.setPosition(pos.x, pos.y, pos.z);
+
+			if (vRel < 0.0f) {                // moving into ground
+				float impactSpeed = -vRel;    // positive
+
+				cout << "Impact speed: " << impactSpeed
+					 << "  threshold: " << lander.crashSpeedThreshold << endl;
+
+				if (impactSpeed > lander.crashSpeedThreshold) {
+					// ----- crash -----
+					lander.setCrashed(true);
+					lander.physics.vel = glm::vec3(0);
+
+					glm::vec3 pos = lander.getPosition();
+					pos += n * 0.01f;
+					lander.setPosition(pos.x, pos.y, pos.z);
+
+					cout << "CRASH!" << endl;
+				}
+				else {
+					// ----- safe bounce -----
+					float e = lander.restitution;
+					float vRelAfter = -e * vRel;
+					float deltaV    = vRelAfter - vRel;
+					float j = lander.physics.mass * deltaV;
+
+					lander.physics.vel += (j / lander.physics.mass) * n;
+
+					glm::vec3 pos = lander.getPosition();
+					pos += n * 0.01f;
+					lander.setPosition(pos.x, pos.y, pos.z);
+
+					cout << "Safe landing." << endl;
+				}
 			}
-		} else {
-//			bGrounded = false;
+		}
+		else {
 			colBoxList.clear();
 		}
 
@@ -990,11 +1003,15 @@ void ofApp::PhysicsDebugSetup() {
 	physicsGui.add(fuelSlider.setup("Fuel",       100.0f, 0.0f, 500.0f));
 	
 	physicsGui.add(restitutionSlider.setup("Restitution", 0.3f, 0.0f, 1.0f));
+	physicsGui.add(crashSpeedSlider.setup("Crash Speed", 5.0f, 0.0f, 20.0f));
 }
 void ofApp::PhysicsUpdate() {
 
 	if (!bLanderLoaded) return;
-	
+	if (lander.isCrashed()) {
+		lander.physics.vel = glm::vec3(0);
+		return;
+	}
 	lander.fuelMax = (float)fuelMaxSlider;
 	lander.fuel = ofClamp((float)fuelSlider, 0.0f, lander.fuelMax);
 
@@ -1003,6 +1020,7 @@ void ofApp::PhysicsUpdate() {
 	lander.physics.rotationalDamping = static_cast<float>(rotDampingSlider);
 	
 	lander.restitution = (float)restitutionSlider;
+	lander.crashSpeedThreshold = (float)crashSpeedSlider;
 
 
 	// Gravity
