@@ -171,6 +171,11 @@ class ofApp : public ofBaseApp{
 		ofLight keyLight3, fillLight3, rimLight3; // landing zone 2
 
 		ofLight landerLight;
+	
+		ofxFloatSlider crashSpeedSlider;
+		
+		void resetLander();
+
 
 
 };

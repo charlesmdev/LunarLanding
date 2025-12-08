@@ -47,11 +47,13 @@ glm::vec3 Lander::getUpDir() const {
 }
 
 void Lander::drawWireframe() {
+	if (crashed) return;
 	applyTransformToModel();
 	model.drawWireframe();
 }
 
 void Lander::drawFaces() {
+	if (crashed) return;
 	applyTransformToModel();
 	model.drawFaces();
 }
