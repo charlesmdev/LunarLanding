@@ -173,6 +173,8 @@ class ofApp : public ofBaseApp{
 		ofLight landerLight;
 	
 		ofxFloatSlider crashSpeedSlider;
+		
+		void resetLander();
 
 
 

@@ -516,6 +516,7 @@ void ofApp::keyPressed(int key) {
 		setCameraTarget();
 		break;
 	case 'u':
+		resetLander();
 		break;
 	case 'v':
 		togglePointsDisplay();
@@ -984,10 +985,10 @@ void ofApp::PhysicsDebugSetup() {
 	physicsGui.setup("Physics Debug");
 	physicsGui.setPosition(10, 220);
 
-	physicsGui.add(thrustSlider.setup("Thrust", 0.0f, 0.0f, 50.0f));
-	physicsGui.add(thrustMaxSlider.setup("Thrust Max", 20.0f, 0.0f, 100.0f));
+	physicsGui.add(thrustSlider.setup("Thrust", 0.0f, 0.0f, 100.0f));
+	physicsGui.add(thrustMaxSlider.setup("Thrust Max", 20.0f, 0.0f, 200.0f));
 	physicsGui.add(dampingSlider.setup("Linear Damping", 0.99f, 0.80f, 1.0f));
-	physicsGui.add(massSlider.setup("Mass", 0.8f, 0.1f, 10.0f));
+	physicsGui.add(massSlider.setup("Mass", 1.0f, 0.1f, 100.0f));
 
 //	physicsGui.add(angVelXSlider.setup("Ang Vel X", 0.0f, -180.0f, 180.0f));
 //	physicsGui.add(angVelYSlider.setup("Ang Vel Y", 0.0f, -180.0f, 180.0f));
@@ -1137,4 +1138,15 @@ void ofApp::drawFuel() {
 
 	// Draw under altitude text
 	ofDrawBitmapStringHighlight(fuelMsg, 20, 40);
+}
+
+void ofApp::resetLander() {
+	if (!bLanderLoaded) return;
+	lander.setCrashed(false);
+	lander.physics.vel    = glm::vec3(0);
+	lander.fuel    = lander.fuelMax;
+	fuelSlider     = lander.fuel;
+	lander.setPosition(0, 10, 0);
+
+	cout << "Lander reset." << endl;
 }
