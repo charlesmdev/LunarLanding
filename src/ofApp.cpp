@@ -82,22 +82,105 @@ void ofApp::setup(){
 	skybox.load("stars_dn.jpg");
 
 
-	// camera
+	// Camera
 
-	// Example coordinates you got:
+	// camera coordinates for landing zones
 	camPositions.push_back(glm::vec3(0, 50, 20)); // Landing Zone Start (default 0)
 	camPositions.push_back(glm::vec3(76.4916, 14.7818, 86.614)); // Landing Zone 1
 	camPositions.push_back(glm::vec3(-86.0892, 40.9025, -51.3489)); // Landing Zone 2
 	camPositions.push_back(glm::vec3(26.6946, 19.3444, -74.3588)); // Landing Zone 3
 	// camera 4 onward will use onboard
 	
-
 	trackingCam.setPosition(0, 50, 20); // Landing Center Start
 	trackingCam.lookAt(glm::vec3(0, 0, 0)); // initial target
 	trackingCam.setNearClip(0.1);
 	trackingCam.setFarClip(2000);
 
 
+	// Lighting
+
+	// Environmental lighting
+	keyLight.setup();
+	keyLight.enable();
+	keyLight.setAmbientColor(ofFloatColor(0.1, 0.1, 0.1));
+	keyLight.setDiffuseColor(ofFloatColor(1, 1, 1));
+	keyLight.setSpecularColor(ofFloatColor(1, 1, 1));
+	keyLight.rotate(-90, ofVec3f(1, 0, 0));
+	keyLight.setPosition(0, 40, 0);
+
+
+	// Landing Zone 1
+	keyLight1.setup();
+	keyLight1.enable();
+	keyLight1.setSpotlight();
+	keyLight1.setSpotlightCutOff(25); // angle of the cone
+	keyLight1.setAmbientColor(ofFloatColor(0.1, 0.1, 0.1));
+	keyLight1.setDiffuseColor(ofFloatColor(1, 1, 1));
+	keyLight1.setSpecularColor(ofFloatColor(1, 1, 1));
+	keyLight1.rotate(-90, ofVec3f(1, 0, 0));
+	keyLight1.setPosition(32.226, 25, 45.588); // NOTE: Use this position to get the coords for landing zone 1
+
+	fillLight1.setup();
+	fillLight1.enable();
+	fillLight1.setScale(0.05);
+	fillLight1.setAttenuation(1, 0.001, 0.001);
+	fillLight1.setAmbientColor(ofFloatColor(0.05, 0.05, 0.05)); 
+	fillLight1.setDiffuseColor(ofFloatColor(1.0, 1.0, 1.0)); 
+	fillLight1.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0));
+	fillLight1.setPosition(32.226, 25, 45.588);
+	fillLight1.lookAt(glm::vec3(32.226, 25, 45.588));
+
+
+	// Landing Zone 2
+	keyLight2.setup();
+	keyLight2.enable();
+	keyLight2.setSpotlight();
+	keyLight2.setSpotlightCutOff(20); // angle of the cone
+	keyLight2.setAmbientColor(ofFloatColor(0.1, 0.1, 0.1));
+	keyLight2.setDiffuseColor(ofFloatColor(1, 1, 1));
+	keyLight2.setSpecularColor(ofFloatColor(1, 1, 1));
+	keyLight2.rotate(-90, ofVec3f(1, 0, 0));
+	keyLight2.setPosition(-62.6381, 50, -33.1133); // NOTE: Use this position to get the coords for landing zone 2
+
+	fillLight2.setup();
+	fillLight2.enable();
+	fillLight2.setScale(0.05);
+	fillLight2.setAttenuation(1, 0.001, 0.001);
+	fillLight2.setAmbientColor(ofFloatColor(0.05, 0.05, 0.05));
+	fillLight2.setDiffuseColor(ofFloatColor(2.0, 2.0, 2.0));
+	fillLight2.setSpecularColor(ofFloatColor(2.0, 2.0, 2.0));
+	fillLight2.setPosition(-62.6381, 50, -33.1133);
+	fillLight2.lookAt(glm::vec3(-62.6381, 50, -33.1133));
+
+
+	// Landing Zone 3
+	keyLight3.setup();
+	keyLight3.enable();
+	keyLight3.setSpotlight();
+	keyLight3.setSpotlightCutOff(25); // angle of the cone
+	keyLight3.setAmbientColor(ofFloatColor(0.1, 0.1, 0.1));
+	keyLight3.setDiffuseColor(ofFloatColor(1, 1, 1));
+	keyLight3.setSpecularColor(ofFloatColor(1, 1, 1));
+	keyLight3.rotate(-90, ofVec3f(1, 0, 0));
+	keyLight3.setPosition(40, 19.3444, -60.3588); // NOTE: Use this position to get the coords for landing zone 3
+
+	fillLight3.setup();
+	fillLight3.enable();
+	fillLight3.setScale(0.05);
+	fillLight3.setAttenuation(1, 0.001, 0.001);
+	fillLight3.setAmbientColor(ofFloatColor(0.05, 0.05, 0.05));
+	fillLight3.setDiffuseColor(ofFloatColor(1.0, 1.0, 1.0));
+	fillLight3.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0));
+	fillLight3.setPosition(46.6946, 19.3444, -74.3588);
+	fillLight3.lookAt(glm::vec3(-86.0892, 40.9025, -20.3489));
+
+	// Lander light
+	landerLight.setup();
+	landerLight.enable();
+	landerLight.setPointLight(); 
+	landerLight.setDiffuseColor(ofFloatColor(1.0, 1.0, 1.0));
+	landerLight.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0));
+	landerLight.setAttenuation(1.0, 0.01, 0.001); 
 
 }
  
@@ -161,7 +244,11 @@ void ofApp::update() {
 			trackingCam.setPosition(landerPos + glm::vec3(0, 10, -8));
 			trackingCam.lookAt(landerPos + glm::vec3(0, 2, 0));
 		}
-		
+
+		// lander light
+		glm::vec3 landerPos = lander.getPosition();
+		landerLight.setPosition(landerPos + glm::vec3(0, 5, 0)); // offset above lander
+
 		updateAltitudeTelemetry();
 
 
@@ -169,11 +256,12 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 
-
+	// draw skybox
 	ofDisableDepthTest();
 	ofSetColor(255); // reset color
 	skybox.draw(0, 0, ofGetWidth(), ofGetHeight());
 	ofEnableDepthTest();
+	
 
 //	glDepthMask(false);
 ////	if (!bHide) gui.draw();
@@ -194,6 +282,23 @@ void ofApp::draw() {
 	else{
 		cam.begin();
 	}
+
+	// draw lighting
+	// NOTE: only uncomment thisif you want to see the physical light
+
+	/*keyLight.draw();*/
+
+	/*keyLight1.draw();
+	fillLight1.draw();
+
+	keyLight2.draw();
+	fillLight2.draw();
+
+	keyLight3.draw();
+	fillLight3.draw();
+	*/
+	
+
 
 
 
@@ -386,7 +491,10 @@ void ofApp::keyPressed(int key) {
 		bDisplayOctree = !bDisplayOctree;
 		break;
 	case 'r':
-		cam.reset();
+		// changing [r]eset button so it'll reset to lander's last position, while enabling easy free cam
+		// add a bit of an offset from lander position
+		cam.setPosition(lander.getPosition() + glm::vec3 (0, 15, -20));
+		cam.lookAt(lander.getPosition() + glm::vec3(0, 2, 0)); 
 		break;
 	case 's':
 		savePicture();
@@ -575,8 +683,8 @@ void ofApp::mousePressed(int x, int y, int button) {
 	}
 
 	// debug print to find some coords
-	glm::vec3 mouseWorld = cam.screenToWorld(glm::vec3(x, y, 0));
-	cout << "Clicked world coords: " << mouseWorld << endl;
+	/*glm::vec3 mouseWorld = cam.screenToWorld(glm::vec3(x, y, 0));
+	cout << "Clicked world coords: " << mouseWorld << endl;*/
 
 }
 
@@ -602,6 +710,13 @@ bool ofApp::raySelectWithOctree(ofVec3f &pointRet) {
 
 	if (pointSelected) {
 		pointRet = octree.mesh.getVertex(selectedNode.points[0]);
+
+		// debug coordinates
+		cout << "Intersection at: ("
+			 << pointRet.x << ", "
+			 << pointRet.y << ", "
+			 << pointRet.z << ")"
+			 << endl;
 	}
 	return pointSelected;
 }
@@ -846,6 +961,7 @@ glm::vec3 ofApp::getMousePointOnPlane(glm::vec3 planePt, glm::vec3 planeNorm) {
 		//
 		glm::vec3 intersectPoint = origin + distance * mouseDir;
 
+		cout << intersectPoint << endl;
 		return intersectPoint;
 	}
 	else return glm::vec3(0, 0, 0);
