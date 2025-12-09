@@ -88,7 +88,7 @@ void ofApp::setup(){
 	camPositions.push_back(glm::vec3(0, 50, 20)); // Landing Zone Start (default 0)
 	camPositions.push_back(glm::vec3(76.4916, 14.7818, 86.614)); // Landing Zone 1
 	camPositions.push_back(glm::vec3(-86.0892, 40.9025, -51.3489)); // Landing Zone 2
-	camPositions.push_back(glm::vec3(42.051, 0, -63.273)); // Landing Zone 3
+	camPositions.push_back(glm::vec3(42.051, 20, -63.273)); // Landing Zone 3
 	// camera 4 onward will use onboard
 	
 	trackingCam.setPosition(0, 50, 20); // Landing Center Start
@@ -181,7 +181,8 @@ void ofApp::setup(){
 	landerLight.setDiffuseColor(ofFloatColor(1.0, 1.0, 1.0));
 	landerLight.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0));
 	landerLight.setAttenuation(1.0, 0.01, 0.001);
-
+	
+	setupLandingZones();
 
 	// sound
 
@@ -216,152 +217,177 @@ void ofApp::setup(){
 	currentLandingCam = 4;
 	useTrackingCam = true;
 
-
-
 }
  
 //--------------------------------------------------------------
 // incrementally update scene (animation)
 //
 void ofApp::update() {
-	
+	if (!bLanderLoaded) return;
 	PhysicsUpdate();
-	
-		if (!bLanderLoaded) return;
+	setupLandingZones(); // IMPORTANT FOR DEBUGGING DELETE LATER!!!
+	Box bounds = computeLanderBounds();
+	colBoxList.clear();
+	octree.intersect(bounds, octree.root, colBoxList);
 
-		ofVec3f min = lander.getSceneMin() + lander.getPosition();
-		ofVec3f max = lander.getSceneMax() + lander.getPosition();
-		Box bounds = Box(Vector3(min.x, min.y, min.z), Vector3(max.x, max.y, max.z));
+	if (!colBoxList.empty() && !lander.isCrashed()) {
+		glm::vec3 n(0, 1, 0);
+		float vRel = glm::dot(lander.physics.vel, n);
 
+		if (vRel < 0.0f) {                // moving into ground
+			float impactSpeed = -vRel;    // positive
+
+//				cout << "Impact speed: " << impactSpeed
+//					 << "  threshold: " << lander.crashSpeedThreshold << endl;
+
+			if (impactSpeed > lander.crashSpeedThreshold) {
+				// ----- crash -----
+				lander.setCrashed(true);
+				lander.physics.vel = glm::vec3(0);
+
+				glm::vec3 pos = lander.getPosition();
+				pos += n * 0.01f;
+				lander.setPosition(pos.x, pos.y, pos.z);
+				explosionSound.play(); // play explosion on death
+				roundOver = true;
+
+//					cout << "CRASH!" << endl;
+			}
+			else {
+				// ----- safe bounce -----
+				float e = lander.restitution;
+				float vRelAfter = -e * vRel;
+				float deltaV    = vRelAfter - vRel;
+				float j = lander.physics.mass * deltaV;
+
+				lander.physics.vel += (j / lander.physics.mass) * n;
+
+				glm::vec3 pos = lander.getPosition();
+				pos += n * 0.01f;
+				lander.setPosition(pos.x, pos.y, pos.z);
+
+//					cout << "Safe landing." << endl;
+				
+				// Handles landing zone logic
+				Box landerBox = computeLanderBounds();
+
+				lastLandingWasSuccess = false;
+				lastLandingWasCrash = false;
+
+				bool onZone = false;
+				for (int i = 0; i < 3; ++i) {
+					if (landingZones[i].overlaps(landerBox)) {
+						onZone = true;
+						break;
+					}
+				}
+				
+//				bool outOfFuel = !lander.hasFuel();
+
+				// Case 1: gentle landing inside a zone
+				if (onZone && !roundOver) {
+					score += 1;
+					successfulLandings += 1;
+					lastLandingWasSuccess = true;
+					roundOver = true;
+					cout << "SUCCESSFUL LANDING! Score = " << score << endl;
+				}
+				// Case 2: gentle landing outside any zone
+				else if (!onZone && !roundOver) {
+					successfulLandings += 1;
+					lastLandingWasCrash = true;
+					roundOver = true;
+					cout << "CRASH LANDING (no fuel, no score)." << endl;
+				}
+			}
+		}
+	}
+	else {
 		colBoxList.clear();
-		octree.intersect(bounds, octree.root, colBoxList);
-	
-		if (!colBoxList.empty() && !lander.isCrashed()) {
-
-			glm::vec3 n(0, 1, 0);
-			float vRel = glm::dot(lander.physics.vel, n);
-
-			if (vRel < 0.0f) {                // moving into ground
-				float impactSpeed = -vRel;    // positive
-
-				cout << "Impact speed: " << impactSpeed
-					 << "  threshold: " << lander.crashSpeedThreshold << endl;
-
-				if (impactSpeed > lander.crashSpeedThreshold) {
-					// ----- crash -----
-					lander.setCrashed(true);
-					lander.physics.vel = glm::vec3(0);
-
-					glm::vec3 pos = lander.getPosition();
-					pos += n * 0.01f;
-					lander.setPosition(pos.x, pos.y, pos.z);
-					explosionSound.play(); // play explosion on death
-
-					cout << "CRASH!" << endl;
-				}
-				else {
-					// ----- safe bounce -----
-					float e = lander.restitution;
-					float vRelAfter = -e * vRel;
-					float deltaV    = vRelAfter - vRel;
-					float j = lander.physics.mass * deltaV;
-
-					lander.physics.vel += (j / lander.physics.mass) * n;
-
-					glm::vec3 pos = lander.getPosition();
-					pos += n * 0.01f;
-					lander.setPosition(pos.x, pos.y, pos.z);
-
-					cout << "Safe landing." << endl;
-				}
-			}
-		}
-		else {
-			colBoxList.clear();
-		}
+	}
 
 
-		// tracking camera
-		if (currentLandingCam < 4) // landing zones
-		{
-			trackingCam.setPosition(camPositions[currentLandingCam]);
-			trackingCam.lookAt(lander.getPosition());
-		}
-		// onboard camera
+	// tracking camera
+	if (currentLandingCam < 4) // landing zones
+	{
+		trackingCam.setPosition(camPositions[currentLandingCam]);
+		trackingCam.lookAt(lander.getPosition());
+	}
+	// onboard camera
 
-		else if (currentLandingCam == 4) // third person
-		{
-			glm::vec3 landerPos = lander.getPosition();
-			trackingCam.setPosition(landerPos + glm::vec3(0, 10, 12));
-			trackingCam.lookAt(landerPos + glm::vec3(0, 2, 0));
-		}
-
-		else if (currentLandingCam == 5) // top down
-		{
-			glm::vec3 landerPos = lander.getPosition();
-			trackingCam.setPosition(landerPos + glm::vec3(0, 50, 0));
-			trackingCam.lookAt(landerPos + glm::vec3(0, 0, -1));
-		}
-
-		else if (currentLandingCam == 6) // below lander cam
-		{
-			glm::vec3 landerPos = lander.getPosition();
-			trackingCam.setPosition(landerPos + glm::vec3(0, 1, 5));
-			trackingCam.lookAt(landerPos + glm::vec3(0, 0, 0));
-		}
-
-		// lander light
+	else if (currentLandingCam == 4) // third person
+	{
 		glm::vec3 landerPos = lander.getPosition();
-		landerLight.setPosition(landerPos + glm::vec3(0, 5, 0)); // offset above lander
+		trackingCam.setPosition(landerPos + glm::vec3(0, 10, 12));
+		trackingCam.lookAt(landerPos + glm::vec3(0, 2, 0));
+	}
 
-		// sound
+	else if (currentLandingCam == 5) // top down
+	{
+		glm::vec3 landerPos = lander.getPosition();
+		trackingCam.setPosition(landerPos + glm::vec3(0, 50, 0));
+		trackingCam.lookAt(landerPos + glm::vec3(0, 0, -1));
+	}
 
-		// check if its moving first and also if it hasn't crashed
-		bool isMoving = ((bMoveForward || bMoveBackward || bMoveLeft || bMoveRight || bMoveUp || bMoveDown || bYawLeft || bYawRight) && lander.crashed == false);
+	else if (currentLandingCam == 6) // below lander cam
+	{
+		glm::vec3 landerPos = lander.getPosition();
+		trackingCam.setPosition(landerPos + glm::vec3(0, 1, 5));
+		trackingCam.lookAt(landerPos + glm::vec3(0, 0, 0));
+	}
 
-		// check if it crashed to turn off crashwarning
-		if (lander.crashed)
+	// lander light
+	glm::vec3 landerPos = lander.getPosition();
+	landerLight.setPosition(landerPos + glm::vec3(0, 5, 0)); // offset above lander
+
+	// sound
+
+	// check if its moving first and also if it hasn't crashed
+	bool isMoving = ((bMoveForward || bMoveBackward || bMoveLeft || bMoveRight || bMoveUp || bMoveDown || bYawLeft || bYawRight) && lander.crashed == false);
+
+	// check if it crashed to turn off crashwarning
+	if (lander.crashed)
+	{
+		if (crashWarning.isPlaying())
 		{
-			if (crashWarning.isPlaying())
-			{
-				crashWarning.stop(); // stop warning loop sound
-			}
-			engineSound.stop(); // stop engine too
+			crashWarning.stop(); // stop warning loop sound
+		}
+		engineSound.stop(); // stop engine too
+	}
+
+	// if lander has fuel
+	else if (lander.hasFuel())
+	{
+
+		// if its moving, play sound
+		if (isMoving && !engineSound.isPlaying())
+		{
+			engineSound.play();
 		}
 
-		// if lander has fuel
-		else if (lander.hasFuel())
+		// turn off it not moving
+		else if (!isMoving && engineSound.isPlaying())
 		{
-
-			// if its moving, play sound
-			if (isMoving && !engineSound.isPlaying())
-			{
-				engineSound.play();
-			}
-
-			// turn off it not moving
-			else if (!isMoving && engineSound.isPlaying())
-			{
-				engineSound.stop();
-			}
-		}
-
-		// no fuel
-		else
-		{
-			// turn off engine sounds
 			engineSound.stop();
-
-			// play warning sounds on loop
-			if (!crashWarningPlayed)
-			{
-				crashWarning.play();
-				crashWarningPlayed = true;
-			}
 		}
-		
+	}
 
-		updateAltitudeTelemetry();
+	// no fuel
+	else
+	{
+		// turn off engine sounds
+		engineSound.stop();
+
+		// play warning sounds on loop
+		if (!crashWarningPlayed)
+		{
+			crashWarning.play();
+			crashWarningPlayed = true;
+		}
+	}
+	
+
+	updateAltitudeTelemetry();
 
 
 }
@@ -445,11 +471,7 @@ void ofApp::draw() {
 			}
 
 			if (bLanderSelected) {
-
-				ofVec3f min = lander.getSceneMin() + lander.getPosition();
-				ofVec3f max = lander.getSceneMax() + lander.getPosition();
-
-				Box bounds = Box(Vector3(min.x, min.y, min.z), Vector3(max.x, max.y, max.z));
+				Box bounds = computeLanderBounds();
 				ofSetColor(ofColor::white);
 				ofNoFill();
 
@@ -527,6 +549,8 @@ void ofApp::draw() {
 
 		ofDrawLine(p0, p1);
 	}
+	
+	drawLandingZones();
 
 	ofPopMatrix();
 	cam.end();
@@ -536,6 +560,8 @@ void ofApp::draw() {
 	
 	drawAltitudeTelemetry();
 	drawFuel();
+	drawScore();
+	drawEndRoundMessage();
 	
 	if (!bHide) {
 	 gui.draw();
@@ -615,7 +641,12 @@ void ofApp::keyPressed(int key) {
 		setCameraTarget();
 		break;
 	case 'u':
-		resetLander();
+		if (lander.isCrashed() || roundOver || lastLandingWasSuccess || lastLandingWasCrash) {
+			roundOver = false;
+			reloadModel();
+			lastLandingWasSuccess = false;
+			lastLandingWasCrash   = false;
+		}
 		break;
 	case 'v':
 		togglePointsDisplay();
@@ -1110,6 +1141,10 @@ void ofApp::PhysicsDebugSetup() {
 	
 	physicsGui.add(restitutionSlider.setup("Restitution", 0.3f, 0.0f, 1.0f));
 	physicsGui.add(crashSpeedSlider.setup("Crash Speed", 1.4f, 0.0f, 20.0f));
+	
+	physicsGui.add(landingZoneHalfX.setup("LZ Half X", 5.0f, 0.5f, 50.0f));
+	physicsGui.add(landingZoneHalfY.setup("LZ Half Y", 2.0f, 0.1f, 50.0f));
+	physicsGui.add(landingZoneHalfZ.setup("LZ Half Z", 5.0f, 0.5f, 50.0f));
 
 	// adding reload model
 	physicsGui.add(modelReloadButton.setup("Reload model"));
@@ -1262,9 +1297,40 @@ void ofApp::resetLander() {
 }
 
 
-// Reload model
-void ofApp::reloadModel()
-{
+void ofApp::setupLandingZones() {
+	// Coordinates are based on the coords of the landing lights, relative to the map model
+//	glm::vec3 zoneHalfSize(5.0f, 2.0f, 5.0f);
+	glm::vec3 zoneHalfSize( // We will comment this out later, use this to find right dimensions for each landing zone.
+		(float)landingZoneHalfX,
+		(float)landingZoneHalfY,
+		(float)landingZoneHalfZ
+	);
+	
+	glm::vec3 zone1Size; // Modify these values during tuning.
+	glm::vec3 zone2Size;
+	glm::vec3 zone3Size;
+	
+	glm::vec3 zone1Center(32.226f, 0.5f, 45.588f);
+	landingZones[0].set(zone1Center, zoneHalfSize); // zone 1
+
+	glm::vec3 zone2Center(-62.6381f, 0.5f, -33.1133f);
+	landingZones[1].set(zone2Center, zoneHalfSize); // zone 2
+
+	glm::vec3 zone3Center(40.0f, 0.5f, -60.3588f);
+	landingZones[2].set(zone3Center, zoneHalfSize); // zone 3
+
+}
+
+void ofApp::drawLandingZones() {
+	ofNoFill();
+	ofSetColor(ofColor::yellow);
+	for (int i = 0; i < 3; ++i) {
+		landingZones[i].draw();
+	}
+}
+
+// Reloads model
+void ofApp::reloadModel() {
 	// load model early
 	lander.setCrashed(false); // need this off to show lander again
 	lander.loadModel("geo/dev-space-lander.obj");
@@ -1283,6 +1349,42 @@ void ofApp::reloadModel()
 
 	// reload fuel
 	fuelSlider = (float)fuelMaxSlider;
-	
-	
 }
+
+Box ofApp::computeLanderBounds() {
+	ofVec3f min = lander.getSceneMin() + lander.getPosition();
+	ofVec3f max = lander.getSceneMax() + lander.getPosition();
+	return Box(Vector3(min.x, min.y, min.z),
+			   Vector3(max.x, max.y, max.z));
+}
+
+void ofApp::drawScore() {
+	ofSetColor(255);
+	std::string scoreMsg =
+		"Score: " + ofToString(score) +
+		"  Landings: " + ofToString(successfulLandings);
+	ofDrawBitmapStringHighlight(scoreMsg, 20, 60);
+}
+
+void ofApp::drawEndRoundMessage() {
+	if (!roundOver && !lander.isCrashed()) return;
+
+	std::string msg;
+	if (lander.isCrashed()) {
+		msg = "DEATH! Press 'U' to restart.";
+	} else if (lastLandingWasSuccess) {
+		msg = "SUCCESSFUL LANDING! Press 'U' to restart.";
+	} else if (lastLandingWasCrash) {
+		msg = "CRASH LANDING. Press 'U' to restart.";
+	} else {
+		msg = "ROUND OVER. Press 'U' to restart.";
+	}
+
+	ofSetColor(255);
+	int w = ofGetWidth();
+	int h = ofGetHeight();
+	int x = w / 2 - 200;
+	int y = h / 2;
+	ofDrawBitmapStringHighlight(msg, x, y);
+}
+

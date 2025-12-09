@@ -6,6 +6,8 @@
 #include "Octree.h"
 #include <glm/gtx/intersect.hpp>
 #include "shapes/Lander.h"
+#include "physics/LandingZone.h"
+
 
 
 class ofApp : public ofBaseApp{
@@ -175,6 +177,18 @@ class ofApp : public ofBaseApp{
 		ofxFloatSlider crashSpeedSlider;
 		
 		void resetLander();
+		
+		// Landing Zone logic
+		LandingZone landingZones[3];
+		bool bLandedOnZone = false;
+		int landedZoneIndex = -1;
+	
+		void setupLandingZones();
+		void drawLandingZones();
+	
+		ofxFloatSlider landingZoneHalfX;
+		ofxFloatSlider landingZoneHalfY;
+		ofxFloatSlider landingZoneHalfZ;
 
 		// lander sound
 
@@ -188,6 +202,20 @@ class ofApp : public ofBaseApp{
 		void reloadModel();
 
 		ofxButton modelReloadButton;
+	
+		// Scoring
+		
+		int score = 0;
+		int successfulLandings = 0;
+		bool lastLandingWasSuccess = false;
+		bool lastLandingWasCrash = false;
+	
+		Box computeLanderBounds(); // Helper for computing the box bounds of lander.
+		void drawScore();
+		void drawEndRoundMessage();
+		bool roundOver = false;
+
+	
 
 
 
