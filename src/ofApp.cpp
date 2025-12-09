@@ -319,30 +319,45 @@ void ofApp::update() {
 		// check if its moving first and also if it hasn't crashed
 		bool isMoving = ((bMoveForward || bMoveBackward || bMoveLeft || bMoveRight || bMoveUp || bMoveDown || bYawLeft || bYawRight) && lander.crashed == false);
 
-		// check fuel first
-		if (lander.hasFuel())
+		// check if it crashed to turn off crashwarning
+		if (lander.crashed)
 		{
-			if (isMoving && !engineSound.isPlaying()) {
+			if (crashWarning.isPlaying())
+			{
+				crashWarning.stop(); // stop warning loop sound
+			}
+			engineSound.stop(); // stop engine too
+		}
+
+		// if lander has fuel
+		else if (lander.hasFuel())
+		{
+
+			// if its moving, play sound
+			if (isMoving && !engineSound.isPlaying())
+			{
 				engineSound.play();
 			}
 
-			// turn off if not and has no fuel
-			else if (!isMoving && engineSound.isPlaying()) {
+			// turn off it not moving
+			else if (!isMoving && engineSound.isPlaying())
+			{
 				engineSound.stop();
 			}
 		}
 
+		// no fuel
 		else
 		{
-			// force stop
+			// turn off engine sounds
 			engineSound.stop();
 
+			// play warning sounds on loop
 			if (!crashWarningPlayed)
 			{
 				crashWarning.play();
 				crashWarningPlayed = true;
 			}
-			
 		}
 		
 
@@ -1265,5 +1280,9 @@ void ofApp::reloadModel()
 	// have landing cam onboard shown immedietely first
 	currentLandingCam = 4;
 	useTrackingCam = true;
+
+	// reload fuel
+	fuelSlider = (float)fuelMaxSlider;
+	
 	
 }
