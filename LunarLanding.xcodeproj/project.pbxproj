@@ -151,6 +151,7 @@
 		291E6A382EDF847F00FB5743 /* Shape3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shape3D.h; sourceTree = "<group>"; };
 		291E6A392EDF84AE00FB5743 /* Physics3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Physics3D.h; sourceTree = "<group>"; };
 		291E6A3C2EDF857300FB5743 /* RotationalPhysics3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RotationalPhysics3D.h; sourceTree = "<group>"; };
+		291E6A3D2EE7A64C00FB5743 /* LandingZone.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LandingZone.h; sourceTree = "<group>"; };
 		2944DD992ED76DB600D1357A /* box.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = box.cc; sourceTree = "<group>"; };
 		"2A594F1E-C3D7-4516-AAB9-6987E84E25A7" /* pushpack1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pushpack1.h; sourceTree = "<group>"; };
 		"2A5AF2B6-7512-475D-92ED-010537EE4438" /* qnan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = qnan.h; sourceTree = "<group>"; };
@@ -802,6 +803,7 @@
 		"4BAB9BFA-3B6D-4FF2-91A3-D1C073DE3A52" /* physics */ = {
 			isa = PBXGroup;
 			children = (
+				291E6A3D2EE7A64C00FB5743 /* LandingZone.h */,
 				291E6A3C2EDF857300FB5743 /* RotationalPhysics3D.h */,
 				291E6A392EDF84AE00FB5743 /* Physics3D.h */,
 				"45BCC53B-8110-4484-A83B-F72849A65D4D" /* Collision.cpp */,

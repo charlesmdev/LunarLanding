@@ -6,6 +6,8 @@
 #include "Octree.h"
 #include <glm/gtx/intersect.hpp>
 #include "shapes/Lander.h"
+#include "physics/LandingZone.h"
+
 
 
 class ofApp : public ofBaseApp{
@@ -175,6 +177,14 @@ class ofApp : public ofBaseApp{
 		ofxFloatSlider crashSpeedSlider;
 		
 		void resetLander();
+		
+		// Landing Zone logic
+		LandingZone landingZones[3];
+		bool bLandedOnZone = false;
+		int landedZoneIndex = -1;
+	
+		void setupLandingZones();
+		void drawLandingZones();
 
 
 

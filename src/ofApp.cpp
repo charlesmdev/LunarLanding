@@ -180,8 +180,9 @@ void ofApp::setup(){
 	landerLight.setPointLight(); 
 	landerLight.setDiffuseColor(ofFloatColor(1.0, 1.0, 1.0));
 	landerLight.setSpecularColor(ofFloatColor(1.0, 1.0, 1.0));
-	landerLight.setAttenuation(1.0, 0.01, 0.001); 
-
+	landerLight.setAttenuation(1.0, 0.01, 0.001);
+	
+	setupLandingZones();
 }
  
 //--------------------------------------------------------------
@@ -208,8 +209,8 @@ void ofApp::update() {
 			if (vRel < 0.0f) {                // moving into ground
 				float impactSpeed = -vRel;    // positive
 
-				cout << "Impact speed: " << impactSpeed
-					 << "  threshold: " << lander.crashSpeedThreshold << endl;
+//				cout << "Impact speed: " << impactSpeed
+//					 << "  threshold: " << lander.crashSpeedThreshold << endl;
 
 				if (impactSpeed > lander.crashSpeedThreshold) {
 					// ----- crash -----
@@ -220,7 +221,7 @@ void ofApp::update() {
 					pos += n * 0.01f;
 					lander.setPosition(pos.x, pos.y, pos.z);
 
-					cout << "CRASH!" << endl;
+//					cout << "CRASH!" << endl;
 				}
 				else {
 					// ----- safe bounce -----
@@ -235,7 +236,26 @@ void ofApp::update() {
 					pos += n * 0.01f;
 					lander.setPosition(pos.x, pos.y, pos.z);
 
-					cout << "Safe landing." << endl;
+//					cout << "Safe landing." << endl;
+					
+					// Handles landing zone logic
+					ofVec3f lMin = lander.getSceneMin() + lander.getPosition();
+					ofVec3f lMax = lander.getSceneMax() + lander.getPosition();
+					Box landerBox(Vector3(lMin.x, lMin.y, lMin.z),
+								  Vector3(lMax.x, lMax.y, lMax.z));
+
+					// Only register first win
+					if (!bLandedOnZone) {
+						for (int i = 0; i < 3; ++i) {
+							if (landingZones[i].overlaps(landerBox)) {
+								bLandedOnZone = true;
+								landedZoneIndex = i;
+								cout << "LANDED ON ZONE " << (i+1) << "!" << endl;
+								break;
+							}
+						}
+					}
+					
 				}
 			}
 		}
@@ -428,6 +448,8 @@ void ofApp::draw() {
 
 		ofDrawLine(p0, p1);
 	}
+	
+	drawLandingZones();
 
 	ofPopMatrix();
 	cam.end();
@@ -1149,4 +1171,26 @@ void ofApp::resetLander() {
 	lander.setPosition(0, 10, 0);
 
 	cout << "Lander reset." << endl;
+}
+
+void ofApp::setupLandingZones() {
+	// Coordinates are based on the coords of the landing lights, relative to the map model
+	glm::vec3 zoneHalfSize(5.0f, 2.0f, 5.0f);
+	glm::vec3 zone1Center(32.226f, 0.5f, 45.588f);
+	landingZones[0].set(zone1Center, zoneHalfSize); // zone 1
+
+	glm::vec3 zone2Center(-62.6381f, 0.5f, -33.1133f);
+	landingZones[1].set(zone2Center, zoneHalfSize); // zone 2
+
+	glm::vec3 zone3Center(40.0f, 0.5f, -60.3588f);
+	landingZones[2].set(zone3Center, zoneHalfSize); // zone 3
+
+}
+
+void ofApp::drawLandingZones() {
+	ofNoFill();
+	ofSetColor(ofColor::yellow);
+	for (int i = 0; i < 3; ++i) {
+		landingZones[i].draw();
+	}
 }
