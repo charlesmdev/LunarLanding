@@ -185,6 +185,10 @@ class ofApp : public ofBaseApp{
 	
 		void setupLandingZones();
 		void drawLandingZones();
+	
+		ofxFloatSlider landingZoneHalfX;
+		ofxFloatSlider landingZoneHalfY;
+		ofxFloatSlider landingZoneHalfZ;
 
 		// lander sound
 
