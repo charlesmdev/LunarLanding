@@ -202,6 +202,16 @@ class ofApp : public ofBaseApp{
 		void reloadModel();
 
 		ofxButton modelReloadButton;
+	
+		// Scoring
+		
+		int score = 0;
+		int successfulLandings = 0;
+		bool lastLandingWasSuccess = false;
+		bool lastLandingWasCrash = false;
+	
+		Box computeLanderBounds(); // Helper for computing the box bounds of lander.
+	
 
 
 

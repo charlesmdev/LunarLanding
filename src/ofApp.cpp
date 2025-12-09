@@ -229,11 +229,7 @@ void ofApp::update() {
 	if (!bLanderLoaded) return;
 
 	setupLandingZones(); // IMPORTANT FOR DEBUGGING DELETE LATER!!!
-
-	ofVec3f min = lander.getSceneMin() + lander.getPosition();
-	ofVec3f max = lander.getSceneMax() + lander.getPosition();
-	Box bounds = Box(Vector3(min.x, min.y, min.z), Vector3(max.x, max.y, max.z));
-
+	Box bounds = computeLanderBounds();
 	colBoxList.clear();
 	octree.intersect(bounds, octree.root, colBoxList);
 
@@ -276,10 +272,7 @@ void ofApp::update() {
 //					cout << "Safe landing." << endl;
 				
 				// Handles landing zone logic
-				ofVec3f lMin = lander.getSceneMin() + lander.getPosition();
-				ofVec3f lMax = lander.getSceneMax() + lander.getPosition();
-				Box landerBox(Vector3(lMin.x, lMin.y, lMin.z),
-							  Vector3(lMax.x, lMax.y, lMax.z));
+				Box landerBox = computeLanderBounds();
 
 				// Only register first win
 				if (!bLandedOnZone) {
@@ -465,11 +458,7 @@ void ofApp::draw() {
 			}
 
 			if (bLanderSelected) {
-
-				ofVec3f min = lander.getSceneMin() + lander.getPosition();
-				ofVec3f max = lander.getSceneMax() + lander.getPosition();
-
-				Box bounds = Box(Vector3(min.x, min.y, min.z), Vector3(max.x, max.y, max.z));
+				Box bounds = computeLanderBounds();
 				ofSetColor(ofColor::white);
 				ofNoFill();
 
@@ -1342,3 +1331,9 @@ void ofApp::reloadModel() {
 	fuelSlider = (float)fuelMaxSlider;
 }
 
+Box ofApp::computeLanderBounds() {
+	ofVec3f min = lander.getSceneMin() + lander.getPosition();
+	ofVec3f max = lander.getSceneMax() + lander.getPosition();
+	return Box(Vector3(min.x, min.y, min.z),
+			   Vector3(max.x, max.y, max.z));
+}
