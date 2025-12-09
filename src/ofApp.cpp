@@ -79,7 +79,7 @@ void ofApp::setup(){
 
 
 	// sky box
-	skybox.load("stars_dn.jpg");
+	skybox.load("images/stars_dn.jpg");
 
 
 	// Camera
@@ -88,7 +88,7 @@ void ofApp::setup(){
 	camPositions.push_back(glm::vec3(0, 50, 20)); // Landing Zone Start (default 0)
 	camPositions.push_back(glm::vec3(76.4916, 14.7818, 86.614)); // Landing Zone 1
 	camPositions.push_back(glm::vec3(-86.0892, 40.9025, -51.3489)); // Landing Zone 2
-	camPositions.push_back(glm::vec3(26.6946, 19.3444, -74.3588)); // Landing Zone 3
+	camPositions.push_back(glm::vec3(42.051, 0, -63.273)); // Landing Zone 3
 	// camera 4 onward will use onboard
 	
 	trackingCam.setPosition(0, 50, 20); // Landing Center Start
@@ -183,6 +183,40 @@ void ofApp::setup(){
 	landerLight.setAttenuation(1.0, 0.01, 0.001);
 	
 	setupLandingZones();
+
+	// sound
+
+	// rocket thrust
+	engineSound.load("sounds/rocket-engine.mp3");
+	engineSound.setVolume(0.05); // quite loud otherwise
+	engineSound.setLoop(true);
+
+	// crash warning
+	crashWarning.load("sounds/crash-warning.mp3");
+	crashWarning.setVolume(0.05); // quite loud otherwise
+	crashWarning.setLoop(true);
+
+	// explosion sound
+	explosionSound.load("sounds/explosion.mp3");
+	explosionSound.setVolume(0.02);
+
+
+
+	// load model early
+	lander.loadModel("geo/dev-space-lander.obj");
+	lander.setScaleNormalization(false);
+	lander.setPosition(-30, 90, 60);
+	lander.setRotation(glm::vec3(0, 180, 0));
+
+	bLanderLoaded = true;
+	for (int i = 0; i < lander.getMeshCount(); i++) {
+		bboxList.push_back(Octree::meshBounds(lander.getMesh(i)));
+	}
+
+	// have landing cam onboard shown immedietely first
+	currentLandingCam = 4;
+	useTrackingCam = true;
+
 }
  
 //--------------------------------------------------------------
@@ -220,6 +254,7 @@ void ofApp::update() {
 					glm::vec3 pos = lander.getPosition();
 					pos += n * 0.01f;
 					lander.setPosition(pos.x, pos.y, pos.z);
+					explosionSound.play(); // play explosion on death
 
 //					cout << "CRASH!" << endl;
 				}
@@ -265,22 +300,84 @@ void ofApp::update() {
 
 
 		// tracking camera
-		if (currentLandingCam < 4)
+		if (currentLandingCam < 4) // landing zones
 		{
 			trackingCam.setPosition(camPositions[currentLandingCam]);
 			trackingCam.lookAt(lander.getPosition());
 		}
 		// onboard camera
-		else
+
+		else if (currentLandingCam == 4) // third person
 		{
 			glm::vec3 landerPos = lander.getPosition();
-			trackingCam.setPosition(landerPos + glm::vec3(0, 10, -8));
+			trackingCam.setPosition(landerPos + glm::vec3(0, 10, 12));
 			trackingCam.lookAt(landerPos + glm::vec3(0, 2, 0));
+		}
+
+		else if (currentLandingCam == 5) // top down
+		{
+			glm::vec3 landerPos = lander.getPosition();
+			trackingCam.setPosition(landerPos + glm::vec3(0, 50, 0));
+			trackingCam.lookAt(landerPos + glm::vec3(0, 0, -1));
+		}
+
+		else if (currentLandingCam == 6) // below lander cam
+		{
+			glm::vec3 landerPos = lander.getPosition();
+			trackingCam.setPosition(landerPos + glm::vec3(0, 1, 5));
+			trackingCam.lookAt(landerPos + glm::vec3(0, 0, 0));
 		}
 
 		// lander light
 		glm::vec3 landerPos = lander.getPosition();
 		landerLight.setPosition(landerPos + glm::vec3(0, 5, 0)); // offset above lander
+
+		// sound
+
+		// check if its moving first and also if it hasn't crashed
+		bool isMoving = ((bMoveForward || bMoveBackward || bMoveLeft || bMoveRight || bMoveUp || bMoveDown || bYawLeft || bYawRight) && lander.crashed == false);
+
+		// check if it crashed to turn off crashwarning
+		if (lander.crashed)
+		{
+			if (crashWarning.isPlaying())
+			{
+				crashWarning.stop(); // stop warning loop sound
+			}
+			engineSound.stop(); // stop engine too
+		}
+
+		// if lander has fuel
+		else if (lander.hasFuel())
+		{
+
+			// if its moving, play sound
+			if (isMoving && !engineSound.isPlaying())
+			{
+				engineSound.play();
+			}
+
+			// turn off it not moving
+			else if (!isMoving && engineSound.isPlaying())
+			{
+				engineSound.stop();
+			}
+		}
+
+		// no fuel
+		else
+		{
+			// turn off engine sounds
+			engineSound.stop();
+
+			// play warning sounds on loop
+			if (!crashWarningPlayed)
+			{
+				crashWarning.play();
+				crashWarningPlayed = true;
+			}
+		}
+		
 
 		updateAltitudeTelemetry();
 
@@ -606,6 +703,12 @@ void ofApp::keyPressed(int key) {
 		break;
 	case '4':
 		currentLandingCam = 4;
+		break;
+	case '5':
+		currentLandingCam = 5;
+		break;
+	case '6':
+		currentLandingCam = 6;
 		break;
 	case 'a':
 		bShowAltitudeHUD = !bShowAltitudeHUD;
@@ -1007,10 +1110,10 @@ void ofApp::PhysicsDebugSetup() {
 	physicsGui.setup("Physics Debug");
 	physicsGui.setPosition(10, 220);
 
-	physicsGui.add(thrustSlider.setup("Thrust", 0.0f, 0.0f, 100.0f));
-	physicsGui.add(thrustMaxSlider.setup("Thrust Max", 20.0f, 0.0f, 200.0f));
-	physicsGui.add(dampingSlider.setup("Linear Damping", 0.99f, 0.80f, 1.0f));
-	physicsGui.add(massSlider.setup("Mass", 1.0f, 0.1f, 100.0f));
+	physicsGui.add(thrustSlider.setup("Thrust", 41.0f, 0.0f, 100.0f));
+	physicsGui.add(thrustMaxSlider.setup("Thrust Max", 102.0f, 0.0f, 200.0f));
+	physicsGui.add(dampingSlider.setup("Linear Damping", 0.9987f, 0.80f, 1.0f));
+	physicsGui.add(massSlider.setup("Mass", 10.0f, 0.1f, 100.0f));
 
 //	physicsGui.add(angVelXSlider.setup("Ang Vel X", 0.0f, -180.0f, 180.0f));
 //	physicsGui.add(angVelYSlider.setup("Ang Vel Y", 0.0f, -180.0f, 180.0f));
@@ -1022,11 +1125,16 @@ void ofApp::PhysicsDebugSetup() {
 
 	physicsGui.add(rotDampingSlider.setup("Rot Damping", 0.99f, 0.80f, 1.0f));
 	
-	physicsGui.add(fuelMaxSlider.setup("Fuel Max", 100.0f, 0.0f, 500.0f));
-	physicsGui.add(fuelSlider.setup("Fuel",       100.0f, 0.0f, 500.0f));
+	physicsGui.add(fuelMaxSlider.setup("Fuel Max", 300.0f, 0.0f, 500.0f));
+	physicsGui.add(fuelSlider.setup("Fuel",       300.0f, 0.0f, 500.0f));
 	
 	physicsGui.add(restitutionSlider.setup("Restitution", 0.3f, 0.0f, 1.0f));
-	physicsGui.add(crashSpeedSlider.setup("Crash Speed", 5.0f, 0.0f, 20.0f));
+	physicsGui.add(crashSpeedSlider.setup("Crash Speed", 1.4f, 0.0f, 20.0f));
+
+	// adding reload model
+	physicsGui.add(modelReloadButton.setup("Reload model"));
+	modelReloadButton.addListener(this, &ofApp::reloadModel);
+
 }
 void ofApp::PhysicsUpdate() {
 
@@ -1173,6 +1281,7 @@ void ofApp::resetLander() {
 	cout << "Lander reset." << endl;
 }
 
+
 void ofApp::setupLandingZones() {
 	// Coordinates are based on the coords of the landing lights, relative to the map model
 	glm::vec3 zoneHalfSize(5.0f, 2.0f, 5.0f);
@@ -1194,3 +1303,26 @@ void ofApp::drawLandingZones() {
 		landingZones[i].draw();
 	}
 }
+
+// Reloads model
+void ofApp::reloadModel() {
+	// load model early
+	lander.setCrashed(false); // need this off to show lander again
+	lander.loadModel("geo/dev-space-lander.obj");
+	lander.setScaleNormalization(false);
+	lander.setPosition(-30, 90, 60);
+	lander.setRotation(glm::vec3(0, 180, 0));
+
+	bLanderLoaded = true;
+	for (int i = 0; i < lander.getMeshCount(); i++) {
+		bboxList.push_back(Octree::meshBounds(lander.getMesh(i)));
+	}
+
+	// have landing cam onboard shown immedietely first
+	currentLandingCam = 4;
+	useTrackingCam = true;
+
+	// reload fuel
+	fuelSlider = (float)fuelMaxSlider;
+}
+

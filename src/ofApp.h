@@ -186,6 +186,19 @@ class ofApp : public ofBaseApp{
 		void setupLandingZones();
 		void drawLandingZones();
 
+		// lander sound
+
+		ofSoundPlayer engineSound;
+
+		ofSoundPlayer crashWarning;
+		bool crashWarningPlayed = false;
+
+		ofSoundPlayer explosionSound;
+
+		void reloadModel();
+
+		ofxButton modelReloadButton;
+
 
 
 };
