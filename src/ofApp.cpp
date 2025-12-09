@@ -316,8 +316,8 @@ void ofApp::update() {
 
 		// sound
 
-		// check if its moving first
-		bool isMoving = bMoveForward || bMoveBackward || bMoveLeft || bMoveRight || bMoveUp || bMoveDown || bYawLeft || bYawRight;
+		// check if its moving first and also if it hasn't crashed
+		bool isMoving = ((bMoveForward || bMoveBackward || bMoveLeft || bMoveRight || bMoveUp || bMoveDown || bYawLeft || bYawRight) && lander.crashed == false);
 
 		// check fuel first
 		if (lander.hasFuel())
@@ -1251,6 +1251,7 @@ void ofApp::resetLander() {
 void ofApp::reloadModel()
 {
 	// load model early
+	lander.setCrashed(false); // need this off to show lander again
 	lander.loadModel("geo/dev-space-lander.obj");
 	lander.setScaleNormalization(false);
 	lander.setPosition(-30, 90, 60);
@@ -1264,4 +1265,5 @@ void ofApp::reloadModel()
 	// have landing cam onboard shown immedietely first
 	currentLandingCam = 4;
 	useTrackingCam = true;
+	
 }
