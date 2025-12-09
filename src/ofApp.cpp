@@ -223,18 +223,14 @@ void ofApp::setup(){
 // incrementally update scene (animation)
 //
 void ofApp::update() {
-	
-	PhysicsUpdate();
-	
 	if (!bLanderLoaded) return;
-
+	PhysicsUpdate();
 	setupLandingZones(); // IMPORTANT FOR DEBUGGING DELETE LATER!!!
 	Box bounds = computeLanderBounds();
 	colBoxList.clear();
 	octree.intersect(bounds, octree.root, colBoxList);
 
-	if (!colBoxList.empty() && !lander.isCrashed()) {
-
+	if (!colBoxList.empty() && !lander.isCrashed() && !roundOver) {
 		glm::vec3 n(0, 1, 0);
 		float vRel = glm::dot(lander.physics.vel, n);
 
@@ -253,6 +249,7 @@ void ofApp::update() {
 				pos += n * 0.01f;
 				lander.setPosition(pos.x, pos.y, pos.z);
 				explosionSound.play(); // play explosion on death
+				roundOver = true;
 
 //					cout << "CRASH!" << endl;
 			}
@@ -274,18 +271,34 @@ void ofApp::update() {
 				// Handles landing zone logic
 				Box landerBox = computeLanderBounds();
 
-				// Only register first win
-				if (!bLandedOnZone) {
-					for (int i = 0; i < 3; ++i) {
-						if (landingZones[i].overlaps(landerBox)) {
-							bLandedOnZone = true;
-							landedZoneIndex = i;
-							cout << "LANDED ON ZONE " << (i+1) << "!" << endl;
-							break;
-						}
+				lastLandingWasSuccess = false;
+				lastLandingWasCrash = false;
+
+				bool onZone = false;
+				for (int i = 0; i < 3; ++i) {
+					if (landingZones[i].overlaps(landerBox)) {
+						onZone = true;
+						break;
 					}
 				}
 				
+//				bool outOfFuel = !lander.hasFuel();
+
+				// Case 1: gentle landing inside a zone
+				if (onZone) {
+					score += 1;
+					successfulLandings += 1;
+					lastLandingWasSuccess = true;
+					cout << "SUCCESSFUL LANDING! Score = " << score << endl;
+				}
+				// Case 2: gentle landing outside any zone
+				else if (!onZone ) {
+					successfulLandings += 1;
+					lastLandingWasCrash = true;
+					cout << "CRASH LANDING (no fuel, no score)." << endl;
+				}
+				roundOver = true;
+				lander.physics.vel = glm::vec3(0);
 			}
 		}
 	}
@@ -547,6 +560,8 @@ void ofApp::draw() {
 	
 	drawAltitudeTelemetry();
 	drawFuel();
+	drawScore();
+	drawEndRoundMessage();
 	
 	if (!bHide) {
 	 gui.draw();
@@ -626,7 +641,12 @@ void ofApp::keyPressed(int key) {
 		setCameraTarget();
 		break;
 	case 'u':
-		resetLander();
+		if (lander.isCrashed() || roundOver || lastLandingWasSuccess || lastLandingWasCrash) {
+			roundOver = false;
+			reloadModel();
+			lastLandingWasSuccess = false;
+			lastLandingWasCrash   = false;
+		}
 		break;
 	case 'v':
 		togglePointsDisplay();
@@ -1134,7 +1154,7 @@ void ofApp::PhysicsDebugSetup() {
 void ofApp::PhysicsUpdate() {
 
 	if (!bLanderLoaded) return;
-	if (lander.isCrashed()) {
+	if (lander.isCrashed() || roundOver) {
 		lander.physics.vel = glm::vec3(0);
 		return;
 	}
@@ -1337,3 +1357,34 @@ Box ofApp::computeLanderBounds() {
 	return Box(Vector3(min.x, min.y, min.z),
 			   Vector3(max.x, max.y, max.z));
 }
+
+void ofApp::drawScore() {
+	ofSetColor(255);
+	std::string scoreMsg =
+		"Score: " + ofToString(score) +
+		"  Landings: " + ofToString(successfulLandings);
+	ofDrawBitmapStringHighlight(scoreMsg, 20, 60);
+}
+
+void ofApp::drawEndRoundMessage() {
+	if (!roundOver && !lander.isCrashed()) return;
+
+	std::string msg;
+	if (lander.isCrashed()) {
+		msg = "DEATH! Press 'U' to restart.";
+	} else if (lastLandingWasSuccess) {
+		msg = "SUCCESSFUL LANDING! Press 'U' to restart.";
+	} else if (lastLandingWasCrash) {
+		msg = "CRASH LANDING. Press 'U' to restart.";
+	} else {
+		msg = "ROUND OVER. Press 'U' to restart.";
+	}
+
+	ofSetColor(255);
+	int w = ofGetWidth();
+	int h = ofGetHeight();
+	int x = w / 2 - 200;
+	int y = h / 2;
+	ofDrawBitmapStringHighlight(msg, x, y);
+}
+

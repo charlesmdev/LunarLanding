@@ -211,6 +211,10 @@ class ofApp : public ofBaseApp{
 		bool lastLandingWasCrash = false;
 	
 		Box computeLanderBounds(); // Helper for computing the box bounds of lander.
+		void drawScore();
+		void drawEndRoundMessage();
+		bool roundOver = false;
+
 	
 
 
