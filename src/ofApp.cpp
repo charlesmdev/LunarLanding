@@ -306,7 +306,7 @@ void ofApp::update() {
 		else if (currentLandingCam == 6) // below lander cam
 		{
 			glm::vec3 landerPos = lander.getPosition();
-			trackingCam.setPosition(landerPos + glm::vec3(0, 2, 10));
+			trackingCam.setPosition(landerPos + glm::vec3(0, 1, 5));
 			trackingCam.lookAt(landerPos + glm::vec3(0, 0, 0));
 		}
 
