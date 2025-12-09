@@ -176,6 +176,19 @@ class ofApp : public ofBaseApp{
 		
 		void resetLander();
 
+		// lander sound
+
+		ofSoundPlayer engineSound;
+
+		ofSoundPlayer crashWarning;
+		bool crashWarningPlayed = false;
+
+		ofSoundPlayer explosionSound;
+
+		void reloadModel();
+
+		ofxButton modelReloadButton;
+
 
 
 };
