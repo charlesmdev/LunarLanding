@@ -88,7 +88,7 @@ void ofApp::setup(){
 	camPositions.push_back(glm::vec3(0, 50, 20)); // Landing Zone Start (default 0)
 	camPositions.push_back(glm::vec3(76.4916, 14.7818, 86.614)); // Landing Zone 1
 	camPositions.push_back(glm::vec3(-86.0892, 40.9025, -51.3489)); // Landing Zone 2
-	camPositions.push_back(glm::vec3(42.051, 0, -63.273)); // Landing Zone 3
+	camPositions.push_back(glm::vec3(42.051, 20, -63.273)); // Landing Zone 3
 	// camera 4 onward will use onboard
 	
 	trackingCam.setPosition(0, 50, 20); // Landing Center Start
@@ -230,7 +230,7 @@ void ofApp::update() {
 	colBoxList.clear();
 	octree.intersect(bounds, octree.root, colBoxList);
 
-	if (!colBoxList.empty() && !lander.isCrashed() && !roundOver) {
+	if (!colBoxList.empty() && !lander.isCrashed()) {
 		glm::vec3 n(0, 1, 0);
 		float vRel = glm::dot(lander.physics.vel, n);
 
@@ -285,20 +285,20 @@ void ofApp::update() {
 //				bool outOfFuel = !lander.hasFuel();
 
 				// Case 1: gentle landing inside a zone
-				if (onZone) {
+				if (onZone && !roundOver) {
 					score += 1;
 					successfulLandings += 1;
 					lastLandingWasSuccess = true;
+					roundOver = true;
 					cout << "SUCCESSFUL LANDING! Score = " << score << endl;
 				}
 				// Case 2: gentle landing outside any zone
-				else if (!onZone ) {
+				else if (!onZone && !roundOver) {
 					successfulLandings += 1;
 					lastLandingWasCrash = true;
+					roundOver = true;
 					cout << "CRASH LANDING (no fuel, no score)." << endl;
 				}
-				roundOver = true;
-				lander.physics.vel = glm::vec3(0);
 			}
 		}
 	}
@@ -1143,7 +1143,7 @@ void ofApp::PhysicsDebugSetup() {
 	physicsGui.add(crashSpeedSlider.setup("Crash Speed", 1.4f, 0.0f, 20.0f));
 	
 	physicsGui.add(landingZoneHalfX.setup("LZ Half X", 5.0f, 0.5f, 50.0f));
-	physicsGui.add(landingZoneHalfY.setup("LZ Half Y", 2.0f, 0.1f, 20.0f));
+	physicsGui.add(landingZoneHalfY.setup("LZ Half Y", 2.0f, 0.1f, 50.0f));
 	physicsGui.add(landingZoneHalfZ.setup("LZ Half Z", 5.0f, 0.5f, 50.0f));
 
 	// adding reload model
@@ -1154,7 +1154,7 @@ void ofApp::PhysicsDebugSetup() {
 void ofApp::PhysicsUpdate() {
 
 	if (!bLanderLoaded) return;
-	if (lander.isCrashed() || roundOver) {
+	if (lander.isCrashed()) {
 		lander.physics.vel = glm::vec3(0);
 		return;
 	}
