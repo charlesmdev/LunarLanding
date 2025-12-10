@@ -7,6 +7,10 @@
 #include <glm/gtx/intersect.hpp>
 #include "shapes/Lander.h"
 #include "physics/LandingZone.h"
+#include "particles/Particle.h"
+#include "particles/ParticleSystem.h"
+#include "emitters/ParticleEmitter.h"
+#include "TransformObject.h"
 
 
 
@@ -216,7 +220,42 @@ class ofApp : public ofBaseApp{
 		bool roundOver = false;
 
 	
+		// Explosion
+		// 
+		// textures
+		//
+		ofTexture particleTex;
+
+		// shaders
+		//
+		ofVbo vbo;
+		ofShader shader;
+
+		ParticleEmitter emitter;
+
+		TurbulenceForce * turbForce;
+		GravityForce * gravityForce;
+		ImpulseRadialForce * radialForce;
+		CyclicForce * cyclicForce;
+
+		// some simple sliders to play with parameters
+		//
+		ofxFloatSlider gravity;
+		ofxFloatSlider damping;
+		ofxFloatSlider radius;
+		ofxVec3Slider velocity;
+		ofxIntSlider numParticles;
+		ofxFloatSlider lifespan;
+		ofxVec2Slider lifespanRange;
+		ofxVec3Slider turbMin;
+		ofxVec3Slider turbMax;
+		ofxFloatSlider mass;
+		ofxFloatSlider radialForceVal;
+		ofxFloatSlider radialHight;
+		ofxFloatSlider cyclicForceVal;
+		ofxFloatSlider rate;
 
 
+		void loadVbo();
 
 };
