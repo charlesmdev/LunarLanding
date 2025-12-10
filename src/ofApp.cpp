@@ -1287,7 +1287,7 @@ void ofApp::PhysicsDebugSetup() {
 	physicsGui.add(landingZoneHalfZ.setup("LZ Half Z", 5.0f, 0.5f, 50.0f));
 	
 	physicsGui.add(thrusterSpeed.setup("Thrust Speed", 80.0f, 10.0f, 300.0f));
-	physicsGui.add(thrusterSize.setup("Thrust Size", 6.0f, 1.0f, 30.0f));
+	physicsGui.add(thrusterSize.setup("Thrust Size", 6.0f, 1.0f, 100.0f));
 	physicsGui.add(thrusterLife.setup("Thrust Life", 0.8f, 0.1f, 3.0f));
 	physicsGui.add(thrusterYOffset.setup("Thrust Y Off", 1.0f, -5.0f, 5.0f));
 
@@ -1575,24 +1575,43 @@ void ofApp::updateThruster() {
 }
 
 void ofApp::drawThruster() {
-	auto &particles = thrusterEmitter.sys->particles;
+	auto & particles = thrusterEmitter.sys->particles;
 	if (particles.empty()) return;
 
-	vector<ofVec3f> points, sizes;
+	vector<ofVec3f> points;
+	vector<ofVec3f> sizes;
+
 	points.reserve(particles.size());
 	sizes.reserve(particles.size());
 
-	for (auto &p : particles) {
-		points.push_back(p.position);
-		sizes.push_back(ofVec3f(static_cast<float>(thrusterSize)));
+	// camera fix
+	float sizeMultiplier;
+	if (currentLandingCam == 6) {
+		sizeMultiplier = 3.0f;
 	}
 
-	int total = (int)points.size();
-	thrusterVbo.clear();
-	thrusterVbo.setVertexData(&points[0], total, GL_STATIC_DRAW);
-	thrusterVbo.setNormalData(&sizes[0], total, GL_STATIC_DRAW);
+	else if (currentLandingCam == 1 || currentLandingCam == 2 || currentLandingCam == 3)
+	{
+		sizeMultiplier = 0.5f;
+	}
 
-//	ofSetColor(150, 200, 255);
+	else {
+		sizeMultiplier = 1.0f;
+	}
+
+	for (auto & p : particles) {
+		points.push_back(p.position);
+
+		sizes.push_back(ofVec3f(thrusterSize * sizeMultiplier, 0, 0));
+	}
+
+	int total = points.size();
+
+	thrusterVbo.clear();
+	thrusterVbo.setVertexData(points.data(), total, GL_STATIC_DRAW);
+	thrusterVbo.setNormalData(sizes.data(), total, GL_STATIC_DRAW);
+
+	// draw
 	ofSetColor(255, 100, 90);
 	ofEnableBlendMode(OF_BLENDMODE_ADD);
 	ofEnablePointSprites();
