@@ -454,7 +454,7 @@ void ofApp::update() {
 	bool isMoving = ((bMoveForward || bMoveBackward || bMoveLeft || bMoveRight || bMoveUp || bMoveDown || bYawLeft || bYawRight) && lander.crashed == false);
 
 	// check if it crashed to turn off crashwarning
-	if (lander.crashed)
+	if (roundOver)
 	{
 		if (crashWarning.isPlaying())
 		{
@@ -1352,47 +1352,52 @@ void ofApp::PhysicsUpdate() {
 			bMoveRight   || bMoveLeft     ||
 			bMoveUp      || bMoveDown     ||
 			bYawLeft     || bYawRight;
-
-	bool thrustersActive = thrustersRequested && lander.hasFuel();
-	if (thrustersActive && !thrusterEmitter.started) {
-		thrusterEmitter.start();
-		cout << "Thruster START\n";
-	} else if (!thrustersActive && thrusterEmitter.started) {
-		thrusterEmitter.stop();
-		cout << "Thruster STOP\n";
-	}
-
-	if (thrustersActive) {
-		if (bMoveForward) {
-			lander.physics.addForce(fwd * moveThrust);
-		}
-		if (bMoveBackward) {
-			lander.physics.addForce(-fwd * moveThrust);
-		}
-		if (bMoveRight) {
-			lander.physics.addForce(right * moveThrust);
-		}
-		if (bMoveLeft) {
-			lander.physics.addForce(-right * moveThrust);
-		}
-		if (bMoveUp) {
-			lander.physics.addForce(up * moveThrust);
-		}
-		if (bMoveDown) {
-			lander.physics.addForce(-up * moveThrust);
-		}
-		float yawTorque = 30.0f;
-		if (bYawLeft) {
-			lander.physics.addTorque(glm::vec3(0, yawTorque, 0));   // +Y rotation
-		}
-		if (bYawRight) {
-			lander.physics.addTorque(glm::vec3(0, -yawTorque, 0));  // -Y rotation
+	if(!roundOver) {
+		bool thrustersActive = thrustersRequested && lander.hasFuel();
+		if (thrustersActive && !thrusterEmitter.started) {
+			thrusterEmitter.start();
+			cout << "Thruster START\n";
+		} else if (!thrustersActive && thrusterEmitter.started) {
+			thrusterEmitter.stop();
+			cout << "Thruster STOP\n";
 		}
 		
-	  float dt = ofGetLastFrameTime();  // seconds
-	  float thrustFactor = moveThrust / std::max(0.01f, (float)thrustMaxSlider);
-	  float burn = lander.fuelBurnRate * thrustFactor * dt;
-	  lander.fuel = std::max(0.0f, lander.fuel - burn);
+		if (thrustersActive) {
+			if (bMoveForward) {
+				lander.physics.addForce(fwd * moveThrust);
+			}
+			if (bMoveBackward) {
+				lander.physics.addForce(-fwd * moveThrust);
+			}
+			if (bMoveRight) {
+				lander.physics.addForce(right * moveThrust);
+			}
+			if (bMoveLeft) {
+				lander.physics.addForce(-right * moveThrust);
+			}
+			if (bMoveUp) {
+				lander.physics.addForce(up * moveThrust);
+			}
+			if (bMoveDown) {
+				lander.physics.addForce(-up * moveThrust);
+			}
+			float yawTorque = 30.0f;
+			if (bYawLeft) {
+				lander.physics.addTorque(glm::vec3(0, yawTorque, 0));   // +Y rotation
+			}
+			if (bYawRight) {
+				lander.physics.addTorque(glm::vec3(0, -yawTorque, 0));  // -Y rotation
+			}
+			
+			float dt = ofGetLastFrameTime();  // seconds
+			float thrustFactor = moveThrust / std::max(0.01f, (float)thrustMaxSlider);
+			float burn = lander.fuelBurnRate * thrustFactor * dt;
+			lander.fuel = std::max(0.0f, lander.fuel - burn);
+		}
+	} else {
+		if (thrusterEmitter.started) {
+			thrusterEmitter.stop();
+		}
 	}
 	
 	fuelSlider = lander.fuel;
