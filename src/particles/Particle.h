@@ -1,7 +1,5 @@
 #pragma once
 
-//  Kevin M. Smith - CS 134 SJSU
-
 #include "ofMain.h"
 
 class ParticleForceField;
@@ -22,7 +20,7 @@ public:
 	void    integrate();
 	void    draw();
 	float   age();        // sec
-	// ofColor color;
+	ofColor color;
 };
 
 

@@ -17,6 +17,9 @@
 		"1F15B909-ED03-40BF-89CB-BD73D58586A1" /* ofxAssimpMeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "0CD7B035-0E1D-475A-BBBB-B301F3838100" /* ofxAssimpMeshHelper.cpp */; };
 		"20921267-9CB3-4D9A-B07A-1369E058C078" /* ofxInputField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "AC4C9B99-8E6E-47A0-B2A0-68CF47B3B5FB" /* ofxInputField.cpp */; };
 		291E6A362EDF80F600FB5743 /* Lander.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 291E6A352EDF80F600FB5743 /* Lander.cpp */; };
+		291E6A402EE8F4E000FB5743 /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 291E6A3F2EE8F4E000FB5743 /* Particle.cpp */; };
+		291E6A432EE8F4EB00FB5743 /* ParticleEmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 291E6A422EE8F4EB00FB5743 /* ParticleEmitter.cpp */; };
+		291E6A462EE8F4F300FB5743 /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 291E6A452EE8F4F300FB5743 /* ParticleSystem.cpp */; };
 		2944DD9A2ED76DBC00D1357A /* box.cc in Sources */ = {isa = PBXBuildFile; fileRef = 2944DD992ED76DB600D1357A /* box.cc */; };
 		"3E838EAE-7DCD-46CB-AC19-EEF03CC47479" /* ofxAssimpSrcMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "10ED82D2-9B8D-4016-9A30-B330D6B38CFE" /* ofxAssimpSrcMesh.cpp */; };
 		"4263E79E-8427-4D90-9E2D-169BB36AF090" /* ofxAssimpAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "398E835B-C973-4E03-8EB5-F90806E5F65B" /* ofxAssimpAnimation.cpp */; };
@@ -34,7 +37,6 @@
 		"741BB63E-C78B-4291-A04A-AFD1C06F34C0" /* ofxLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "95A8DA54-F769-4E78-BC1E-E559E6DA05A0" /* ofxLabel.cpp */; };
 		"7A01FCF2-87CD-47F7-945F-D6B4ECD1D24F" /* ofxAssimpSrcNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "F387669E-D9EF-454A-8128-0E2A0E343160" /* ofxAssimpSrcNode.cpp */; };
 		"906E7403-9A8C-490F-9AC7-DBE320B31D82" /* CreEPS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "47A7C35E-3F19-4D13-B951-964B7EF930B1" /* CreEPS.cpp */; };
-		"9A674F60-331E-42E0-BFCE-390FFA9D27C2" /* ParticleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "2714D185-EB9A-428E-A3C8-501CCD339479" /* ParticleSystem.cpp */; };
 		"9FE306A8-657A-4AFF-B0C5-B5390CCB6DCF" /* ofxAssimpBounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "2FE04867-2463-4B29-AB2E-F0B83C587D6B" /* ofxAssimpBounds.cpp */; };
 		"A1C40652-C4E4-4424-834A-EA5AA35A99C0" /* ofxAssimpScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "A92FD694-1E82-450A-90A8-8BAD49142F17" /* ofxAssimpScene.cpp */; };
 		"A33DFBE5-90E4-4BF0-BD09-56FEEFA81193" /* ofxToggle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "C6C3AA6D-0F9D-4A58-894E-C392B9D9C9FA" /* ofxToggle.cpp */; };
@@ -51,10 +53,8 @@
 		"DFC7737B-4044-47E5-A798-E58455A228F5" /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "E99EBD6F-1CF7-41B7-8FEC-AAE8CD3D44C8" /* ofxBaseGui.cpp */; };
 		E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1D0A3A1BDC003C02F2 /* main.cpp */; };
 		E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */; };
-		"F2F7F69D-0A6F-4693-B1FC-F382B0CCB4AB" /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "AC61388D-0D4C-4451-AD69-AE6A92D7BD90" /* Particle.cpp */; };
 		"F3235141-26C6-4D74-BDCD-3ADA0CF52CF5" /* ofxGuiGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "9137B78C-3458-4D5E-B7A8-F5416C1B7936" /* ofxGuiGroup.cpp */; };
 		"F3C4F32F-F9A2-45F6-AE24-E4A172AD1837" /* Helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "2CC7B016-7CDC-4F21-B8F5-EF5C42D104D3" /* Helpers.cpp */; };
-		"FCFC2489-CF19-4129-976A-8FE79EDB5606" /* ParticleEmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "D7EFDAAF-FA8B-4E4E-B6EC-3787675C1D42" /* ParticleEmitter.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -87,7 +87,6 @@
 		"01DAEC65-A7CF-44E4-999A-6B5EA628B340" /* ofxButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxButton.cpp; sourceTree = "<group>"; };
 		"020790A4-295D-4BF2-9441-B11B161236B6" /* ofxAssimpSrcAnimKeyCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxAssimpSrcAnimKeyCollection.h; sourceTree = "<group>"; };
 		"02D7426C-9624-47C1-BFB2-259E5347870E" /* ProgressHandler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProgressHandler.hpp; sourceTree = "<group>"; };
-		"03BF5B7C-57DB-43B9-BD0D-1D583B256AFF" /* ParticleEmitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitter.h; sourceTree = "<group>"; };
 		"03E92AF7-E501-4ABA-95E0-8ADDF0A0818C" /* LogStream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LogStream.hpp; sourceTree = "<group>"; };
 		"041A03A1-AB9B-4F8C-B779-95DC2E61BB36" /* scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = scene.h; sourceTree = "<group>"; };
 		"0469C93D-CA83-4BFA-B973-0BEB19EB1CC2" /* ofxSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxSlider.h; sourceTree = "<group>"; };
@@ -141,7 +140,6 @@
 		"233F2BB4-116F-4597-90B2-296E5C466A14" /* DefaultIOStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DefaultIOStream.h; sourceTree = "<group>"; };
 		"252CE401-EEF3-4BBC-9F07-F4176E76B665" /* cimport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cimport.h; sourceTree = "<group>"; };
 		"26AEFE7C-A544-4E80-85C0-D21D39BC5835" /* ofxAssimpBounds.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxAssimpBounds.h; sourceTree = "<group>"; };
-		"2714D185-EB9A-428E-A3C8-501CCD339479" /* ParticleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleSystem.cpp; sourceTree = "<group>"; };
 		"27494D6E-C077-413A-8FBD-AC573579884C" /* Exporter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Exporter.hpp; sourceTree = "<group>"; };
 		"276A0584-512E-4129-A92F-0BB8A2A6228C" /* Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Helpers.h; sourceTree = "<group>"; };
 		"2783593A-6EA2-4A35-A103-BF4FC2F840D4" /* poppack1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = poppack1.h; sourceTree = "<group>"; };
@@ -152,6 +150,12 @@
 		291E6A392EDF84AE00FB5743 /* Physics3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Physics3D.h; sourceTree = "<group>"; };
 		291E6A3C2EDF857300FB5743 /* RotationalPhysics3D.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RotationalPhysics3D.h; sourceTree = "<group>"; };
 		291E6A3D2EE7A64C00FB5743 /* LandingZone.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LandingZone.h; sourceTree = "<group>"; };
+		291E6A3E2EE8F4E000FB5743 /* Particle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
+		291E6A3F2EE8F4E000FB5743 /* Particle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
+		291E6A412EE8F4EB00FB5743 /* ParticleEmitter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParticleEmitter.h; sourceTree = "<group>"; };
+		291E6A422EE8F4EB00FB5743 /* ParticleEmitter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleEmitter.cpp; sourceTree = "<group>"; };
+		291E6A442EE8F4F300FB5743 /* ParticleSystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ParticleSystem.h; sourceTree = "<group>"; };
+		291E6A452EE8F4F300FB5743 /* ParticleSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleSystem.cpp; sourceTree = "<group>"; };
 		2944DD992ED76DB600D1357A /* box.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = box.cc; sourceTree = "<group>"; };
 		"2A594F1E-C3D7-4516-AAB9-6987E84E25A7" /* pushpack1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pushpack1.h; sourceTree = "<group>"; };
 		"2A5AF2B6-7512-475D-92ED-010537EE4438" /* qnan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = qnan.h; sourceTree = "<group>"; };
@@ -380,7 +384,6 @@
 		"A93438EA-2711-49D6-80F2-7111CE10F413" /* MemoryIOWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MemoryIOWrapper.h; sourceTree = "<group>"; };
 		"A95D783D-4CF8-4742-A84E-87CC12EAEF05" /* TinyFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TinyFormatter.h; sourceTree = "<group>"; };
 		"A9758E87-F18F-49FD-B706-5BF2CACCC679" /* Bitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Bitmap.h; sourceTree = "<group>"; };
-		"A9E06F18-BB71-4834-A4DD-2F3487DCE0A2" /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Particle.h; sourceTree = "<group>"; };
 		"AA75A5FC-5A3D-44BD-9EE4-473F7BE20F11" /* vector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vector2.h; sourceTree = "<group>"; };
 		"AAB0E65C-B2D3-4C60-B8B4-11AD6617553A" /* Base64.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Base64.hpp; sourceTree = "<group>"; };
 		"AB334B9B-2B61-4B17-B503-AB9CE2A3ED61" /* fast_atof.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = fast_atof.h; sourceTree = "<group>"; };
@@ -388,7 +391,6 @@
 		"ABF03307-86D2-4824-91B9-7A5A6F07F959" /* XMLTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = XMLTools.h; sourceTree = "<group>"; };
 		"AC00C6B7-43FB-4FF5-8697-106810906266" /* Importer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Importer.hpp; sourceTree = "<group>"; };
 		"AC4C9B99-8E6E-47A0-B2A0-68CF47B3B5FB" /* ofxInputField.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxInputField.cpp; sourceTree = "<group>"; };
-		"AC61388D-0D4C-4451-AD69-AE6A92D7BD90" /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
 		"AD1FF6BD-F5C7-41B3-9C0D-9E78ABAF1763" /* BlobIOSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BlobIOSystem.h; sourceTree = "<group>"; };
 		"AD5503DA-D61B-429C-BD18-578E112D100F" /* SceneCombiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SceneCombiner.h; sourceTree = "<group>"; };
 		"AD8C3BBC-56D1-4D0E-912E-398CA1FD81F0" /* IOStream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IOStream.hpp; sourceTree = "<group>"; };
@@ -416,7 +418,6 @@
 		"BA3A5812-FF08-4461-8E28-28E96A57851C" /* GltfMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GltfMaterial.h; sourceTree = "<group>"; };
 		"BB18249B-FB81-43FF-97BA-B6667735E830" /* color4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = color4.h; sourceTree = "<group>"; };
 		"BB45DA92-45B5-4D2D-B3DB-BDE59EF99219" /* ColladaMetaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ColladaMetaData.h; sourceTree = "<group>"; };
-		"BBF5C2CB-2D22-4062-A89E-7E37C04FA9C0" /* ParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ParticleSystem.h; sourceTree = "<group>"; };
 		"BC47F936-CE71-4A4C-B2E4-167258FDBF66" /* LineSplitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LineSplitter.h; sourceTree = "<group>"; };
 		"BCD18632-B875-4A94-B52E-7EE0B423935A" /* vector2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vector2.h; sourceTree = "<group>"; };
 		"BE74D358-7B7A-4932-92AB-4EE1F077F980" /* aabb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = aabb.h; sourceTree = "<group>"; };
@@ -472,7 +473,6 @@
 		"D622F7E9-6EA8-4E6F-8827-FDE5829013D5" /* ofxGuiUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxGuiUtils.h; sourceTree = "<group>"; };
 		"D71E2C1E-2AEC-4CD5-A968-086E281B1621" /* XmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = XmlParser.h; sourceTree = "<group>"; };
 		"D7341A1B-F767-4119-AEF7-C7A3C9849539" /* ofxButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxButton.h; sourceTree = "<group>"; };
-		"D7EFDAAF-FA8B-4E4E-B6EC-3787675C1D42" /* ParticleEmitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleEmitter.cpp; sourceTree = "<group>"; };
 		"D9372274-864D-4F69-A1DF-7D31CBC7A69E" /* XMLTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = XMLTools.h; sourceTree = "<group>"; };
 		"DC7C0076-A6C8-4B19-8A57-8A46E1E0267E" /* BlobIOSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BlobIOSystem.h; sourceTree = "<group>"; };
 		"DCE688B6-7C9E-41C8-A41B-7EA9B318AC55" /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
@@ -792,10 +792,10 @@
 		"41317E2B-7911-43D6-B746-BB2EBE2098DA" /* particles */ = {
 			isa = PBXGroup;
 			children = (
-				"AC61388D-0D4C-4451-AD69-AE6A92D7BD90" /* Particle.cpp */,
-				"A9E06F18-BB71-4834-A4DD-2F3487DCE0A2" /* Particle.h */,
-				"2714D185-EB9A-428E-A3C8-501CCD339479" /* ParticleSystem.cpp */,
-				"BBF5C2CB-2D22-4062-A89E-7E37C04FA9C0" /* ParticleSystem.h */,
+				291E6A3E2EE8F4E000FB5743 /* Particle.h */,
+				291E6A3F2EE8F4E000FB5743 /* Particle.cpp */,
+				291E6A442EE8F4F300FB5743 /* ParticleSystem.h */,
+				291E6A452EE8F4F300FB5743 /* ParticleSystem.cpp */,
 			);
 			path = particles;
 			sourceTree = "<group>";
@@ -868,8 +868,8 @@
 		"7609D93D-ED68-4F8B-AB14-723699FB1983" /* emitters */ = {
 			isa = PBXGroup;
 			children = (
-				"D7EFDAAF-FA8B-4E4E-B6EC-3787675C1D42" /* ParticleEmitter.cpp */,
-				"03BF5B7C-57DB-43B9-BD0D-1D583B256AFF" /* ParticleEmitter.h */,
+				291E6A412EE8F4EB00FB5743 /* ParticleEmitter.h */,
+				291E6A422EE8F4EB00FB5743 /* ParticleEmitter.cpp */,
 			);
 			path = emitters;
 			sourceTree = "<group>";
@@ -1360,11 +1360,9 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* ofApp.cpp in Sources */,
+				291E6A432EE8F4EB00FB5743 /* ParticleEmitter.cpp in Sources */,
 				"17CB76FD-BBA1-47CB-BE45-2CDF2EA1B137" /* Octree.cpp in Sources */,
 				"03395949-7F62-4726-810A-C87ADFFB6968" /* Util.cpp in Sources */,
-				"FCFC2489-CF19-4129-976A-8FE79EDB5606" /* ParticleEmitter.cpp in Sources */,
-				"F2F7F69D-0A6F-4693-B1FC-F382B0CCB4AB" /* Particle.cpp in Sources */,
-				"9A674F60-331E-42E0-BFCE-390FFA9D27C2" /* ParticleSystem.cpp in Sources */,
 				"05D42577-C7A0-4837-89F4-C717E3F99A3E" /* Collision.cpp in Sources */,
 				"0019E811-7FF5-4B7C-BB14-78863DDD339E" /* CollisionManager.cpp in Sources */,
 				"4DE01E5D-2479-4D42-B359-26F0C84CA58B" /* Physics.cpp in Sources */,
@@ -1390,6 +1388,7 @@
 				"4D465B99-450B-41C3-878A-E2CAB7D0F0EE" /* ofxAssimpSkeleton.cpp in Sources */,
 				"DCD415B2-EFF8-4541-84F0-2EC86D907A30" /* ofxAssimpTexture.cpp in Sources */,
 				2944DD9A2ED76DBC00D1357A /* box.cc in Sources */,
+				291E6A402EE8F4E000FB5743 /* Particle.cpp in Sources */,
 				"4263E79E-8427-4D90-9E2D-169BB36AF090" /* ofxAssimpAnimation.cpp in Sources */,
 				"1F15B909-ED03-40BF-89CB-BD73D58586A1" /* ofxAssimpMeshHelper.cpp in Sources */,
 				"B9F61BB1-0EBA-4B94-A993-4E3F8E9163AB" /* ofxAssimpModelLoader.cpp in Sources */,
@@ -1403,6 +1402,7 @@
 				"D6CDB5C9-C136-4690-BA85-2702A846A623" /* ofxPanel.cpp in Sources */,
 				"B316D10F-31E7-4805-A5D7-899B4F2F4F5E" /* ofxSlider.cpp in Sources */,
 				"02B7B59E-290C-40A4-B12D-98D9FF83FCFC" /* ofxSliderGroup.cpp in Sources */,
+				291E6A462EE8F4F300FB5743 /* ParticleSystem.cpp in Sources */,
 				"A33DFBE5-90E4-4BF0-BD09-56FEEFA81193" /* ofxToggle.cpp in Sources */,
 				"906E7403-9A8C-490F-9AC7-DBE320B31D82" /* CreEPS.cpp in Sources */,
 				"DC64ADE8-75E2-4BA8-99D3-D81E225F9C60" /* ofxVectorGraphics.cpp in Sources */,

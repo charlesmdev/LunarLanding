@@ -1,5 +1,3 @@
-//  Kevin M. Smith - CS 134 SJSU
-
 #include "Particle.h"
 
 
@@ -13,15 +11,15 @@ Particle::Particle() {
 	forces.set(0, 0, 0);
 	lifespan = 5;
 	birthtime = 0;
-	// radius = .1;
-	radius = 1.0f;
+	radius = .1;
 	damping = .99;
 	mass = 1;
-	// color = ofColor::aquamarine;
+	color = ofColor::aquamarine;
 }
 
 void Particle::draw() {
-	// ofSetColor(color);
+//	ofSetColor(color);
+	ofSetColor(ofMap(age(), 0, lifespan, 255, 10), 0, 0);
 	ofDrawSphere(position, radius);
 }
 
