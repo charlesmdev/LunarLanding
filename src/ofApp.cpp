@@ -217,6 +217,76 @@ void ofApp::setup(){
 	currentLandingCam = 4;
 	useTrackingCam = true;
 
+
+
+	// explosion setup
+	ofDisableArbTex(); // disable rectangular textures
+	if (!ofLoadImage(particleTex, "images/dot.png")) {
+		cout << "Particle Texture File: images/dot.png not found" << endl;
+		ofExit();
+	}
+
+	#ifdef TARGET_OPENGLES
+	shader.load("shaders_gles/shader");
+#else
+	shader.load("shaders/shader");
+#endif
+
+	// some simple sliders to play with parameters
+	//
+	//	gui.add(velocity.setup("Initial Velocity", ofVec3f(0, 20, 0), ofVec3f(0, 0, 0), ofVec3f(100, 100, 100)));
+	//	gui.add(lifespan.setup("Lifespan", 2.0, .1, 10.0));(
+	gui.add(numParticles.setup("Number of Particles", 10000, 0, 25000));
+	gui.add(lifespanRange.setup("Lifespan Range", ofVec2f(1, 6), ofVec2f(.1, .2), ofVec2f(3, 10)));
+	gui.add(mass.setup("Mass", 1, .1, 10));
+	//	gui.add(rate.setup("Rate", 1.0, .5, 60.0));
+	gui.add(damping.setup("Damping", .99, .8, 1.0));
+	gui.add(gravity.setup("Gravity", 0, -20, 20));
+	gui.add(radius.setup("Radius", 5, 1, 10));
+	gui.add(turbMin.setup("Turbulence Min", ofVec3f(0, 0, 0), ofVec3f(-20, -20, -20), ofVec3f(20, 20, 20)));
+	gui.add(turbMax.setup("Turbulence Max", ofVec3f(0, 0, 0), ofVec3f(-20, -20, -20), ofVec3f(20, 20, 20)));
+	gui.add(radialForceVal.setup("Radial Force", 1000, 100, 5000));
+	gui.add(radialHight.setup("Radial Height", .2, .1, 1.0));
+	gui.add(cyclicForceVal.setup("Cyclic Force", 0, 10, 500));
+
+	// Create Forces
+	//
+	turbForce = new TurbulenceForce(ofVec3f(turbMin->x, turbMin->y, turbMin->z), ofVec3f(turbMax->x, turbMax->y, turbMax->z));
+	gravityForce = new GravityForce(ofVec3f(0, -gravity, 0));
+	radialForce = new ImpulseRadialForce(radialForceVal);
+	cyclicForce = new CyclicForce(cyclicForceVal);
+
+	// set up the emitter
+	//
+	emitter.sys->addForce(turbForce);
+	emitter.sys->addForce(gravityForce);
+	emitter.sys->addForce(radialForce);
+	emitter.sys->addForce(cyclicForce);
+
+	emitter.setVelocity(ofVec3f(0, 0, 0));
+	emitter.setOneShot(true);
+	emitter.setEmitterType(RadialEmitter);
+	emitter.setGroupSize(numParticles);
+	emitter.setRandomLife(true);
+	emitter.setLifespanRange(ofVec2f(lifespanRange->x, lifespanRange->y));
+
+}
+
+void ofApp::loadVbo() {
+	if (emitter.sys->particles.size() < 1) return;
+
+	vector<ofVec3f> sizes;
+	vector<ofVec3f> points;
+	for (int i = 0; i < emitter.sys->particles.size(); i++) {
+		points.push_back(emitter.sys->particles[i].position);
+		sizes.push_back(ofVec3f(radius));
+	}
+	// upload the data to the vbo
+	//
+	int total = (int)points.size();
+	vbo.clear();
+	vbo.setVertexData(&points[0], total, GL_STATIC_DRAW);
+	vbo.setNormalData(&sizes[0], total, GL_STATIC_DRAW);
 }
  
 //--------------------------------------------------------------
@@ -249,6 +319,14 @@ void ofApp::update() {
 				pos += n * 0.01f;
 				lander.setPosition(pos.x, pos.y, pos.z);
 				explosionSound.play(); // play explosion on death
+
+				// play explosionEmitter
+				emitter.sys->reset();
+				emitter.setPosition(lander.getPosition() + glm::vec3(0, 1.5, 0));
+				emitter.start();
+				
+
+
 				roundOver = true;
 
 //					cout << "CRASH!" << endl;
@@ -390,6 +468,31 @@ void ofApp::update() {
 	updateAltitudeTelemetry();
 
 
+
+	// explosion
+	ofSeedRandom();
+
+	// live update of emmitter parameters (with sliders)
+	//
+	emitter.setParticleRadius(radius);
+	emitter.setLifespanRange(ofVec2f(lifespanRange->x, lifespanRange->y));
+	emitter.setMass(mass);
+	emitter.setDamping(damping);
+	emitter.setGroupSize(numParticles);
+
+	// live update of forces  (with sliders)
+	//
+	gravityForce->set(ofVec3f(0, -gravity, 0));
+	turbForce->set(ofVec3f(turbMin->x, turbMin->y, turbMin->z), ofVec3f(turbMax->x, turbMax->y, turbMax->z));
+	radialForce->set(radialForceVal);
+	radialForce->setHeight(radialHight);
+	cyclicForce->set(cyclicForceVal);
+
+	// don't forget to update emitter
+	//
+	emitter.update();
+
+
 }
 //--------------------------------------------------------------
 void ofApp::draw() {
@@ -399,6 +502,9 @@ void ofApp::draw() {
 	ofSetColor(255); // reset color
 	skybox.draw(0, 0, ofGetWidth(), ofGetHeight());
 	ofEnableDepthTest();
+
+	// explosion
+	loadVbo();
 	
 
 //	glDepthMask(false);
@@ -420,6 +526,23 @@ void ofApp::draw() {
 	else{
 		cam.begin();
 	}
+
+	ofDisableLighting();
+	ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+	ofEnablePointSprites();
+	ofSetColor(255, 100, 90);
+
+	// draw shader
+	shader.begin();
+	particleTex.bind();
+	vbo.draw(GL_POINTS, 0, (int)emitter.sys->particles.size());
+	particleTex.unbind();
+
+	shader.end();
+
+	ofDisablePointSprites();
+	ofDisableBlendMode();
+	ofEnableAlphaBlending();
 
 	// draw lighting
 	// NOTE: only uncomment thisif you want to see the physical light
@@ -554,6 +677,7 @@ void ofApp::draw() {
 
 	ofPopMatrix();
 	cam.end();
+	
 	
 	ofDisableDepthTest();
 	glDepthMask(false);
