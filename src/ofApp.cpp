@@ -4,10 +4,20 @@
 //  Kevin M. Smith
 //
 //  Octree Test - startup scene
-// 
+//
+//  Lunar Lander
 //
 //  Student Name:   Charles Vincent Manaois
-//  Date: 11/15/2025
+//  Student Name:   David Vu
+//  Date: 12/10/2025
+//
+//
+//  Charles Contribution: All physics, altitude sensor, fuel, landing zones, particle emitter for rocket exhaust, HUD, scoring 
+//
+// 
+//	David Contribution: Model creation of lander and terrain, cameras, lighting, explosion, sounds, video trailer
+//
+//
 
 
 #include "ofApp.h"
@@ -63,7 +73,8 @@ void ofApp::setup(){
 	//
 	buildStartTime = ofGetElapsedTimeMillis();
 
-	// need this to combine meshes (terrain, flags, everything)
+	// Model Loading - David
+	// need this to combine meshes (terrain, flags, everything) - David
 	for (int i = 0; i < mars.getNumMeshes(); i++) {
 		combined.append(mars.getMesh(i));
 	}
@@ -78,11 +89,11 @@ void ofApp::setup(){
 	testBox = Box(Vector3(3, 3, 0), Vector3(5, 5, 2));
 
 
-	// sky box
+	// sky box - David
 	skybox.load("images/stars_dn.jpg");
 
 
-	// Camera
+	// Camera - David
 
 	// camera coordinates for landing zones
 	camPositions.push_back(glm::vec3(0, 50, 20)); // Landing Zone Start (default 0)
@@ -97,7 +108,7 @@ void ofApp::setup(){
 	trackingCam.setFarClip(2000);
 
 
-	// Lighting
+	// Lighting - David
 
 	// Environmental lighting
 	keyLight.setup();
@@ -108,8 +119,9 @@ void ofApp::setup(){
 	keyLight.rotate(-90, ofVec3f(1, 0, 0));
 	keyLight.setPosition(0, 40, 0);
 
+	// Landing Zone Lighting
 
-	// Landing Zone 1
+	// Landing Zone 1 
 	keyLight1.setup();
 	keyLight1.enable();
 	keyLight1.setSpotlight();
@@ -184,7 +196,7 @@ void ofApp::setup(){
 	
 	setupLandingZones();
 
-	// sound
+	// sound - David
 
 	// rocket thrust
 	engineSound.load("sounds/rocket-engine.mp3");
@@ -208,7 +220,7 @@ void ofApp::setup(){
 
 
 
-	// load model early
+	// load model early - David
 	lander.loadModel("geo/dev-space-lander.obj");
 	lander.setScaleNormalization(false);
 	lander.setPosition(-30, 90, 60);
@@ -225,7 +237,7 @@ void ofApp::setup(){
 
 
 
-	// explosion setup
+	// Explosion setup - David
 	ofDisableArbTex(); // disable rectangular textures
 	if (!ofLoadImage(particleTex, "images/dot.png")) {
 		cout << "Particle Texture File: images/dot.png not found" << endl;
@@ -422,7 +434,7 @@ void ofApp::update() {
 		colBoxList.clear();
 	}
 
-
+	// Camera update - David
 	// tracking camera
 	if (currentLandingCam < 4) // landing zones
 	{
@@ -452,12 +464,13 @@ void ofApp::update() {
 		trackingCam.lookAt(landerPos + glm::vec3(0, 0, 0));
 	}
 
+	// Lighting Update - David
 	// lander light
 	glm::vec3 landerPos = lander.getPosition();
 	landerLight.setPosition(landerPos + glm::vec3(0, 5, 0)); // offset above lander
 
-	// sound
 
+	// Sounds - David
 	// check if its moving first and also if it hasn't crashed
 	bool isMoving = ((bMoveForward || bMoveBackward || bMoveLeft || bMoveRight || bMoveUp || bMoveDown || bYawLeft || bYawRight) && lander.crashed == false);
 
@@ -506,8 +519,7 @@ void ofApp::update() {
 	updateAltitudeTelemetry();
 
 
-
-	// explosion
+	// Explosion - David
 	ofSeedRandom();
 
 	// live update of emmitter parameters (with sliders)
@@ -1526,7 +1538,7 @@ void ofApp::drawLandingZones() {
 	}
 }
 
-// Reloads model
+// Reloads model - David
 void ofApp::reloadModel() {
 	// load model early
 	lander.setCrashed(false); // need this off to show lander again
