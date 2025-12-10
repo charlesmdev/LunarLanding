@@ -1494,7 +1494,7 @@ void ofApp::thrustEmitterUpdate() {
 	
 	 ofVec3f exhaustDir(-up.x, -up.y, -up.z);
 	 exhaustDir.normalize();
-	 thrustEmitter.setV3elocity(exhaustDir * thrustSpeedSlider);
+	 thrustEmitter.setVelocity(exhaustDir * thrustSpeedSlider);
 
 	 thrustEmitter.setLifespan(thrustLifeSlider);
 	 thrustEmitter.setRate(thrustRateSlider);
