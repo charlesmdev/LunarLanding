@@ -237,16 +237,16 @@ void ofApp::setup(){
 	//	gui.add(velocity.setup("Initial Velocity", ofVec3f(0, 20, 0), ofVec3f(0, 0, 0), ofVec3f(100, 100, 100)));
 	//	gui.add(lifespan.setup("Lifespan", 2.0, .1, 10.0));(
 	gui.add(numParticles.setup("Number of Particles", 10000, 0, 25000));
-	gui.add(lifespanRange.setup("Lifespan Range", ofVec2f(1, 6), ofVec2f(.1, .2), ofVec2f(3, 10)));
-	gui.add(mass.setup("Mass", 1, .1, 10));
+	gui.add(lifespanRange.setup("Lifespan Range", ofVec2f(0.2, 1), ofVec2f(.1, .2), ofVec2f(3, 10)));
+	gui.add(mass.setup("Mass", 0.2, .1, 10));
 	//	gui.add(rate.setup("Rate", 1.0, .5, 60.0));
 	gui.add(damping.setup("Damping", .99, .8, 1.0));
 	gui.add(gravity.setup("Gravity", 0, -20, 20));
-	gui.add(radius.setup("Radius", 5, 1, 10));
+	gui.add(radius.setup("Radius", 10, 1, 10));
 	gui.add(turbMin.setup("Turbulence Min", ofVec3f(0, 0, 0), ofVec3f(-20, -20, -20), ofVec3f(20, 20, 20)));
 	gui.add(turbMax.setup("Turbulence Max", ofVec3f(0, 0, 0), ofVec3f(-20, -20, -20), ofVec3f(20, 20, 20)));
-	gui.add(radialForceVal.setup("Radial Force", 1000, 100, 5000));
-	gui.add(radialHight.setup("Radial Height", .2, .1, 1.0));
+	gui.add(radialForceVal.setup("Radial Force", 5000, 100, 5000));
+	gui.add(radialHight.setup("Radial Height", 1.0, .1, 1.0));
 	gui.add(cyclicForceVal.setup("Cyclic Force", 0, 10, 500));
 
 	// Create Forces
@@ -347,7 +347,7 @@ void ofApp::update() {
 
 				// Add a big random torque so it tumbles
 				glm::vec3 randomAxis = glm::sphericalRand(1.0f);
-				float     torqueMag  = impactSpeed * 50.0f;
+				float     torqueMag  = impactSpeed * 1000000.0f;
 				lander.physics.addTorque(randomAxis * torqueMag);
 
 				// Explosion sound + particles
@@ -539,15 +539,6 @@ void ofApp::draw() {
 	loadVbo();
 	
 
-//	glDepthMask(false);
-////	if (!bHide) gui.draw();
-//	if (!bHide) {
-//		  gui.draw();
-//		  if (bShowPhysicsGui) {
-//			  physicsGui.draw();
-//		  }
-//	  }
-//	glDepthMask(true);
 
 	
 
@@ -704,8 +695,11 @@ void ofApp::draw() {
 					 altitudeRayOrigin.z());
 
 		ofDrawLine(p0, p1);
+		ofSetColor(255);
 	}
+
 	
+	ofNoFill();
 	drawLandingZones();
 
 	ofPopMatrix();
@@ -719,13 +713,14 @@ void ofApp::draw() {
 	drawFuel();
 	drawScore();
 	drawEndRoundMessage();
-	
-	if (!bHide) {
+
+	// uncomment this if you want gui back
+	/*if (!bHide) {
 	 gui.draw();
 	if (bShowPhysicsGui) {
 		 physicsGui.draw();
 	 }
-	}
+	}*/
 
 	glDepthMask(true);
 }
@@ -786,16 +781,23 @@ void ofApp::keyPressed(int key) {
 		bDisplayOctree = !bDisplayOctree;
 		break;
 	case 'r':
-		// changing [r]eset button so it'll reset to lander's last position, while enabling easy free cam
-		// add a bit of an offset from lander position
-		cam.setPosition(lander.getPosition() + glm::vec3 (0, 15, -20));
-		cam.lookAt(lander.getPosition() + glm::vec3(0, 2, 0)); 
+		cout << "Camera coords: " << cam.getPosition() << " Lookat: " << cam.getLookAtDir() << endl;
+		cam.setPosition(96.5395, 86.1365, 188.99);
+		cam.lookAt(glm::vec3(0, 0, 0));
 		break;
 	case 's':
 		savePicture();
 		break;
 	case 't':
-		setCameraTarget();
+		// changing t reset button so it'll reset to lander's last position, while enabling easy free cam
+		// add a bit of an offset from lander position
+		cam.setPosition(lander.getPosition() + glm::vec3(0, 15, 50));
+		cam.lookAt(
+			lander.getPosition() + glm::vec3(0, 2, 0), glm::vec3(0, 1, 0) 
+		);
+
+		cam.lookAt(lander.getPosition() + glm::vec3(0, 2, 0)); 
+
 		break;
 	case 'u':
 		if (lander.isCrashed() || roundOver || lastLandingWasSuccess || lastLandingWasCrash) {
@@ -1293,8 +1295,8 @@ void ofApp::PhysicsDebugSetup() {
 
 	physicsGui.add(rotDampingSlider.setup("Rot Damping", 0.99f, 0.80f, 1.0f));
 	
-	physicsGui.add(fuelMaxSlider.setup("Fuel Max", 300.0f, 0.0f, 500.0f));
-	physicsGui.add(fuelSlider.setup("Fuel",       300.0f, 0.0f, 500.0f));
+	physicsGui.add(fuelMaxSlider.setup("Fuel Max", 100.0f, 0.0f, 500.0f));
+	physicsGui.add(fuelSlider.setup("Fuel",       100.0f, 0.0f, 500.0f));
 	
 	physicsGui.add(restitutionSlider.setup("Restitution", 0.3f, 0.0f, 1.0f));
 	physicsGui.add(crashSpeedSlider.setup("Crash Speed", 1.4f, 0.0f, 20.0f));
@@ -1303,10 +1305,10 @@ void ofApp::PhysicsDebugSetup() {
 	physicsGui.add(landingZoneHalfY.setup("LZ Half Y", 2.0f, 0.1f, 50.0f));
 	physicsGui.add(landingZoneHalfZ.setup("LZ Half Z", 5.0f, 0.5f, 50.0f));
 	
-	physicsGui.add(thrusterSpeed.setup("Thrust Speed", 80.0f, 10.0f, 300.0f));
-	physicsGui.add(thrusterSize.setup("Thrust Size", 6.0f, 1.0f, 100.0f));
-	physicsGui.add(thrusterLife.setup("Thrust Life", 0.8f, 0.1f, 3.0f));
-	physicsGui.add(thrusterYOffset.setup("Thrust Y Off", 1.0f, -5.0f, 5.0f));
+	physicsGui.add(thrusterSpeed.setup("Thrust Speed", 60.0f, 10.0f, 300.0f));
+	physicsGui.add(thrusterSize.setup("Thrust Size", 100.0f, 1.0f, 100.0f));
+	physicsGui.add(thrusterLife.setup("Thrust Life", 0.1f, 0.1f, 3.0f));
+	physicsGui.add(thrusterYOffset.setup("Thrust Y Off", 3.0f, -5.0f, 5.0f));
 
 
 	// adding reload model
@@ -1383,7 +1385,7 @@ void ofApp::PhysicsUpdate() {
 			if (bMoveDown) {
 				lander.physics.addForce(-up * moveThrust);
 			}
-			float yawTorque = 30.0f;
+			float yawTorque = 100.0f;
 			if (bYawLeft) {
 				lander.physics.addTorque(glm::vec3(0, yawTorque, 0));   // +Y rotation
 			}
@@ -1481,16 +1483,17 @@ void ofApp::setupLandingZones() {
 		(float)landingZoneHalfY,
 		(float)landingZoneHalfZ
 	);
-	
-	glm::vec3 zone1Size; // Modify these values during tuning.
-	glm::vec3 zone2Size;
+
+	// custom tuning
+	glm::vec3 zone1Size = glm::vec3(11.0, 3.0, 10.0);
+	glm::vec3 zone2Size = glm::vec3(9.0, 28.0, 8.0);
 	glm::vec3 zone3Size;
 	
 	glm::vec3 zone1Center(32.226f, 0.5f, 45.588f);
-	landingZones[0].set(zone1Center, zoneHalfSize); // zone 1
+	landingZones[0].set(zone1Center, zone1Size); // zone 1
 
 	glm::vec3 zone2Center(-62.6381f, 0.5f, -33.1133f);
-	landingZones[1].set(zone2Center, zoneHalfSize); // zone 2
+	landingZones[1].set(zone2Center, zone2Size); // zone 2
 
 	glm::vec3 zone3Center(40.0f, 0.5f, -60.3588f);
 	landingZones[2].set(zone3Center, zoneHalfSize); // zone 3
@@ -1498,9 +1501,21 @@ void ofApp::setupLandingZones() {
 }
 
 void ofApp::drawLandingZones() {
+	ofSetColor(255);
 	ofNoFill();
-	ofSetColor(ofColor::yellow);
 	for (int i = 0; i < 3; ++i) {
+		// change color of each landing zone
+		switch (i) {
+		case 0:
+			ofSetColor(ofColor::green);
+			break;
+		case 1:
+			ofSetColor(ofColor::yellow);
+			break;
+		case 2:
+			ofSetColor(ofColor::red);
+			break;
+		}
 		landingZones[i].draw();
 	}
 }
