@@ -326,21 +326,36 @@ void ofApp::update() {
 //					 << "  threshold: " << lander.crashSpeedThreshold << endl;
 
 			if (impactSpeed > lander.crashSpeedThreshold) {
-				// ----- crash -----
-				lander.setCrashed(true);
-				lander.physics.vel = glm::vec3(0);
+				// ----- violent crash -----
+//				lander.setCrashed(true);  // or delay setting this if you want controls disabled later
 
 				glm::vec3 pos = lander.getPosition();
-				pos += n * 0.01f;
+				pos += n * 0.02f;
 				lander.setPosition(pos.x, pos.y, pos.z);
-				explosionSound.play(); // play explosion on death
 
-				// play explosionEmitter
+				// n is ground normal (0,1,0)
+				glm::vec3 upImpulse = n * (impactSpeed * lander.physics.mass * 8.0f);  // was 2.0f
+
+				glm::vec3 randomDir(ofRandom(-1, 1), 0, ofRandom(-1, 1));
+				if (glm::length(randomDir) > 0.001f) randomDir = glm::normalize(randomDir);
+				glm::vec3 lateralImpulse = randomDir * (impactSpeed * lander.physics.mass * 2.0f);  // optional sideways
+
+				glm::vec3 totalImpulse = upImpulse + lateralImpulse;
+
+				// apply impulse
+				lander.physics.vel += totalImpulse / lander.physics.mass;
+
+				// Add a big random torque so it tumbles
+				glm::vec3 randomAxis = glm::sphericalRand(1.0f);
+				float     torqueMag  = impactSpeed * 50.0f;
+				lander.physics.addTorque(randomAxis * torqueMag);
+
+				// Explosion sound + particles
+				explosionSound.play();
+
 				emitter.sys->reset();
-				emitter.setPosition(lander.getPosition() + glm::vec3(0, 1.5, 0));
+				emitter.setPosition(lander.getPosition() + glm::vec3(0, 1.5f, 0));
 				emitter.start();
-				
-
 
 				roundOver = true;
 
@@ -1301,8 +1316,9 @@ void ofApp::PhysicsUpdate() {
 
 	if (!bLanderLoaded) return;
 	if (lander.isCrashed()) {
-		lander.physics.vel = glm::vec3(0);
-		return;
+//		lander.physics.vel = glm::vec3(0);
+//		return;
+		lander.physics.damping = 0.99f;
 	}
 	lander.fuelMax = (float)fuelMaxSlider;
 	lander.fuel = ofClamp((float)fuelSlider, 0.0f, lander.fuelMax);
@@ -1491,17 +1507,29 @@ void ofApp::reloadModel() {
 	lander.setPosition(-30, 90, 60);
 	lander.setRotation(glm::vec3(0, 180, 0));
 
+	// FULL physics reset
+	lander.physics.vel = glm::vec3(0);        // stop linear motion
+	lander.physics.torque = glm::vec3(0);        // clear torque (if stored)
+
+	// fuel
+	lander.fuelMax = (float)fuelMaxSlider;
+	lander.fuel    = lander.fuelMax;
+	fuelSlider     = lander.fuel;
+
 	bLanderLoaded = true;
+	bboxList.clear();
 	for (int i = 0; i < lander.getMeshCount(); i++) {
 		bboxList.push_back(Octree::meshBounds(lander.getMesh(i)));
 	}
 
-	// have landing cam onboard shown immedietely first
+	// camera reset
 	currentLandingCam = 4;
-	useTrackingCam = true;
+	useTrackingCam    = true;
 
-	// reload fuel
-	fuelSlider = (float)fuelMaxSlider;
+	// round state
+	roundOver             = false;
+	lastLandingWasSuccess = false;
+	lastLandingWasCrash   = false;
 }
 
 Box ofApp::computeLanderBounds() {
