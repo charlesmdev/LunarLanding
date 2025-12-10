@@ -327,7 +327,7 @@ void ofApp::update() {
 
 			if (impactSpeed > lander.crashSpeedThreshold) {
 				// ----- violent crash -----
-//				lander.setCrashed(true);  // or delay setting this if you want controls disabled later
+				lander.setCrashed(true);  // or delay setting this if you want controls disabled later
 
 				glm::vec3 pos = lander.getPosition();
 				pos += n * 0.02f;
@@ -379,8 +379,8 @@ void ofApp::update() {
 				// Handles landing zone logic
 				Box landerBox = computeLanderBounds();
 
-				lastLandingWasSuccess = false;
-				lastLandingWasCrash = false;
+//				lastLandingWasSuccess = false;
+//				lastLandingWasCrash = false;
 
 				bool onZone = false;
 				for (int i = 0; i < 3; ++i) {
@@ -397,6 +397,7 @@ void ofApp::update() {
 					score += 1;
 					successfulLandings += 1;
 					lastLandingWasSuccess = true;
+					lastLandingWasCrash = false;
 					roundOver = true;
 					cout << "SUCCESSFUL LANDING! Score = " << score << endl;
 				}
@@ -404,6 +405,7 @@ void ofApp::update() {
 				else if (!onZone && !roundOver) {
 					successfulLandings += 1;
 					lastLandingWasCrash = true;
+					lastLandingWasSuccess = false;
 					roundOver = true;
 					cout << "CRASH LANDING (no fuel, no score)." << endl;
 				}
@@ -1562,7 +1564,8 @@ void ofApp::drawEndRoundMessage() {
 		msg = "SUCCESSFUL LANDING! Press 'U' to restart.";
 	} else if (lastLandingWasCrash) {
 		msg = "CRASH LANDING. Press 'U' to restart.";
-	} else {
+	}
+	else {
 		msg = "ROUND OVER. Press 'U' to restart.";
 	}
 
