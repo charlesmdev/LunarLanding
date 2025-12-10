@@ -269,6 +269,20 @@ void ofApp::setup(){
 	emitter.setGroupSize(numParticles);
 	emitter.setRandomLife(true);
 	emitter.setLifespanRange(ofVec2f(lifespanRange->x, lifespanRange->y));
+	
+	// --- Thruster emitter setup ---
+	thrusterEmitter.setEmitterType(DirectionalEmitter);
+	thrusterEmitter.setOneShot(false);
+	thrusterEmitter.setGroupSize(50);
+	thrusterEmitter.setRate(200.0f);
+	thrusterEmitter.setRandomLife(false);
+	thrusterEmitter.setLifespan(0.8f);
+	thrusterEmitter.setMass(0.5f);
+	thrusterEmitter.setDamping(0.90f);
+
+	// reuse explosion forces for exhaust motion
+	thrusterEmitter.sys->addForce(turbForce);
+	thrusterEmitter.sys->addForce(gravityForce);
 
 }
 
@@ -295,6 +309,7 @@ void ofApp::loadVbo() {
 void ofApp::update() {
 	if (!bLanderLoaded) return;
 	PhysicsUpdate();
+	updateThruster();
 	setupLandingZones(); // IMPORTANT FOR DEBUGGING DELETE LATER!!!
 	Box bounds = computeLanderBounds();
 	colBoxList.clear();
@@ -580,6 +595,7 @@ void ofApp::draw() {
 		ofMesh mesh;
 		if (bLanderLoaded) {
 			lander.drawFaces();
+			drawThruster();
 			if (!bTerrainSelected) drawAxis(lander.getPosition());
 			if (bDisplayBBoxes) {
 				ofNoFill();
@@ -1269,6 +1285,12 @@ void ofApp::PhysicsDebugSetup() {
 	physicsGui.add(landingZoneHalfX.setup("LZ Half X", 5.0f, 0.5f, 50.0f));
 	physicsGui.add(landingZoneHalfY.setup("LZ Half Y", 2.0f, 0.1f, 50.0f));
 	physicsGui.add(landingZoneHalfZ.setup("LZ Half Z", 5.0f, 0.5f, 50.0f));
+	
+	physicsGui.add(thrusterSpeed.setup("Thrust Speed", 80.0f, 10.0f, 300.0f));
+	physicsGui.add(thrusterSize.setup("Thrust Size", 6.0f, 1.0f, 100.0f));
+	physicsGui.add(thrusterLife.setup("Thrust Life", 0.8f, 0.1f, 3.0f));
+	physicsGui.add(thrusterYOffset.setup("Thrust Y Off", 1.0f, -5.0f, 5.0f));
+
 
 	// adding reload model
 	physicsGui.add(modelReloadButton.setup("Reload model"));
@@ -1316,6 +1338,13 @@ void ofApp::PhysicsUpdate() {
 			bYawLeft     || bYawRight;
 
 	bool thrustersActive = thrustersRequested && lander.hasFuel();
+	if (thrustersActive && !thrusterEmitter.started) {
+		thrusterEmitter.start();
+		cout << "Thruster START\n";
+	} else if (!thrustersActive && thrusterEmitter.started) {
+		thrusterEmitter.stop();
+		cout << "Thruster STOP\n";
+	}
 
 	if (thrustersActive) {
 		if (bMoveForward) {
@@ -1510,5 +1539,90 @@ void ofApp::drawEndRoundMessage() {
 	int x = w / 2 - 200;
 	int y = h / 2;
 	ofDrawBitmapStringHighlight(msg, x, y);
+}
+
+void ofApp::updateThruster() {
+	if (!bLanderLoaded) return;
+
+	bool thrustersRequested =
+		bMoveForward || bMoveBackward ||
+		bMoveRight   || bMoveLeft     ||
+		bMoveUp      || bMoveDown     ||
+		bYawLeft     || bYawRight;
+
+	bool thrustersActive = thrustersRequested && lander.hasFuel();
+
+	if (thrustersActive && !thrusterEmitter.started) {
+		thrusterEmitter.start();
+	} else if (!thrustersActive && thrusterEmitter.started) {
+		thrusterEmitter.stop();
+	}
+
+	glm::vec3 landerPos = lander.getPosition();
+	glm::vec3 up        = lander.getUpDir();
+
+	float yOff = static_cast<float>(thrusterYOffset);
+	glm::vec3 nozzlePos = landerPos - up * 0.2f + glm::vec3(0, yOff, 0);
+	thrusterEmitter.setPosition(ofVec3f(nozzlePos.x, nozzlePos.y, nozzlePos.z));
+
+	ofVec3f exhaustDir(-up.x, -up.y, -up.z);
+	exhaustDir.normalize();
+	thrusterEmitter.setVelocity(exhaustDir * static_cast<float>(thrusterSpeed));
+
+	thrusterEmitter.setLifespan(static_cast<float>(thrusterLife));
+
+	thrusterEmitter.update();
+}
+
+void ofApp::drawThruster() {
+	auto & particles = thrusterEmitter.sys->particles;
+	if (particles.empty()) return;
+
+	vector<ofVec3f> points;
+	vector<ofVec3f> sizes;
+
+	points.reserve(particles.size());
+	sizes.reserve(particles.size());
+
+	// camera fix
+	float sizeMultiplier;
+	if (currentLandingCam == 6) {
+		sizeMultiplier = 3.0f;
+	}
+
+	else if (currentLandingCam == 1 || currentLandingCam == 2 || currentLandingCam == 3)
+	{
+		sizeMultiplier = 0.5f;
+	}
+
+	else {
+		sizeMultiplier = 1.0f;
+	}
+
+	for (auto & p : particles) {
+		points.push_back(p.position);
+
+		sizes.push_back(ofVec3f(thrusterSize * sizeMultiplier, 0, 0));
+	}
+
+	int total = points.size();
+
+	thrusterVbo.clear();
+	thrusterVbo.setVertexData(points.data(), total, GL_STATIC_DRAW);
+	thrusterVbo.setNormalData(sizes.data(), total, GL_STATIC_DRAW);
+
+	// draw
+	ofSetColor(255, 100, 90);
+	ofEnableBlendMode(OF_BLENDMODE_ADD);
+	ofEnablePointSprites();
+
+	shader.begin();
+	shader.setUniformTexture("tex0", particleTex, 0);
+	thrusterVbo.draw(GL_POINTS, 0, total);
+	shader.end();
+
+	ofDisablePointSprites();
+	ofDisableBlendMode();
+	ofEnableAlphaBlending();
 }
 

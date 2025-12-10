@@ -257,5 +257,17 @@ class ofApp : public ofBaseApp{
 
 
 		void loadVbo();
+	
+		// Thrust Effect
+		ParticleEmitter thrusterEmitter;
+		ofVbo thrusterVbo;
+
+		void updateThruster();
+		void drawThruster();
+	
+		ofxFloatSlider thrusterSpeed;
+		ofxFloatSlider thrusterSize;
+		ofxFloatSlider thrusterLife;
+		ofxFloatSlider thrusterYOffset;
 
 };
