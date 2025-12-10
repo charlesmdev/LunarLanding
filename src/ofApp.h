@@ -204,6 +204,9 @@ class ofApp : public ofBaseApp{
 
 		ofSoundPlayer explosionSound;
 
+		ofSoundPlayer bgm;
+
+
 		void reloadModel();
 
 		ofxButton modelReloadButton;

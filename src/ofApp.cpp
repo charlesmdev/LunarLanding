@@ -200,6 +200,12 @@ void ofApp::setup(){
 	explosionSound.load("sounds/explosion.mp3");
 	explosionSound.setVolume(0.02);
 
+	// bgm
+	bgm.load("sounds/Alicia.mp3");
+	bgm.setVolume(0.1);
+	bgm.setLoop(true);
+	bgm.play();
+
 
 
 	// load model early
