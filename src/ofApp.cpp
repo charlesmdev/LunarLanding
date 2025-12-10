@@ -216,6 +216,8 @@ void ofApp::setup(){
 	// have landing cam onboard shown immedietely first
 	currentLandingCam = 4;
 	useTrackingCam = true;
+	
+	particleSetup();
 
 }
  
@@ -386,7 +388,7 @@ void ofApp::update() {
 		}
 	}
 	
-
+	thrustEmitterUpdate();
 	updateAltitudeTelemetry();
 
 
@@ -441,7 +443,7 @@ void ofApp::draw() {
 
 
 	ofPushMatrix();
-	if (bWireframe) {                    // wireframe mode  (include axis)
+	if (bWireframe) {  // wireframe mode  (include axis)
 		ofDisableLighting();
 		ofSetColor(ofColor::slateGray);
 		mars.drawWireframe();
@@ -457,6 +459,8 @@ void ofApp::draw() {
 		ofMesh mesh;
 		if (bLanderLoaded) {
 			lander.drawFaces();
+			drawThruster();
+			
 			if (!bTerrainSelected) drawAxis(lander.getPosition());
 			if (bDisplayBBoxes) {
 				ofNoFill();
@@ -565,6 +569,9 @@ void ofApp::draw() {
 	
 	if (!bHide) {
 	 gui.draw();
+	if (bShowThrustGui) {
+		thrustGui.draw();
+	}
 	if (bShowPhysicsGui) {
 		 physicsGui.draw();
 	 }
@@ -1145,6 +1152,17 @@ void ofApp::PhysicsDebugSetup() {
 	physicsGui.add(landingZoneHalfX.setup("LZ Half X", 5.0f, 0.5f, 50.0f));
 	physicsGui.add(landingZoneHalfY.setup("LZ Half Y", 2.0f, 0.1f, 50.0f));
 	physicsGui.add(landingZoneHalfZ.setup("LZ Half Z", 5.0f, 0.5f, 50.0f));
+	
+	// Thrust debug GUI
+	thrustGui.setup("Thrust Debug");
+	thrustGui.setPosition(10, 420);
+
+	thrustGui.add(thrustLifeSlider.setup("Life (s)", 1.0f, 0.1f, 5.0f));
+	thrustGui.add(thrustRateSlider.setup("Rate (pps)", 60.0f, 1.0f, 200.0f));
+	thrustGui.add(thrustSpeedSlider.setup("Speed", 80.0f, 10.0f, 300.0f));
+	thrustGui.add(thrustSizeSlider.setup("Size", 10.0f, 1.0f, 40.0f));
+	thrustGui.add(thrustYOffsetSlider.setup("Y Offset", 1.0f, -5.0f, 5.0f));
+
 
 	// adding reload model
 	physicsGui.add(modelReloadButton.setup("Reload model"));
@@ -1192,6 +1210,16 @@ void ofApp::PhysicsUpdate() {
 			bYawLeft     || bYawRight;
 
 	bool thrustersActive = thrustersRequested && lander.hasFuel();
+	
+	// start when active, stop when not
+	if (thrustersActive && !thrustEmitter.started) {
+		thrustEmitter.start();
+	} else if (!thrustersActive && thrustEmitter.started) {
+		thrustEmitter.stop();
+	}
+
+	// always update, it will only spawn when started
+	thrustEmitter.update();
 
 	if (thrustersActive) {
 		if (bMoveForward) {
@@ -1388,3 +1416,86 @@ void ofApp::drawEndRoundMessage() {
 	ofDrawBitmapStringHighlight(msg, x, y);
 }
 
+
+void ofApp::particleSetup() {
+	// --- particle explosion setup ---
+
+	// load texture (soft round or smoke sprite)
+	ofDisableArbTex(); // use normalized UVs
+	if (!ofLoadImage(particleTex, "images/dot.png")) {
+		cout << "Particle Texture File: images/dot.png not found" << endl;
+	}
+
+	// load particle shader (reuse CS134 shader)
+	#ifndef TARGET_OPENGLES
+	particleShader.load("shaders/shader");   
+	#else
+	particleShader.load("shaders_gles/shader");
+	#endif
+
+	// Thruster emitter config
+	thrustEmitter.setEmitterType(DirectionalEmitter);
+	thrustEmitter.setOneShot(false);
+	thrustEmitter.setGroupSize(5);
+	thrustEmitter.setRate(60.0f);
+	thrustEmitter.setLifespan(1.0f);
+	thrustEmitter.setParticleRadius(0.12f);
+	thrustEmitter.setMass(0.5f);
+	thrustEmitter.setDamping(0.90f);
+
+
+}
+void ofApp::drawThruster() {
+	auto &particles = thrustEmitter.sys->particles;
+	if (particles.empty()) return;
+
+	vector<ofVec3f> points, sizes;
+	points.reserve(particles.size());
+	sizes.reserve(particles.size());
+	for (auto &p : particles) {
+		points.push_back(p.position);
+//		sizes.push_back(ofVec3f(10.0f));
+		sizes.push_back(ofVec3f(thrustSizeSlider));
+	}
+	int total = (int)points.size();
+	thrustVbo.clear();
+	thrustVbo.setVertexData(&points[0], total, GL_STATIC_DRAW);
+	thrustVbo.setNormalData(&sizes[0], total, GL_STATIC_DRAW);
+
+	ofSetColor(150, 200, 255);          // bluish exhaust
+	ofEnableBlendMode(OF_BLENDMODE_ADD);
+	ofEnablePointSprites();
+
+	particleShader.begin();
+	particleShader.setUniformTexture("tex0", particleTex, 0);
+
+	thrustVbo.draw(GL_POINTS, 0, total);
+
+	particleShader.end();
+	ofDisablePointSprites();
+	ofDisableBlendMode();
+	ofEnableAlphaBlending();
+}
+
+void ofApp::thrustEmitterUpdate() {
+	glm::vec3 landerPos = lander.getPosition();
+	glm::vec3 up = lander.getUpDir();
+
+//	glm::vec3 nozzlePos = landerPos - up * 0.1f + glm::vec3(0, 1.0f, 0);
+//	thrustEmitter.setPosition(nozzlePos.x, nozzlePos.y, nozzlePos.z);
+//
+//	ofVec3f exhaustDir(-up.x, -up.y, -up.z);
+//	exhaustDir.normalize();
+//	thrustEmitter.setVelocity(exhaustDir * 80.0f);
+	
+
+	 glm::vec3 nozzlePos = landerPos - up * 0.1f + glm::vec3(0, (float) thrustYOffsetSlider, 0);
+	 thrustEmitter.setPosition(nozzlePos.x, nozzlePos.y, nozzlePos.z);
+	
+	 ofVec3f exhaustDir(-up.x, -up.y, -up.z);
+	 exhaustDir.normalize();
+	 thrustEmitter.setV3elocity(exhaustDir * thrustSpeedSlider);
+
+	 thrustEmitter.setLifespan(thrustLifeSlider);
+	 thrustEmitter.setRate(thrustRateSlider);
+}

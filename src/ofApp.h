@@ -7,6 +7,9 @@
 #include <glm/gtx/intersect.hpp>
 #include "shapes/Lander.h"
 #include "physics/LandingZone.h"
+#include "particles/Particle.h"
+#include "emitters/ParticleEmitter.h"
+#include "particles/ParticleSystem.h"
 
 
 
@@ -214,6 +217,27 @@ class ofApp : public ofBaseApp{
 		void drawScore();
 		void drawEndRoundMessage();
 		bool roundOver = false;
+	
+		// shader + VBO for particle rendering
+		ofShader particleShader;
+		ofTexture particleTex;
+		ofVbo thrustVbo;
+		void particleSetup();
+		ParticleEmitter thrustEmitter;
+		void drawThruster();
+		void thrustEmitterUpdate();
+	
+		ofxPanel thrustGui;
+		bool bShowThrustGui = true;
+
+		ofxFloatSlider thrustLifeSlider;
+		ofxFloatSlider thrustRateSlider;
+		ofxFloatSlider thrustSpeedSlider;
+		ofxFloatSlider thrustSizeSlider;
+		ofxFloatSlider thrustYOffsetSlider;
+	
+		
+
 
 	
 
