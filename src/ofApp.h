@@ -132,11 +132,12 @@ class ofApp : public ofBaseApp{
 		bool bYawRight = false;
 
 
+		// Camera - David
 		// tracking cam
 		ofCamera trackingCam;
 		bool useTrackingCam;
 
-		// landing zone cams
+		// landing zone cams 
 		vector<glm::vec3> camPositions;
 
 		// cam indictator
@@ -165,7 +166,7 @@ class ofApp : public ofBaseApp{
 
 		ofxFloatSlider restitutionSlider;
 
-		// lighting
+		// Lighting - David
 
 		ofxPanel keyGui;
 
@@ -195,7 +196,7 @@ class ofApp : public ofBaseApp{
 		ofxFloatSlider landingZoneHalfY;
 		ofxFloatSlider landingZoneHalfZ;
 
-		// lander sound
+		// Sounds - David
 
 		ofSoundPlayer engineSound;
 
@@ -203,6 +204,10 @@ class ofApp : public ofBaseApp{
 		bool crashWarningPlayed = false;
 
 		ofSoundPlayer explosionSound;
+
+		
+		ofSoundPlayer bgm;
+
 
 		void reloadModel();
 
@@ -221,7 +226,7 @@ class ofApp : public ofBaseApp{
 		bool roundOver = false;
 
 	
-		// Explosion
+		// Explosion - David
 		// 
 		// textures
 		//
