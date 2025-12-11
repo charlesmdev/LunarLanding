@@ -1,0 +1,35 @@
+Lunar Lander
+
+Student Name:   Charles Vincent Manaois
+Student Name:   David Vu
+Date: 12/10/2025
+
+Note: Involves code from Charles' spatial subdivision lab project and the example code from OpenGL shader particle lab.
+
+Charles Contribution: All physics related logic, altitude sensor, fuel, landing zones, particle emitter for rocket exhaust, HUD, scoring
+ 
+David Contribution: Model creation of lander and terrain, cameras, lighting, explosion, sounds, video trailer
+
+Repo: https://github.com/charlesmdev/LunarLanding
+
+Controls
+
+Up/Down/Left/Right arrow keys = LEM movement
+Shift/Space = Down/Up LEM movement
+Q/E = Rotate left/right LEM movement
+
+1 = LZ1 cam
+2 = LZ2 cam
+3 = LZ3 cam
+4 = Lander onboard cam
+5 = Top-down Lander cam
+6 = Below Lander cam
+
+` = Toggle tracking cam
+R = EasyCam wide view
+T = EasyCam wide view, lander position
+
+
+U = Restart on landing/death
+Z = Toggle Altitude sensor
+A = Toggle Fuel/Altitude HUD

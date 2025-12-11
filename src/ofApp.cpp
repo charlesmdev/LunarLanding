@@ -11,7 +11,7 @@
 //  Student Name:   David Vu
 //  Date: 12/10/2025
 //
-// 	Note: Involves code from Charles' spatial subdivision lab project.
+// 	Note: Involves code from Charles' spatial subdivision lab project and the example code from OpenGL shader particle lab.
 //
 //  Charles Contribution: All physics related logic, altitude sensor, fuel, landing zones, particle emitter for rocket exhaust, HUD, scoring
 //
