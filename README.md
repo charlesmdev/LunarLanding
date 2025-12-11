@@ -1,7 +1,7 @@
 # Lunar Lander 3D Game Final
 ### Students
 Student Name:   Charles Vincent Manaois <br>
-Student Name:   David Vu
+Student Name:   David Vu <br>
 Date: 12/10/2025
 ### Contributions
 **Note:** Involves code from Charles spatial subdivision lab project and the example code from OpenGL shader particle lab.
@@ -10,7 +10,7 @@ Charles Contribution: All physics related logic, altitude sensor, fuel, landing 
   
 David Contribution: Model creation of lander and terrain, cameras, lighting, explosion, sounds, video trailer
 
-**Repo:** https://github.com/charlesmdev/LunarLanding
+**Repo:** https://github.com/charlesmdev/LunarLanding <br>
 **Trailer** https://www.youtube.com/watch?v=fsWcbXPHOu8
 ### Controls
 
