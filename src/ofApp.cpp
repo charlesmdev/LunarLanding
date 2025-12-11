@@ -11,8 +11,9 @@
 //  Student Name:   David Vu
 //  Date: 12/10/2025
 //
+// 	Note: Involves code from Charles' spatial subdivision lab project and the example code from OpenGL shader particle lab.
 //
-//  Charles Contribution: All physics, altitude sensor, fuel, landing zones, particle emitter for rocket exhaust, HUD, scoring 
+//  Charles Contribution: All physics related logic, altitude sensor, fuel, landing zones, particle emitter for rocket exhaust, HUD, scoring
 //
 // 
 //	David Contribution: Model creation of lander and terrain, cameras, lighting, explosion, sounds, video trailer
@@ -289,6 +290,7 @@ void ofApp::setup(){
 	emitter.setLifespanRange(ofVec2f(lifespanRange->x, lifespanRange->y));
 	
 	// --- Thruster emitter setup ---
+	// Thrust emitter - Charles
 	thrusterEmitter.setEmitterType(DirectionalEmitter);
 	thrusterEmitter.setOneShot(false);
 	thrusterEmitter.setGroupSize(50);
@@ -333,6 +335,7 @@ void ofApp::update() {
 	colBoxList.clear();
 	octree.intersect(bounds, octree.root, colBoxList);
 
+	// Collision, impact/impulse forces, restitution force, scoring depending on landing code - Charles
 	if (!colBoxList.empty() && !lander.isCrashed()) {
 		glm::vec3 n(0, 1, 0);
 		float vRel = glm::dot(lander.physics.vel, n);
@@ -475,6 +478,7 @@ void ofApp::update() {
 	bool isMoving = ((bMoveForward || bMoveBackward || bMoveLeft || bMoveRight || bMoveUp || bMoveDown || bYawLeft || bYawRight) && lander.crashed == false);
 
 	// check if it crashed to turn off crashwarning
+	// Fuel and roundOver logic - Charles
 	if (roundOver)
 	{
 		if (crashWarning.isPlaying())
@@ -515,7 +519,7 @@ void ofApp::update() {
 		}
 	}
 	
-
+	// Altitude telemetry update - Charles
 	updateAltitudeTelemetry();
 
 
@@ -545,6 +549,7 @@ void ofApp::update() {
 
 }
 //--------------------------------------------------------------
+// Draw method - David, Charles
 void ofApp::draw() {
 
 	// draw skybox
@@ -746,7 +751,7 @@ void ofApp::draw() {
 
 // 
 // Draw an XYZ axis in RGB at world (0,0,0) for reference.
-//
+// Spatial subdivision code
 void ofApp::drawAxis(ofVec3f location) {
 
 	ofPushMatrix();
@@ -771,6 +776,7 @@ void ofApp::drawAxis(ofVec3f location) {
 }
 
 
+// Controls - David, Charles
 void ofApp::keyPressed(int key) {
 
 	switch (key) {
@@ -972,6 +978,7 @@ void ofApp::mouseMoved(int x, int y ){
 
 
 //--------------------------------------------------------------
+// Spatial subdivision code
 void ofApp::mousePressed(int x, int y, int button) {
 
 	// if moving camera, don't allow mouse interaction
@@ -1015,6 +1022,7 @@ void ofApp::mousePressed(int x, int y, int button) {
 
 }
 
+// Spatial subdivision code
 bool ofApp::raySelectWithOctree(ofVec3f &pointRet) {
 	
 	searchStartTime = ofGetElapsedTimeMicros();
@@ -1052,6 +1060,7 @@ bool ofApp::raySelectWithOctree(ofVec3f &pointRet) {
 
 
 //--------------------------------------------------------------
+// Spatial subdivison code
 void ofApp::mouseDragged(int x, int y, int button) {
 
 	// if moving camera, don't allow mouse interaction
@@ -1132,6 +1141,7 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 // setup basic ambient lighting in GL  (for now, enable just 1 light)
 //
+// Lighting for environment - David
 void ofApp::initLightingAndMaterials() {
 
 	static float ambient[] =
@@ -1179,6 +1189,8 @@ void ofApp::savePicture() {
 // support drag-and-drop of model (.obj) file loading.  when
 // model is dropped in viewport, place origin under cursor
 //
+
+// Spatial subdivision lab
 void ofApp::dragEvent2(ofDragInfo dragInfo) {
 
 	ofVec3f point;
@@ -1199,6 +1211,7 @@ void ofApp::dragEvent2(ofDragInfo dragInfo) {
 	else cout << "Error: Can't load model" << dragInfo.files[0] << endl;
 }
 
+// Spatial subdivision lab
 bool ofApp::mouseIntersectPlane(ofVec3f planePoint, ofVec3f planeNorm, ofVec3f &point) {
 	ofVec2f mouse(mouseX, mouseY);
 	ofVec3f rayPoint = cam.screenToWorld(glm::vec3(mouseX, mouseY, 0));
@@ -1212,6 +1225,7 @@ bool ofApp::mouseIntersectPlane(ofVec3f planePoint, ofVec3f planeNorm, ofVec3f &
 // support drag-and-drop of model (.obj) file loading.  when
 // model is dropped in viewport, place origin under cursor
 //
+// Spatial sub division lab
 void ofApp::dragEvent(ofDragInfo dragInfo) {
 	if (lander.loadModel(dragInfo.files[0].string())) {
 		bLanderLoaded = true;
@@ -1269,6 +1283,8 @@ void ofApp::dragEvent(ofDragInfo dragInfo) {
 //  intersect the mouse ray with the plane normal to the camera 
 //  return intersection point.   (package code above into function)
 //
+
+// From spatial substitution lab - Charles
 glm::vec3 ofApp::getMousePointOnPlane(glm::vec3 planePt, glm::vec3 planeNorm) {
 	// Setup our rays
 	//
@@ -1294,6 +1310,7 @@ glm::vec3 ofApp::getMousePointOnPlane(glm::vec3 planePt, glm::vec3 planeNorm) {
 	else return glm::vec3(0, 0, 0);
 }
 
+// Debug menu for anything physics and mechanic related - Charles
 void ofApp::PhysicsDebugSetup() {
 	physicsGui.setup("Physics Debug");
 	physicsGui.setPosition(10, 220);
@@ -1334,6 +1351,8 @@ void ofApp::PhysicsDebugSetup() {
 	modelReloadButton.addListener(this, &ofApp::reloadModel);
 
 }
+
+// Physics update method, for all physics requirements, some forces are also in the ofApp::update for impulse, restitution, etc... - Charles
 void ofApp::PhysicsUpdate() {
 
 	if (!bLanderLoaded) return;
@@ -1427,6 +1446,7 @@ void ofApp::PhysicsUpdate() {
 	lander.updatePhysics();
 }
 
+// Update method for altitude telemetry - Charles
 void ofApp::updateAltitudeTelemetry() {
 	hasAltitudeHit = false;
 	altitudeAGL    = 0.0f;
@@ -1448,6 +1468,7 @@ void ofApp::updateAltitudeTelemetry() {
 	}
 }
 
+// Draw altitude telemetry HUD element - Charles
 void ofApp::drawAltitudeTelemetry() {
 	ofDisableDepthTest();
 
@@ -1463,6 +1484,7 @@ void ofApp::drawAltitudeTelemetry() {
 	}
 }
 
+// Draw fuel method - Charles
 void ofApp::drawFuel() {
 	if (!bShowAltitudeHUD) return;  // same toggle as altitude HUD
 
@@ -1481,6 +1503,7 @@ void ofApp::drawFuel() {
 	ofDrawBitmapStringHighlight(fuelMsg, 20, 40);
 }
 
+// Unused reset method from previous iterations used for debugging.
 void ofApp::resetLander() {
 	if (!bLanderLoaded) return;
 	lander.setCrashed(false);
@@ -1492,7 +1515,7 @@ void ofApp::resetLander() {
 	cout << "Lander reset." << endl;
 }
 
-
+// Setup method for landing zones - Charles
 void ofApp::setupLandingZones() {
 	// Coordinates are based on the coords of the landing lights, relative to the map model
 //	glm::vec3 zoneHalfSize(5.0f, 2.0f, 5.0f);
@@ -1518,6 +1541,7 @@ void ofApp::setupLandingZones() {
 
 }
 
+// Draw method for landing zones - Charles
 void ofApp::drawLandingZones() {
 	ofSetColor(255);
 	ofNoFill();
@@ -1538,7 +1562,7 @@ void ofApp::drawLandingZones() {
 	}
 }
 
-// Reloads model - David
+// Reloads model - David, Charles
 void ofApp::reloadModel() {
 	// load model early
 	lander.setCrashed(false); // need this off to show lander again
@@ -1572,6 +1596,7 @@ void ofApp::reloadModel() {
 	lastLandingWasCrash   = false;
 }
 
+// Helper method for computing AABB for lander - Charles
 Box ofApp::computeLanderBounds() {
 	ofVec3f min = lander.getSceneMin() + lander.getPosition();
 	ofVec3f max = lander.getSceneMax() + lander.getPosition();
@@ -1579,6 +1604,7 @@ Box ofApp::computeLanderBounds() {
 			   Vector3(max.x, max.y, max.z));
 }
 
+// Score hud element - Charles
 void ofApp::drawScore() {
 	ofSetColor(255);
 	std::string scoreMsg =
@@ -1587,6 +1613,7 @@ void ofApp::drawScore() {
 	ofDrawBitmapStringHighlight(scoreMsg, 20, 60);
 }
 
+// End of round messages for scoring system - Charles
 void ofApp::drawEndRoundMessage() {
 	if (!roundOver && !lander.isCrashed()) return;
 
@@ -1610,6 +1637,7 @@ void ofApp::drawEndRoundMessage() {
 	ofDrawBitmapStringHighlight(msg, x, y);
 }
 
+// Update method for Thruster - Charles
 void ofApp::updateThruster() {
 	if (!bLanderLoaded) return;
 
@@ -1643,6 +1671,7 @@ void ofApp::updateThruster() {
 	thrusterEmitter.update();
 }
 
+// Draw method for thruster particle - Charles
 void ofApp::drawThruster() {
 	auto & particles = thrusterEmitter.sys->particles;
 	if (particles.empty()) return;

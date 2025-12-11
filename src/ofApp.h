@@ -91,14 +91,15 @@ class ofApp : public ofBaseApp{
 	
 		vector<ofColor> levelColors;
 
-		// skybox
+		// skybox - David
 		ofImage skybox;
 
-		// mesh
+		// mesh - Charles
 		ofMesh combined;
 		Lander lander;
 		bool bGrounded = false;
 	
+		// Anything physics related for debug and logic - Charles
 		ofxPanel physicsGui;
 
 		// Lander physics parameters
@@ -144,7 +145,7 @@ class ofApp : public ofBaseApp{
 		int currentLandingCam = 0; // 0 = start, 123 = landing zones
 
 
-		// Telemetry
+		// Telemetry - Charles
 		bool bShowAltitude = false;
 		float altitudeAGL = 0.0f;
 		bool hasAltitudeHit = false;
@@ -184,7 +185,7 @@ class ofApp : public ofBaseApp{
 		
 		void resetLander();
 		
-		// Landing Zone logic
+		// Landing Zone logic - Charles
 		LandingZone landingZones[3];
 		bool bLandedOnZone = false;
 		int landedZoneIndex = -1;
@@ -213,7 +214,7 @@ class ofApp : public ofBaseApp{
 
 		ofxButton modelReloadButton;
 	
-		// Scoring
+		// Scoring header and variables - Charles
 		
 		int score = 0;
 		int successfulLandings = 0;
@@ -261,13 +262,14 @@ class ofApp : public ofBaseApp{
 		ofxFloatSlider cyclicForceVal;
 		ofxFloatSlider rate;
 
-
+		
+		// Thruster emitter headers - Charles
 		void loadVbo();
 	
 		// Thrust Effect
 		ParticleEmitter thrusterEmitter;
 		ofVbo thrusterVbo;
-
+		
 		void updateThruster();
 		void drawThruster();
 	

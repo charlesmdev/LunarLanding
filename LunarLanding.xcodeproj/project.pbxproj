@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		"02BEBFED-7B71-48CB-882F-817D32521868" /* ofxLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "1CB6DF4B-83E2-47D8-8CA4-6AB328A0CC2D" /* ofxLabel.cpp */; };
-		"0864DF99-03F7-42C2-A4FC-215E4FB7C470" /* CollisionManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "7B35BBF8-A1A4-47E4-A9BD-ECF5EDCF09A1" /* CollisionManager.cpp */; };
 		"10052C99-37CA-4849-BE75-6E87E9B73303" /* Util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "1196AEFC-E5EF-4D42-95C8-3CBB06A9A462" /* Util.cpp */; };
 		"10BB322F-F9B5-411E-8E32-D5FEB7BF1AF5" /* ofxVectorGraphics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "968767FA-4D86-4C7D-BD08-428B2436BD36" /* ofxVectorGraphics.cpp */; };
 		"12015E4E-315F-4928-B9CF-67ACAA720E3F" /* ofxAssimpSrcBone.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "92FE0451-A603-417A-A8CF-EBE78394E92C" /* ofxAssimpSrcBone.cpp */; };
@@ -17,12 +16,10 @@
 		"2520F760-C6E0-4B68-BD80-F9799599AABB" /* ofxAssimpBounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "A69F0B7C-B24E-47CC-B7CE-47867A2F5969" /* ofxAssimpBounds.cpp */; };
 		291E6A4D2EE90BC700FB5743 /* box.cc in Sources */ = {isa = PBXBuildFile; fileRef = 291E6A4C2EE90BC700FB5743 /* box.cc */; };
 		"29987C89-2ABD-436F-BCEA-13F47FB61637" /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "2BEFED61-E495-4049-8A6D-9F3068179BB2" /* ofxBaseGui.cpp */; };
-		"31182967-C67D-4590-8C08-0DFECD684037" /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "D91A87AB-E280-4738-9BCC-FAF005E842C2" /* Player.cpp */; };
 		"32267411-AB21-440A-9614-9F27B5F91E3E" /* ofxAssimpModelLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "19488611-ECB7-4730-B10B-C11D83129569" /* ofxAssimpModelLoader.cpp */; };
 		"4330F60A-AA71-409E-929C-69B7649649C0" /* ofxSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "E4862D41-76D6-4E05-9E9B-C5C7F6CEF522" /* ofxSlider.cpp */; };
 		"47B1B51C-34C3-44AA-AC92-3C72DBD76826" /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "5C8ECB01-8842-48B1-A612-80B34A109973" /* Particle.cpp */; };
 		"47D80CA7-2147-475E-AD8D-D5A3AA4BB0D0" /* CreEPS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "45683E41-08EA-4264-A560-4EB44F2C9C8F" /* CreEPS.cpp */; };
-		"520966D0-ED2E-4EE7-9AE5-3DBD6FB614BF" /* HeadingVector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "3E4300CA-5A09-40A1-BC08-2FF10B05733E" /* HeadingVector.cpp */; };
 		"5A5909C0-E623-4C88-B830-BA2DF54BA421" /* ofxAssimpSrcMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "E871F8D4-A34F-4717-9AC0-A37C4C989BED" /* ofxAssimpSrcMesh.cpp */; };
 		"6099E735-464A-462E-9A85-918A79185352" /* ofxAssimpSrcScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "6A505405-76A2-479D-821F-B876F7907CDB" /* ofxAssimpSrcScene.cpp */; };
 		"63316C78-942E-44AD-90A7-C6020F29538F" /* ParticleEmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "9C45F8C3-0F53-4806-BE0C-75DB80DB5FE8" /* ParticleEmitter.cpp */; };
@@ -30,16 +27,11 @@
 		"7250F943-D106-4CA7-8600-110D33394721" /* ofxAssimpNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "2C58F3C2-C838-4FBA-A892-FE2C141B61E1" /* ofxAssimpNode.cpp */; };
 		"79D925C0-28D4-4821-9F50-7E2FCBB3D398" /* ofxAssimpScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "89B06F59-FDE2-4258-9593-27D88DFAE33B" /* ofxAssimpScene.cpp */; };
 		"7BF415EC-EC72-488B-B183-CA4B0590EBE6" /* ofxButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "79EB6A4A-0EB5-4767-AB17-F804927017F8" /* ofxButton.cpp */; };
-		"7EA5F70B-8258-4D11-BFAC-1B6E025CCE8A" /* AsteroidManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "4B819A58-DBED-409D-AA19-F7FD951CC29C" /* AsteroidManager.cpp */; };
-		"88EC1FF1-53FC-464D-8887-E3A59A1CEE16" /* Collision.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "2024C9B3-5315-4982-BEE9-E99C6FCDD97C" /* Collision.cpp */; };
-		"8909E04D-5E69-4E6A-A607-20EBC32B0B16" /* Physics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "A0713042-116E-420E-94C3-917E2AAECC52" /* Physics.cpp */; };
 		"8FEDA585-9823-457C-9F10-78E059361208" /* ofxInputField.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "0F779C28-DCD0-4DA5-968E-00D1FEDB7DBA" /* ofxInputField.cpp */; };
 		"95EBFDC6-F256-440B-A76A-1293819086CD" /* ofxSliderGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "D6728650-1DF7-4081-8552-A0494CAEFABE" /* ofxSliderGroup.cpp */; };
 		"9D1B5D29-7294-46A0-ACC8-C0A29F7CC7F4" /* ofxPanel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "6382C898-2729-4205-8CB5-4BE0A0BA8E89" /* ofxPanel.cpp */; };
-		"9EAC1FB3-B4F4-4B18-A312-3CB7925B58CA" /* Shape.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "BB8B5061-F34B-4BE6-9BA9-62F28D2A1774" /* Shape.cpp */; };
 		"A015DCF2-1133-42CB-BC85-AC970A1AB0B6" /* ofxAssimpSrcNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "0FD86281-B4B5-4B77-865E-7DD2F7279C76" /* ofxAssimpSrcNode.cpp */; };
 		"A21E6BEF-E0FC-4950-A2F3-4773B2A70AE9" /* ofxGuiGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "D4F54E00-BD7D-4A12-9425-8354E9FFD469" /* ofxGuiGroup.cpp */; };
-		"A2CB3B03-3BDD-45FB-9D56-EFAE44D55E76" /* Asteroid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "74567861-0189-462C-A7D8-AB7410223101" /* Asteroid.cpp */; };
 		"A4A0069E-A856-4F8C-9D09-8CF6886526E4" /* Octree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "4BB97B13-E8AD-4585-9639-3A5157F163CA" /* Octree.cpp */; };
 		"A733BDA6-9CF1-4E83-BB32-34E179148AA2" /* ofxAssimpAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "857FD5FC-2C4C-46B9-B5DE-ED0E1692C298" /* ofxAssimpAnimation.cpp */; };
 		"AEB2D159-975B-4F18-A03F-849BDBE69571" /* ofxAssimpMeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = "200B5C24-15CA-45BE-BBFF-5D2B8435D94B" /* ofxAssimpMeshHelper.cpp */; };
@@ -121,12 +113,9 @@
 		"1196AEFC-E5EF-4D42-95C8-3CBB06A9A462" /* Util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Util.cpp; sourceTree = "<group>"; };
 		"11C5C183-888D-4654-B17A-818E8B9D7B5D" /* StringComparison.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StringComparison.h; sourceTree = "<group>"; };
 		"121CAF52-CE33-4457-B2C7-7D7C5C6682F4" /* vector3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vector3.h; sourceTree = "<group>"; };
-		"1330125E-7C64-4422-B4B8-1E79B774EEA4" /* RotationalPhysics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RotationalPhysics.h; sourceTree = "<group>"; };
-		"133730A1-9387-45B6-97E2-4DACF1A071D9" /* CollisionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CollisionManager.h; sourceTree = "<group>"; };
 		"13FD2509-8BFE-4116-82A5-B547B90DC439" /* pushpack1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pushpack1.h; sourceTree = "<group>"; };
 		"14232BA5-7098-433F-894E-D54D4B21D55C" /* Bitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Bitmap.h; sourceTree = "<group>"; };
 		"15011739-44BA-4061-8C1E-CF91A4CC1B09" /* AndroidJNIIOSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AndroidJNIIOSystem.h; sourceTree = "<group>"; };
-		"151C19A5-D803-4F73-91EF-9EBD8D9D47A8" /* Physics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Physics.h; sourceTree = "<group>"; };
 		"153EBB07-8C3D-4E91-A8A6-1FDE3CBDEA84" /* CreateAnimMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CreateAnimMesh.h; sourceTree = "<group>"; };
 		"16DB4C10-C593-44AD-8F3D-6C85922F7A13" /* aabb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = aabb.h; sourceTree = "<group>"; };
 		"1722DCCD-F34C-4D43-84DC-23175397646A" /* SpatialSort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SpatialSort.h; sourceTree = "<group>"; };
@@ -145,7 +134,6 @@
 		"1E9CCA1A-977D-4582-B13E-E3942D4EFEDE" /* StringUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StringUtils.h; sourceTree = "<group>"; };
 		"1FD4D894-CC92-411B-A27F-46C8A8805F5B" /* commonMetaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = commonMetaData.h; sourceTree = "<group>"; };
 		"200B5C24-15CA-45BE-BBFF-5D2B8435D94B" /* ofxAssimpMeshHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAssimpMeshHelper.cpp; sourceTree = "<group>"; };
-		"2024C9B3-5315-4982-BEE9-E99C6FCDD97C" /* Collision.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Collision.cpp; sourceTree = "<group>"; };
 		"2098F794-F358-4047-86C5-28C5DBF07D11" /* fast_atof.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = fast_atof.h; sourceTree = "<group>"; };
 		"20C4DD97-9827-4116-9422-3739044B6324" /* RotationalPhysics3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RotationalPhysics3D.h; sourceTree = "<group>"; };
 		"2120E0AB-D1C1-411E-9E3A-6555F3D42643" /* revision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = revision.h; sourceTree = "<group>"; };
@@ -199,9 +187,7 @@
 		"3D5654CA-24DD-4BD2-89A2-AA08E97CC739" /* texture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = texture.h; sourceTree = "<group>"; };
 		"3D617A77-D9C1-4285-807F-B45C530108FA" /* CreEPS.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CreEPS.hpp; sourceTree = "<group>"; };
 		"3E1EAD26-3C34-42CD-9E08-7B009EAE9FE3" /* light.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = light.h; sourceTree = "<group>"; };
-		"3E4300CA-5A09-40A1-BC08-2FF10B05733E" /* HeadingVector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HeadingVector.cpp; sourceTree = "<group>"; };
 		"3EDF745D-5888-4B36-BEAA-1D0D9B7FF47F" /* CreateAnimMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CreateAnimMesh.h; sourceTree = "<group>"; };
-		"3EE65B17-16DC-4285-A3EE-FBA5259EBF32" /* Collision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Collision.h; sourceTree = "<group>"; };
 		"3F3499FB-6A61-49D8-AF57-E10968F880E6" /* SkeletonMeshBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SkeletonMeshBuilder.h; sourceTree = "<group>"; };
 		"4178FBCB-637B-457D-B66D-C1B514131872" /* StreamReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StreamReader.h; sourceTree = "<group>"; };
 		"4218C3B8-693D-45BB-9AD8-D0162D665732" /* LogAux.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LogAux.h; sourceTree = "<group>"; };
@@ -218,13 +204,10 @@
 		"479B10A4-A034-4920-AF6D-419F57EFE6BF" /* StreamWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StreamWriter.h; sourceTree = "<group>"; };
 		"47B50BF3-E046-46F2-A5BB-802B3B62DE8E" /* BundledAssetIOSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BundledAssetIOSystem.h; sourceTree = "<group>"; };
 		"481DFE75-66ED-4D34-BE0D-FA0A980481CA" /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = types.h; sourceTree = "<group>"; };
-		"4884B7EF-5D01-43C3-A8A2-99481C784A0D" /* HeadingVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HeadingVector.h; sourceTree = "<group>"; };
 		"4955208F-40A7-45C1-B9E3-2CD24DC7C47D" /* AssertHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssertHandler.h; sourceTree = "<group>"; };
 		"49AB8724-EE2A-4C43-8CC9-E41292B82217" /* types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = types.h; sourceTree = "<group>"; };
-		"49DDB240-78AD-4D5B-808F-15D42912930B" /* AsteroidManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AsteroidManager.h; sourceTree = "<group>"; };
 		"4A0A9FA0-3129-4950-977A-F68D462B94E2" /* cimport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cimport.h; sourceTree = "<group>"; };
 		"4A810199-091F-456D-B834-70CE1B56FCDD" /* BaseImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BaseImporter.h; sourceTree = "<group>"; };
-		"4B819A58-DBED-409D-AA19-F7FD951CC29C" /* AsteroidManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AsteroidManager.cpp; sourceTree = "<group>"; };
 		"4BB97B13-E8AD-4585-9639-3A5157F163CA" /* Octree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Octree.cpp; sourceTree = "<group>"; };
 		"4C127EC3-7824-4E1D-9FE4-1A2FC7358399" /* Subdivision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Subdivision.h; sourceTree = "<group>"; };
 		"4CDBC074-09A8-4EB4-BB10-35FD6866352C" /* light.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = light.h; sourceTree = "<group>"; };
@@ -287,12 +270,10 @@
 		"73520CD7-446F-4CCE-9438-7D4E5B34DE31" /* qnan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = qnan.h; sourceTree = "<group>"; };
 		"73DC6306-6800-478A-80B9-6FF886703E68" /* ColladaMetaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ColladaMetaData.h; sourceTree = "<group>"; };
 		"74228BA8-3CAC-44AF-A5B8-E3E9D283FDE0" /* StringComparison.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StringComparison.h; sourceTree = "<group>"; };
-		"74567861-0189-462C-A7D8-AB7410223101" /* Asteroid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Asteroid.cpp; sourceTree = "<group>"; };
 		"751B6B29-88CB-493B-9D13-0C6644A7B0B0" /* Profiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Profiler.h; sourceTree = "<group>"; };
 		"75332DB0-302B-4CB2-983A-5FA509766CBA" /* matrix3x3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = matrix3x3.h; sourceTree = "<group>"; };
 		"75CBE302-B9F8-4265-A238-57841555A435" /* material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = material.h; sourceTree = "<group>"; };
 		"7637ED18-4ED7-4F0D-A805-C28236DB853F" /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = version.h; sourceTree = "<group>"; };
-		"76465B0C-EC0C-4BD4-BA46-79186EE3BBAF" /* Shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Shape.h; sourceTree = "<group>"; };
 		"76CA1592-676F-4995-8BD7-7114DB30D668" /* StreamReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StreamReader.h; sourceTree = "<group>"; };
 		"774C4B87-5AB6-4181-929A-4DE7F40D16A8" /* pstdint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pstdint.h; sourceTree = "<group>"; };
 		"79EB6A4A-0EB5-4767-AB17-F804927017F8" /* ofxButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxButton.cpp; sourceTree = "<group>"; };
@@ -300,7 +281,6 @@
 		"7ABE1AEA-3226-4F9B-8031-4302A43A67CF" /* mesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mesh.h; sourceTree = "<group>"; };
 		"7ADAD39C-3ED2-4901-99CD-0C3E86174C9C" /* StandardShapes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StandardShapes.h; sourceTree = "<group>"; };
 		"7B0EDBC8-7014-4F1C-B8FD-121567453B8D" /* cexport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cexport.h; sourceTree = "<group>"; };
-		"7B35BBF8-A1A4-47E4-A9BD-ECF5EDCF09A1" /* CollisionManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CollisionManager.cpp; sourceTree = "<group>"; };
 		"7C1E2000-4307-4241-B360-B97BFC1FA226" /* Exceptional.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Exceptional.h; sourceTree = "<group>"; };
 		"7C2D9593-236D-418D-8F13-4B7EE480791B" /* Exceptional.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Exceptional.h; sourceTree = "<group>"; };
 		"7C2FEE22-E77A-4A72-B007-97D1E9314763" /* ofxAssimpAnimationMixer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAssimpAnimationMixer.cpp; sourceTree = "<group>"; };
@@ -335,7 +315,6 @@
 		"8EA3B0BE-5381-4470-BFAD-BB01C5B82B2A" /* ofxLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxLabel.h; sourceTree = "<group>"; };
 		"907E2A60-1E09-42CC-B671-ED41D45BC3AB" /* XmlParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = XmlParser.h; sourceTree = "<group>"; };
 		"91F66A8C-B3DD-4823-9A1A-5CBA8264BE58" /* ofxSliderGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxSliderGroup.h; sourceTree = "<group>"; };
-		"924BFE27-80F1-48C9-9DA7-9385FFD8A36D" /* Asteroid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Asteroid.h; sourceTree = "<group>"; };
 		"92FE0451-A603-417A-A8CF-EBE78394E92C" /* ofxAssimpSrcBone.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxAssimpSrcBone.cpp; sourceTree = "<group>"; };
 		"93072F56-13C9-4EC5-B1B1-844641CEC66C" /* ZipArchiveIOSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ZipArchiveIOSystem.h; sourceTree = "<group>"; };
 		"94321AE8-E609-4BAA-8C14-71D18199941A" /* quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = quaternion.h; sourceTree = "<group>"; };
@@ -355,7 +334,6 @@
 		"9DA6EAD2-1309-4D1C-93BC-426B688301BB" /* ofxAssimpSrcNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxAssimpSrcNode.h; sourceTree = "<group>"; };
 		"9EEB10F2-00EB-4963-BFA8-EC788A3D9569" /* ofxGuiGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxGuiGroup.h; sourceTree = "<group>"; };
 		"A051FEDC-A5B0-462E-B679-C418AA26A64D" /* quaternion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = quaternion.h; sourceTree = "<group>"; };
-		"A0713042-116E-420E-94C3-917E2AAECC52" /* Physics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Physics.cpp; sourceTree = "<group>"; };
 		"A257B8D5-F8F4-43CE-8820-C9E5D97DFF4D" /* ProgressHandler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProgressHandler.hpp; sourceTree = "<group>"; };
 		"A2F06D40-3A66-46AE-ACF3-B8EC4ABCFE35" /* StringComparison.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = StringComparison.h; sourceTree = "<group>"; };
 		"A316B39D-63DC-4093-BC09-573BD8F53180" /* CreateAnimMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CreateAnimMesh.h; sourceTree = "<group>"; };
@@ -394,7 +372,6 @@
 		"B86E96E6-4B4E-4FF7-B699-82A43B6C7D9D" /* anim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = anim.h; sourceTree = "<group>"; };
 		"B9ABAFF4-F96F-46FF-8387-8FAF410A2026" /* ParticleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ParticleSystem.h; sourceTree = "<group>"; };
 		"BB67A164-3DD2-421A-BB8F-0D91D0F21C57" /* LandingZone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LandingZone.h; sourceTree = "<group>"; };
-		"BB8B5061-F34B-4BE6-9BA9-62F28D2A1774" /* Shape.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Shape.cpp; sourceTree = "<group>"; };
 		"BBA90984-A948-4350-B41E-6E5C23891ABC" /* data */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = folder; name = data; path = bin/data; sourceTree = SOURCE_ROOT; };
 		"BBFFAAD0-510A-49BE-BB8B-692977A0D0C8" /* camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = camera.h; sourceTree = "<group>"; };
 		"BC273EF2-5F00-46E0-B090-8E80E5DD2AFF" /* postprocess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = postprocess.h; sourceTree = "<group>"; };
@@ -454,7 +431,6 @@
 		"D8413096-C89F-4731-AC2D-D2D5ABDB41F2" /* IOStream.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IOStream.hpp; sourceTree = "<group>"; };
 		"D8ACF395-07B1-4369-98F7-B467B8F3EB41" /* ofxGui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxGui.h; sourceTree = "<group>"; };
 		"D8DC5DA0-D98A-4940-A364-444B36057C18" /* poppack1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = poppack1.h; sourceTree = "<group>"; };
-		"D91A87AB-E280-4738-9BCC-FAF005E842C2" /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
 		"D9A1BEBB-F327-4DCC-8DE2-2F7297D2A7CF" /* SmallVector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SmallVector.h; sourceTree = "<group>"; };
 		"DA5FE991-3407-453C-AA99-8A8AA70C1673" /* Bitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Bitmap.h; sourceTree = "<group>"; };
 		"DA97B583-0D49-4537-95CC-9952F4E91996" /* TinyFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TinyFormatter.h; sourceTree = "<group>"; };
@@ -494,7 +470,6 @@
 		"E8D38090-80B5-4867-A516-5F199191BC35" /* commonMetaData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = commonMetaData.h; sourceTree = "<group>"; };
 		"E9D77E75-6E66-4ECC-B16B-68C968316DCE" /* LineSplitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LineSplitter.h; sourceTree = "<group>"; };
 		"EA395BCA-5D7E-46BB-A436-20CBB09EC250" /* pushpack1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = pushpack1.h; sourceTree = "<group>"; };
-		"EA5A2484-6DBF-4E54-8E4C-FBB45D0FCAE7" /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Player.h; sourceTree = "<group>"; };
 		"EA8F2670-7483-4188-B258-F36C08072973" /* Util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Util.h; sourceTree = "<group>"; };
 		"EAEF975D-05BE-453F-9EA9-E0294D3D9EB0" /* fast_atof.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = fast_atof.h; sourceTree = "<group>"; };
 		"EB456864-62DB-4B90-B446-0F57999D401F" /* importerdesc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = importerdesc.h; sourceTree = "<group>"; };
@@ -1154,15 +1129,8 @@
 		"B2218C32-B9D3-4999-8C31-85AE1798B348" /* physics */ = {
 			isa = PBXGroup;
 			children = (
-				"2024C9B3-5315-4982-BEE9-E99C6FCDD97C" /* Collision.cpp */,
-				"3EE65B17-16DC-4285-A3EE-FBA5259EBF32" /* Collision.h */,
-				"7B35BBF8-A1A4-47E4-A9BD-ECF5EDCF09A1" /* CollisionManager.cpp */,
-				"133730A1-9387-45B6-97E2-4DACF1A071D9" /* CollisionManager.h */,
 				"BB67A164-3DD2-421A-BB8F-0D91D0F21C57" /* LandingZone.h */,
-				"A0713042-116E-420E-94C3-917E2AAECC52" /* Physics.cpp */,
-				"151C19A5-D803-4F73-91EF-9EBD8D9D47A8" /* Physics.h */,
 				"59DBB248-9535-48D1-9263-9AD8A881EF27" /* Physics3D.h */,
-				"1330125E-7C64-4422-B4B8-1E79B774EEA4" /* RotationalPhysics.h */,
 				"20C4DD97-9827-4116-9422-3739044B6324" /* RotationalPhysics3D.h */,
 			);
 			path = physics;
@@ -1204,18 +1172,8 @@
 		"C383096E-369A-46BF-8668-A7DF8B27ECFB" /* shapes */ = {
 			isa = PBXGroup;
 			children = (
-				"74567861-0189-462C-A7D8-AB7410223101" /* Asteroid.cpp */,
-				"924BFE27-80F1-48C9-9DA7-9385FFD8A36D" /* Asteroid.h */,
-				"4B819A58-DBED-409D-AA19-F7FD951CC29C" /* AsteroidManager.cpp */,
-				"49DDB240-78AD-4D5B-808F-15D42912930B" /* AsteroidManager.h */,
-				"3E4300CA-5A09-40A1-BC08-2FF10B05733E" /* HeadingVector.cpp */,
-				"4884B7EF-5D01-43C3-A8A2-99481C784A0D" /* HeadingVector.h */,
 				"86B367A6-8F6E-4477-880A-CF255F2B1836" /* Lander.cpp */,
 				"3AF34DB5-BF08-431E-B5A6-0040EE75D331" /* Lander.h */,
-				"D91A87AB-E280-4738-9BCC-FAF005E842C2" /* Player.cpp */,
-				"EA5A2484-6DBF-4E54-8E4C-FBB45D0FCAE7" /* Player.h */,
-				"BB8B5061-F34B-4BE6-9BA9-62F28D2A1774" /* Shape.cpp */,
-				"76465B0C-EC0C-4BD4-BA46-79186EE3BBAF" /* Shape.h */,
 				"273112ED-9382-4607-811C-EB3B0C48CF4A" /* Shape3D.h */,
 			);
 			path = shapes;
@@ -1372,15 +1330,7 @@
 				"63316C78-942E-44AD-90A7-C6020F29538F" /* ParticleEmitter.cpp in Sources */,
 				"47B1B51C-34C3-44AA-AC92-3C72DBD76826" /* Particle.cpp in Sources */,
 				"EF903C74-6D5A-431D-B217-2514CE005776" /* ParticleSystem.cpp in Sources */,
-				"88EC1FF1-53FC-464D-8887-E3A59A1CEE16" /* Collision.cpp in Sources */,
-				"0864DF99-03F7-42C2-A4FC-215E4FB7C470" /* CollisionManager.cpp in Sources */,
-				"8909E04D-5E69-4E6A-A607-20EBC32B0B16" /* Physics.cpp in Sources */,
-				"A2CB3B03-3BDD-45FB-9D56-EFAE44D55E76" /* Asteroid.cpp in Sources */,
-				"7EA5F70B-8258-4D11-BFAC-1B6E025CCE8A" /* AsteroidManager.cpp in Sources */,
-				"520966D0-ED2E-4EE7-9AE5-3DBD6FB614BF" /* HeadingVector.cpp in Sources */,
 				"1D872F20-6096-41D6-9EFE-9919C7090169" /* Lander.cpp in Sources */,
-				"31182967-C67D-4590-8C08-0DFECD684037" /* Player.cpp in Sources */,
-				"9EAC1FB3-B4F4-4B18-A312-3CB7925B58CA" /* Shape.cpp in Sources */,
 				"B51B63AB-9F62-470E-AC52-80FE8494BD2F" /* Helpers.cpp in Sources */,
 				"EAA76DEF-4092-4EF7-9811-8CA149996E6A" /* ofxAssimpSrcAnimKeyCollection.cpp in Sources */,
 				"12015E4E-315F-4928-B9CF-67ACAA720E3F" /* ofxAssimpSrcBone.cpp in Sources */,
