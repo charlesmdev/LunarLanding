@@ -11,7 +11,7 @@ Charles Contribution: All physics related logic, altitude sensor, fuel, landing 
 David Contribution: Model creation of lander and terrain, cameras, lighting, explosion, sounds, video trailer
 
 **Repo:** https://github.com/charlesmdev/LunarLanding
-
+**Trailer** https://www.youtube.com/watch?v=fsWcbXPHOu8
 ### Controls
 
 Up/Down/Left/Right arrow keys = LEM movement <br>
